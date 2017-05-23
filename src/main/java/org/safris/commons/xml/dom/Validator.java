@@ -25,7 +25,7 @@ import java.util.Collection;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.safris.commons.net.URLs;
+import org.lib4j.net.URLs;
 import org.safris.commons.xml.validate.ValidationException;
 import org.safris.commons.xml.validate.ValidatorError;
 import org.w3c.dom.Element;

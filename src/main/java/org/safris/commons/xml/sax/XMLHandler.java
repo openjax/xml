@@ -26,9 +26,9 @@ import java.util.StringTokenizer;
 
 import javax.xml.XMLConstants;
 
+import org.lib4j.net.CachedURL;
+import org.lib4j.net.URLs;
 import org.safris.commons.lang.Paths;
-import org.safris.commons.net.CachedURL;
-import org.safris.commons.net.URLs;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

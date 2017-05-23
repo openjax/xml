@@ -23,8 +23,8 @@ import java.util.Map;
 
 import javax.xml.XMLConstants;
 
+import org.lib4j.net.CachedURL;
 import org.safris.commons.lang.Resources;
-import org.safris.commons.net.CachedURL;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;

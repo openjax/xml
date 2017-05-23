@@ -28,9 +28,9 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.SchemaFactory;
 
-import org.safris.commons.net.CachedURL;
-import org.safris.commons.net.Sockets;
-import org.safris.commons.net.URLs;
+import org.lib4j.net.CachedURL;
+import org.lib4j.net.Sockets;
+import org.lib4j.net.URLs;
 import org.xml.sax.SAXException;
 
 public final class XMLDocuments {

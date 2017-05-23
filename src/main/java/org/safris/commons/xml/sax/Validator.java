@@ -24,8 +24,8 @@ import java.util.Map;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
-import org.safris.commons.net.CachedURL;
-import org.safris.commons.net.URLs;
+import org.lib4j.net.CachedURL;
+import org.lib4j.net.URLs;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

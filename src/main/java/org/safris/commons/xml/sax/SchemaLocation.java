@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lib4j.net.CachedURL;
+import org.lib4j.net.URLs;
 import org.safris.commons.lang.Paths;
-import org.safris.commons.net.CachedURL;
-import org.safris.commons.net.URLs;
 
 public class SchemaLocation {
   private final String namespace;
