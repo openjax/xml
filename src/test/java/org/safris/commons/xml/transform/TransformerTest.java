@@ -23,7 +23,7 @@ import javax.xml.transform.TransformerException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.safris.commons.io.Files;
+import org.lib4j.io.Files;
 
 public class TransformerTest {
   @Test
