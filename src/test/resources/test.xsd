@@ -16,8 +16,8 @@
 -->
 <xs:schema
   elementFormDefault="qualified"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  targetNamespace="http://maven.safris.org/plugin/xml/test.xsd">
+  targetNamespace="http://xml.lib4j.org/test.xsd"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="parent">
     <xs:complexType>
       <xs:sequence>
