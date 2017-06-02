@@ -17,14 +17,45 @@
 <xs:schema
   elementFormDefault="qualified"
   targetNamespace="http://xml.lib4j.org/datatypes.xsd"
+  xmlns:dt="http://xml.lib4j.org/datatypes.xsd"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+  <xs:simpleType name="anyURINonEmpty">
+    <xs:restriction base="xs:anyURI">
+      <xs:pattern value=".+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="tokenNonEmpty">
+    <xs:restriction base="xs:token">
+      <xs:pattern value=".+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="stringNonEmpty">
+    <xs:restriction base="xs:string">
+      <xs:pattern value=".+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="NCNameNonEmpty">
+    <xs:restriction base="xs:NCName">
+      <xs:pattern value=".+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="NCWName">
     <xs:restriction base="xs:NCName">
       <xs:pattern value="[\S]*"/>
     </xs:restriction>
   </xs:simpleType>
-
+  
+  <xs:simpleType name="NCWNameNonEmpty">
+    <xs:restriction base="dt:NCWName">
+      <xs:pattern value=".+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="char">
     <xs:restriction base="xs:normalizedString">
       <xs:maxLength value="1"/>
