@@ -22,25 +22,25 @@
 
   <xs:simpleType name="anyURINonEmpty">
     <xs:restriction base="xs:anyURI">
-      <xs:pattern value=".+"/>
+      <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="tokenNonEmpty">
     <xs:restriction base="xs:token">
-      <xs:pattern value=".+"/>
+      <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="stringNonEmpty">
     <xs:restriction base="xs:string">
-      <xs:pattern value=".+"/>
+      <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="NCNameNonEmpty">
     <xs:restriction base="xs:NCName">
-      <xs:pattern value=".+"/>
+      <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -52,7 +52,7 @@
   
   <xs:simpleType name="NCWNameNonEmpty">
     <xs:restriction base="dt:NCWName">
-      <xs:pattern value=".+"/>
+      <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
   
