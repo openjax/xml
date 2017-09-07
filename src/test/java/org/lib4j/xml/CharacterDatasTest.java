@@ -1,4 +1,4 @@
-/* Copyright (c) 2008 lib4j
+/* Copyright (c) 2017 lib4j
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -16,22 +16,22 @@
 
 package org.lib4j.xml;
 
-public class XMLException extends Exception {
-  private static final long serialVersionUID = 1244153460891393863L;
+import org.junit.Assert;
+import org.junit.Test;
 
-  public XMLException() {
-    super();
+public class CharacterDatasTest {
+  private static final String[] unescaped = {"foo & bar", "< foo bar", "foo bar >", "'foo bar'", "\"foo bar\""};
+  private static final String[] escaped = {"foo &amp; bar", "&lt; foo bar", "foo bar &gt;", "&apos;foo bar&apos;", "&quot;foo bar&quot;"};
+
+  @Test
+  public void testEscape() {
+    for (int i = 0; i < escaped.length; i++)
+      Assert.assertEquals(escaped[i], CharacterDatas.escape(unescaped[i]));
   }
 
-  public XMLException(final String message) {
-    super(message);
-  }
-
-  public XMLException(final Throwable cause) {
-    super(cause);
-  }
-
-  public XMLException(final String message, final Throwable cause) {
-    super(message, cause);
+  @Test
+  public void testUnescape() {
+    for (int i = 0; i < unescaped.length; i++)
+      Assert.assertEquals(unescaped[i], CharacterDatas.unescape(escaped[i]));
   }
 }

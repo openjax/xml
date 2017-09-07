@@ -32,52 +32,44 @@ public final class DOMs {
    */
   public static String domToString(final Element element, final DOMStyle ... styles) {
     final DOMStyle style = DOMStyle.consolidate(styles);
-    final StringBuffer buffer = new StringBuffer();
-    domToString(buffer, element, 0, style);
-    return buffer.toString();
+    final StringBuilder string = new StringBuilder();
+    domToString(string, element, 0, style);
+    return string.toString();
   }
 
-  private static void domToString(final StringBuffer stringBuffer, final Node node, int depth, final DOMStyle style) {
+  private static void domToString(final StringBuilder string, final Node node, int depth, final DOMStyle style) {
     if (node == null)
       return;
 
-    final String nodeName;
-    if (style.isIgnoreNamespaces())
-      nodeName = node.getLocalName();
-    else
-      nodeName = node.getNodeName();
-
+    final String nodeName = style.isIgnoreNamespaces() ? node.getLocalName() : node.getNodeName();
     final String nodeValue = node.getNodeValue();
     final int type = node.getNodeType();
     if (Node.ELEMENT_NODE == type) {
-      if (style.isIndent() && stringBuffer.length() > 1 && stringBuffer.charAt(stringBuffer.length() - 1) == '>') {
-        stringBuffer.append("\n");
-        for (int i = 0; i < depth; i++) {
-          stringBuffer.append("  ");
-        }
+      if (style.isIndent() && string.length() > 1 && string.charAt(string.length() - 1) == '>') {
+        string.append("\n");
+        for (int i = 0; i < depth; i++)
+          string.append("  ");
       }
 
-      stringBuffer.append("<");
-      stringBuffer.append(nodeName);
-      attributesToString(stringBuffer, node, depth + 1, style);
+      string.append("<");
+      string.append(nodeName);
+      attributesToString(string, node, depth + 1, style);
       if (node.hasChildNodes()) {
-        stringBuffer.append(">");
+        string.append(">");
         final NodeList nodeList = node.getChildNodes();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-          domToString(stringBuffer, nodeList.item(i), depth + 1, style);
+        for (int i = 0; i < nodeList.getLength(); i++)
+          domToString(string, nodeList.item(i), depth + 1, style);
+
+        if (style.isIndent() && string.length() > 1 && string.charAt(string.length() - 1) == '>') {
+          string.append("\n");
+          for (int i = 0; i < depth; i++)
+            string.append("  ");
         }
 
-        if (style.isIndent() && stringBuffer.length() > 1 && stringBuffer.charAt(stringBuffer.length() - 1) == '>') {
-          stringBuffer.append("\n");
-          for (int i = 0; i < depth; i++) {
-            stringBuffer.append("  ");
-          }
-        }
-
-        stringBuffer.append("</").append(nodeName).append(">");
+        string.append("</").append(nodeName).append(">");
       }
       else {
-        stringBuffer.append("/>");
+        string.append("/>");
       }
     }
     else if (Node.TEXT_NODE == type && nodeValue != null && nodeValue.length() != 0) {
@@ -85,13 +77,13 @@ public final class DOMs {
       // '&amp;' becomes simply '&'. Since the string being constructed
       // here is intended to be used as XML text, we have to reconstruct
       // the standard entity references
-      entityConvert(stringBuffer, nodeValue);
+      entityConvert(string, nodeValue);
     }
   }
 
-  private static void attributesToString(final StringBuffer stringBuffer, final Node node, int depth, final DOMStyle style) {
-    final NamedNodeMap attributes;
-    if ((attributes = node.getAttributes()) == null)
+  private static void attributesToString(final StringBuilder string, final Node node, int depth, final DOMStyle style) {
+    final NamedNodeMap attributes = node.getAttributes();
+    if (attributes == null)
       return;
 
     for (int i = 0; i < attributes.getLength(); i++) {
@@ -101,19 +93,18 @@ public final class DOMs {
         continue;
 
       if (style.isIndentAttributes()) {
-        stringBuffer.append("\n");
-        for (int j = 0; j < depth; j++) {
-          stringBuffer.append("  ");
-        }
+        string.append("\n");
+        for (int j = 0; j < depth; j++)
+          string.append("  ");
       }
       else {
-        stringBuffer.append(" ");
+        string.append(" ");
       }
 
-      stringBuffer.append(nodeName);
-      stringBuffer.append("=\"");
-      entityConvert(stringBuffer, attribute.getNodeValue());
-      stringBuffer.append("\"");
+      string.append(nodeName);
+      string.append("=\"");
+      entityConvert(string, attribute.getNodeValue());
+      string.append("\"");
     }
   }
 
@@ -124,24 +115,31 @@ public final class DOMs {
    *          the String containing invalid entities.
    * @return String with expanded entities.
    */
-  private static void entityConvert(final StringBuffer stringBuffer, String entity) {
+  private static void entityConvert(final StringBuilder string, String entity) {
     if (entity == null)
       return;
 
     entity = entity.trim();
     for (int i = 0; i < entity.length(); i++) {
-      switch (entity.charAt(i)) {
+      final char ch = entity.charAt(i);
+      switch (ch) {
         case '&':
-          stringBuffer.append("&amp;");
+          string.append("&amp;");
           break;
         case '>':
-          stringBuffer.append("&gt;");
+          string.append("&gt;");
           break;
         case '<':
-          stringBuffer.append("&lt;");
+          string.append("&lt;");
+          break;
+        case '\'':
+          string.append("&apos;");
+          break;
+        case '"':
+          string.append("&quot;");
           break;
         default:
-          stringBuffer.append(entity.substring(i, i + 1));
+          string.append(ch);
           break;
       }
     }
