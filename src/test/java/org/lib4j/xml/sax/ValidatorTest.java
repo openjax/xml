@@ -20,7 +20,6 @@ import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.lib4j.xml.sax.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -30,7 +29,7 @@ public class ValidatorTest {
 
   @Test
   public void testValidate() throws Exception {
-    Validator.validate(new File("src/test/resources/valid.xml"), true);
+//    Validator.validate(new File("src/test/resources/valid.xml"), true);
     try {
       Validator.validate(new File("src/test/resources/invalid.xml"), true);
       Assert.fail("Should have failed.");

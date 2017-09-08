@@ -32,7 +32,6 @@ import org.xml.sax.SAXParseException;
 
 public final class Validator {
   private static final SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
-  private static final ThreadLocal<javax.xml.validation.Validator> localValidator = new ThreadLocal<javax.xml.validation.Validator>();
 
   public static void validate(final File file, final boolean offline) throws IOException, SAXException {
     validate(file, offline, new LoggingErrorHandler());
@@ -52,14 +51,21 @@ public final class Validator {
     }
 
     final ValidationHandler handler = new ValidationHandler(schemaReferences, errorHandler);
-    javax.xml.validation.Validator validator = localValidator.get();
-    if (validator == null)
-      localValidator.set(validator = factory.newSchema().newValidator());
+    if (xmlDocument.isXSD()) {
+      final SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
+      factory.setResourceResolver(handler);
+      factory.setErrorHandler(handler);
 
-    validator.setResourceResolver(handler);
-    validator.setErrorHandler(handler);
+      factory.newSchema(new StreamSource(file));
+    }
+    else {
+      final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
+      validator.setResourceResolver(handler);
+      validator.setErrorHandler(handler);
 
-    validator.validate(new StreamSource(file));
+      validator.validate(new StreamSource(file));
+    }
+
     for (final Map.Entry<String,SchemaLocation> schemaLocation : schemaReferences.entrySet()) {
       final Map<String,CachedURL> locations = schemaLocation.getValue().getLocation();
       for (final Map.Entry<String,CachedURL> location : locations.entrySet())
@@ -68,7 +74,9 @@ public final class Validator {
 
     if (handler.getErrors() != null) {
       final Iterator<SAXParseException> iterator = handler.getErrors().iterator();
-      final SAXException exception = new SAXException(iterator.next());
+      final SAXParseException firstException = iterator.next();
+      final SAXException exception = new SAXException(firstException);
+      exception.setStackTrace(firstException.getStackTrace());
       while (iterator.hasNext())
         exception.addSuppressed(iterator.next());
 

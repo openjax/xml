@@ -17,6 +17,7 @@
 package org.lib4j.xml.sax;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -36,6 +37,10 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLHandler extends DefaultHandler {
   protected static String getPath(final String referrer, final String location) {
     return URLs.isAbsolute(location) ? location : Paths.newPath(Paths.getParent(referrer), location);
+  }
+
+  protected static String getPath(final URI referrer, final String location) {
+    return getPath(referrer.toASCIIString(), location);
   }
 
   private final Set<String> namespaceURIs = new HashSet<String>();

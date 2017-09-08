@@ -26,7 +26,6 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.validation.SchemaFactory;
 
 import org.lib4j.net.CachedURL;
 import org.lib4j.net.Sockets;
@@ -49,12 +48,6 @@ public final class XMLDocuments {
     factory.setNamespaceAware(true);
     factory.setValidating(true);
     try {
-      try {
-        factory.setSchema(SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1").newSchema());
-      }
-      catch (final IllegalArgumentException e) {
-      }
-
       factory.setFeature("http://xml.org/sax/features/validation", true);
       factory.setFeature("http://apache.org/xml/features/validation/schema", true);
       factory.setFeature("http://apache.org/xml/features/validation/dynamic", false);
