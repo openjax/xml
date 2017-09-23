@@ -16,6 +16,7 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
@@ -23,7 +24,9 @@ import javax.xml.bind.DatatypeConverter;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#base64Binary
  */
-public final class Base64Binary {
+public final class Base64Binary implements Serializable {
+  private static final long serialVersionUID = 2865426282252687625L;
+
   public static Base64Binary parseBase64Binary(final String string) {
     return string == null ? null : new Base64Binary(DatatypeConverter.parseBase64Binary(string));
   }

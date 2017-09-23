@@ -16,6 +16,7 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -24,7 +25,9 @@ import org.lib4j.util.CalendarUtil;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#time
  */
-public final class Time {
+public final class Time implements Serializable {
+  private static final long serialVersionUID = -9015566323752593968L;
+
   public static Time parseTime(String string) {
     if (string == null)
       throw new NullPointerException("string == null");

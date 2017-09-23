@@ -16,10 +16,14 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
+
 /**
  * http://www.w3.org/TR/xmlschema11-2/#duration
  */
-public final class Duration {
+public final class Duration implements Serializable {
+  private static final long serialVersionUID = -4434035431304455290L;
+
   public static Duration parseDuration(String string) {
     if (string == null)
       throw new NullPointerException("string == null");

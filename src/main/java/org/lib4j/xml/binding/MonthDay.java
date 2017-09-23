@@ -16,13 +16,16 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gMonthDay
  */
-public final class MonthDay {
+public final class MonthDay implements Serializable {
+  private static final long serialVersionUID = 6702644782424414369L;
+
   public static MonthDay parseMonthDay(String string) {
     if (string == null)
       throw new NullPointerException("string == null");

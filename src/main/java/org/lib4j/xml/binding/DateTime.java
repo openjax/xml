@@ -16,11 +16,14 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.TimeZone;
 
-public final class DateTime {
+public final class DateTime implements Serializable {
+  private static final long serialVersionUID = 7756729079060501414L;
+
   public static DateTime parseDateTime(String string) {
     if (string == null)
       throw new NullPointerException("string == null");

@@ -16,14 +16,17 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.TimeZone;
+
 /**
  * http://www.w3.org/TR/xmlschema11-2/#date
  */
-import java.util.TimeZone;
+public final class Date implements Serializable {
+  private static final long serialVersionUID = -9016233681424543761L;
 
-public final class Date {
   public static Date parseDate(String string) {
     if (string == null)
       throw new NullPointerException("string == null");

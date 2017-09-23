@@ -16,6 +16,7 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -24,7 +25,9 @@ import org.lib4j.util.CalendarUtil;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gYear
  */
-public final class Year {
+public final class Year implements Serializable {
+  private static final long serialVersionUID = 1715357512840880045L;
+
   public static Year parseYear(String string) {
     if (string == null)
       throw new NullPointerException("string == null");

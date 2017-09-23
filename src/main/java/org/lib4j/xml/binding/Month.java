@@ -16,12 +16,15 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gMonth
  */
-public final class Month {
+public final class Month implements Serializable {
+  private static final long serialVersionUID = 9191134240521332696L;
+
   public static Month parseMonth(String string) {
     if (string == null)
       throw new NullPointerException("string == null");

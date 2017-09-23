@@ -17,12 +17,15 @@
 package org.lib4j.xml.binding;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#hexBinary
  */
-public final class HexBinary {
+public final class HexBinary implements Serializable {
+  private static final long serialVersionUID = 3972638444033283159L;
+
   public static HexBinary parseHexBinary(final String string) {
     if (string == null)
       return null;

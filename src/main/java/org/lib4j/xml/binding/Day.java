@@ -16,12 +16,15 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gDay
  */
-public final class Day {
+public final class Day implements Serializable {
+  private static final long serialVersionUID = -2605382792284795205L;
+
   public static Day parseDay(String string) {
     if (string == null)
       throw new NullPointerException("string == null");

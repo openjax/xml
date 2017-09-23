@@ -16,6 +16,7 @@
 
 package org.lib4j.xml.binding;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,7 +26,9 @@ import java.util.regex.Pattern;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#language
  */
-public final class Language implements CharSequence {
+public final class Language implements CharSequence, Serializable {
+  private static final long serialVersionUID = -3019968992019702549L;
+
   public static Language parseLanguage(String string) {
     if (string == null)
       throw new NullPointerException("string == null");
