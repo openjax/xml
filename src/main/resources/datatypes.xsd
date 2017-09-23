@@ -32,6 +32,18 @@
     </xs:restriction>
   </xs:simpleType>
   
+  <xs:simpleType name="stringWord">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Za-z0-9_]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="stringWordNonEmpty">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Za-z0-9_]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="stringNonEmpty">
     <xs:restriction base="xs:string">
       <xs:minLength value="1"/>
@@ -63,6 +75,30 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="nonNegativeInt">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="positiveInt">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="nonNegativeLong">
+    <xs:restriction base="xs:long">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="positiveLong">
+    <xs:restriction base="xs:long">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="nonNegativeDecimal">
     <xs:restriction base="xs:decimal">
       <xs:minInclusive value="0"/>
