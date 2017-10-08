@@ -75,15 +75,75 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="nonNegativeByte">
+    <xs:restriction base="xs:byte">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="nonPositiveByte">
+    <xs:restriction base="xs:byte">
+      <xs:maxInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="positiveByte">
+    <xs:restriction base="xs:byte">
+      <xs:minExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="negativeByte">
+    <xs:restriction base="xs:byte">
+      <xs:maxExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="nonNegativeShort">
+    <xs:restriction base="xs:short">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="nonPositiveShort">
+    <xs:restriction base="xs:short">
+      <xs:maxInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="positiveShort">
+    <xs:restriction base="xs:short">
+      <xs:minExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="negativeShort">
+    <xs:restriction base="xs:short">
+      <xs:maxExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="nonNegativeInt">
     <xs:restriction base="xs:int">
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
   
+  <xs:simpleType name="nonPositiveInt">
+    <xs:restriction base="xs:int">
+      <xs:maxInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="positiveInt">
     <xs:restriction base="xs:int">
-      <xs:minInclusive value="1"/>
+      <xs:minExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="negativeInt">
+    <xs:restriction base="xs:int">
+      <xs:maxExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -93,9 +153,21 @@
     </xs:restriction>
   </xs:simpleType>
   
+  <xs:simpleType name="nonPositiveLong">
+    <xs:restriction base="xs:long">
+      <xs:maxInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="positiveLong">
     <xs:restriction base="xs:long">
-      <xs:minInclusive value="1"/>
+      <xs:minExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="negativeLong">
+    <xs:restriction base="xs:long">
+      <xs:maxExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -104,7 +176,7 @@
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-
+  
   <xs:simpleType name="nonPositiveDecimal">
     <xs:restriction base="xs:nonPositiveInteger">
       <xs:maxInclusive value="0"/>
@@ -123,6 +195,54 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="nonNegativeFloat">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="nonPositiveFloat">
+    <xs:restriction base="xs:float">
+      <xs:maxInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="positiveFloat">
+    <xs:restriction base="xs:float">
+      <xs:minExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="negativeFloat">
+    <xs:restriction base="xs:float">
+      <xs:maxExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="nonNegativeDouble">
+    <xs:restriction base="xs:double">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="nonPositiveDouble">
+    <xs:restriction base="xs:double">
+      <xs:maxInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="positiveDouble">
+    <xs:restriction base="xs:double">
+      <xs:minExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="negativeDouble">
+    <xs:restriction base="xs:double">
+      <xs:maxExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="email">
     <xs:restriction base="xs:string">
       <xs:pattern value="[a-zA-Z]([.]?([a-zA-Z0-9_-]+)*)?@([a-zA-Z0-9\-_]+\.)+[a-zA-Z]{2,4}"/>

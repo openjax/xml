@@ -31,7 +31,7 @@ public class ValidatorTest {
   public void testValidate() throws Exception {
 //    Validator.validate(new File("src/test/resources/valid.xml"), true);
     try {
-      Validator.validate(new File("src/test/resources/invalid.xml"), true);
+      Validator.validate(new File("src/test/resources/invalid.xml").toURI().toURL(), true);
       Assert.fail("Should have failed.");
     }
     catch (final SAXException e) {
@@ -40,7 +40,7 @@ public class ValidatorTest {
     }
 
     try {
-      Validator.validate(new File("src/test/resources/test.xsd"), true);
+      Validator.validate(new File("src/test/resources/test.xsd").toURI().toURL(), true);
     }
     catch (final SAXException e) {
       System.err.println(e.getMessage());
