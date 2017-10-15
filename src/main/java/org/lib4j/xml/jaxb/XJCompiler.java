@@ -141,11 +141,11 @@ public class XJCompiler {
     //
     // <configuration>
     // ...
-    // <sources>
-    // <source>some/explicit/relative/file.xsd</source>
-    // <source>/another/absolute/path/to/a/specification.xsd</source>
-    // <source>a/directory/holding/xsds</source>
-    // </sources>
+    // <schemas>
+    // <schema>some/explicit/relative/file.xsd</schema>
+    // <schema>/another/absolute/path/to/a/specification.xsd</schema>
+    // <schema>a/directory/holding/xsds</schema>
+    // </schemas>
     // </configuration>
     private LinkedHashSet<URL> schemas;
 
