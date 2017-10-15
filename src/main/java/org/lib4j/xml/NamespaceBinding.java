@@ -92,22 +92,22 @@ public final class NamespaceBinding {
   }
 
   private static String jls77String(final String name) {
-    final StringBuffer buffer = new StringBuffer(name);
+    final StringBuilder builder = new StringBuilder(name);
     for (int i = 0; i < name.length(); i++) {
       // We need to also make sure that our package names don't contain the
       // "$" character in them, which, although a valid Java identifier part,
       // would create confusion when trying to generate fully-qualified names
-      if ('$' == buffer.charAt(i) || !Character.isJavaIdentifierPart(buffer.charAt(i)))
-        buffer.setCharAt(i, '_');
+      if ('$' == builder.charAt(i) || !Character.isJavaIdentifierPart(builder.charAt(i)))
+        builder.setCharAt(i, '_');
     }
 
-    if (buffer.length() == 0 || !Character.isJavaIdentifierStart(buffer.charAt(0)))
-      buffer.insert(0, '_');
+    if (builder.length() == 0 || !Character.isJavaIdentifierStart(builder.charAt(0)))
+      builder.insert(0, '_');
 
     if (isJavaReservedWord(name))
-      buffer.append('_');
+      builder.append('_');
 
-    return buffer.toString();
+    return builder.toString();
   }
 
   private static List<String> splitDNS(final String dns) {
@@ -191,30 +191,30 @@ public final class NamespaceBinding {
       }
     }
 
-    final StringBuffer buffer = new StringBuffer();
+    final StringBuilder builder = new StringBuilder();
     for (final String result : results) {
       final String part = nonJavaKeyword(lowerCamelCase(result, useJaxRpcRules, true));
       if (part.length() > 0) {
-        buffer.append(part);
-        buffer.append('.');
+        builder.append(part);
+        builder.append('.');
       }
     }
 
-    if (buffer.length() == 0)
+    if (builder.length() == 0)
       return "noNamespace";
 
     if (useJaxRpcRules)
-      return buffer.substring(0, buffer.length() - 1).toLowerCase();
+      return builder.substring(0, builder.length() - 1).toLowerCase();
 
-    return buffer.substring(0, buffer.length() - 1); // chop off extra dot
+    return builder.substring(0, builder.length() - 1); // chop off extra dot
   }
 
   /**
    * Returns a camel-cased string using the JAXB or JAX-RPC rules
    */
   private static String lowerCamelCase(final String xml_name, final boolean useJaxRpcRules, final boolean fixGeneratedName) {
-    StringBuffer buffer = new StringBuffer();
-    List<String> words = splitWords(xml_name, useJaxRpcRules);
+    final StringBuilder buffer = new StringBuilder();
+    final List<String> words = splitWords(xml_name, useJaxRpcRules);
 
     if (words.size() > 0) {
       String firstWord = words.get(0).toLowerCase();

@@ -27,9 +27,13 @@ import java.util.TimeZone;
 public final class Date implements Serializable {
   private static final long serialVersionUID = -9016233681424543761L;
 
-  public static Date parseDate(String string) {
+  public static String print(final Date binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static Date parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (string.length() < DATE_FRAG_MIN_LENGTH)
@@ -146,19 +150,19 @@ public final class Date implements Serializable {
   }
 
   protected String toEmbededString() {
-    final StringBuffer buffer = new StringBuffer();
-    buffer.append(yearMonth.toEmbededString());
-    buffer.append("-");
+    final StringBuilder builder = new StringBuilder();
+    builder.append(yearMonth.toEmbededString());
+    builder.append("-");
     if (getDay() < 10)
-      buffer.append("0").append(getDay());
+      builder.append("0").append(getDay());
     else
-      buffer.append(getDay());
+      builder.append(getDay());
 
-    return buffer.toString();
+    return builder.toString();
   }
 
   @Override
   public String toString() {
-    return new StringBuffer(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
   }
 }

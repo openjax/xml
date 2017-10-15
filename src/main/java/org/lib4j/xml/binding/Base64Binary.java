@@ -26,7 +26,11 @@ import java.util.Base64;
 public final class Base64Binary implements Serializable {
   private static final long serialVersionUID = 2865426282252687625L;
 
-  public static Base64Binary parseBase64Binary(final String string) {
+  public static String print(final Base64Binary binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static Base64Binary parse(final String string) {
     return string == null ? null : new Base64Binary(Base64.getDecoder().decode(string));
   }
 

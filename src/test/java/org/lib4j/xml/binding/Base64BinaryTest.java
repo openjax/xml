@@ -25,7 +25,7 @@ public class Base64BinaryTest {
     final Base64Binary base64Binary = new Base64Binary(data.getBytes());
     final String base64String = base64Binary.toString();
     Assert.assertEquals(base64, base64String);
-    final Base64Binary unmarshalled = Base64Binary.parseBase64Binary(base64String);
+    final Base64Binary unmarshalled = Base64Binary.parse(base64String);
     Assert.assertEquals(data, new String(unmarshalled.getBytes()));
   }
 

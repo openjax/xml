@@ -29,9 +29,13 @@ import java.util.regex.Pattern;
 public final class Language implements CharSequence, Serializable {
   private static final long serialVersionUID = -3019968992019702549L;
 
-  public static Language parseLanguage(String string) {
+  public static String print(final Language binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static Language parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (string.length() < LANGUAGE_FRAG_MIN_LENGTH)
@@ -116,10 +120,10 @@ public final class Language implements CharSequence, Serializable {
     if (language == null || language.length == 0)
       return encoded = "";
 
-    final StringBuffer buffer = new StringBuffer();
+    final StringBuilder builder = new StringBuilder();
     for (final String string : language)
-      buffer.append("-").append(string);
+      builder.append("-").append(string);
 
-    return encoded = buffer.substring(1);
+    return encoded = builder.substring(1);
   }
 }

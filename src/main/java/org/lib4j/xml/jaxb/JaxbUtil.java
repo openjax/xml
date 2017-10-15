@@ -40,7 +40,7 @@ import org.lib4j.xml.sax.Validator;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
-public final class JAXBUtil {
+public final class JaxbUtil {
   private static final String DEFAULT = "##default";
 
   @SuppressWarnings("unchecked")
@@ -76,11 +76,15 @@ public final class JAXBUtil {
   }
 
   public static <T>T parse(final Class<T> cls, final URL url) throws IOException, SAXException {
-    return parse(cls, url, new LoggingErrorHandler());
+    return parse(cls, url, new LoggingErrorHandler(), true);
   }
 
-  public static <T>T parse(final Class<T> cls, final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
-    final CachedURL cachedURL = Validator.validate(url, false, errorHandler);
+  public static <T>T parse(final Class<T> cls, final URL url, final boolean validate) throws IOException, SAXException {
+    return parse(cls, url, new LoggingErrorHandler(), validate);
+  }
+
+  public static <T>T parse(final Class<T> cls, final URL url, final ErrorHandler errorHandler, final boolean validate) throws IOException, SAXException {
+    final CachedURL cachedURL = validate ? Validator.validate(url, false, errorHandler) : new CachedURL(url);
 
     try {
       final Unmarshaller unmarshaller = JAXBContext.newInstance(cls).createUnmarshaller();
@@ -97,6 +101,6 @@ public final class JAXBUtil {
     }
   }
 
-  private JAXBUtil() {
+  private JaxbUtil() {
   }
 }

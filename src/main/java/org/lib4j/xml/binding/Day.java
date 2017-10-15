@@ -25,9 +25,13 @@ import java.util.TimeZone;
 public final class Day implements Serializable {
   private static final long serialVersionUID = -2605382792284795205L;
 
-  public static Day parseDay(String string) {
+  public static String print(final Day binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static Day parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (!string.startsWith(PAD_FRAG) || string.length() < PAD_FRAG.length() + DAY_FRAG_MIN_LENGTH)
@@ -130,17 +134,17 @@ public final class Day implements Serializable {
   }
 
   protected String toEmbededString() {
-    final StringBuffer string = new StringBuffer();
+    final StringBuilder builder = new StringBuilder();
     if (day < 10)
-      string.append("---0").append(day);
+      builder.append("---0").append(day);
     else
-      string.append("---").append(day);
+      builder.append("---").append(day);
 
-    return string.toString();
+    return builder.toString();
   }
 
   @Override
   public String toString() {
-    return new StringBuffer(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
   }
 }

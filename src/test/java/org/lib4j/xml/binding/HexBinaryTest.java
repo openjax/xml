@@ -25,7 +25,7 @@ public class HexBinaryTest {
     final HexBinary hexBinary = new HexBinary(data.getBytes());
     final String hexString = hexBinary.toString();
     Assert.assertEquals(base64, hexString);
-    final HexBinary unmarshalled = HexBinary.parseHexBinary(hexString);
+    final HexBinary unmarshalled = HexBinary.parse(hexString);
     Assert.assertEquals(data, new String(unmarshalled.getBytes()));
   }
 

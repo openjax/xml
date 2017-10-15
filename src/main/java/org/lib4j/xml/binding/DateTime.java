@@ -24,9 +24,13 @@ import java.util.TimeZone;
 public final class DateTime implements Serializable {
   private static final long serialVersionUID = 7756729079060501414L;
 
-  public static DateTime parseDateTime(String string) {
+  public static String print(final DateTime binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static DateTime parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (string.length() < Year.YEAR_FRAG_MIN_LENGTH + 1 + Month.MONTH_FRAG_MIN_LENGTH + 1 + Day.DAY_FRAG_MIN_LENGTH + 1 + Time.HOUR_FRAG_MIN_LENGTH + 1 + Time.MINUTE_FRAG_MIN_LENGTH + 1 + Time.SECOND_FRAG_MIN_LENGTH)
@@ -37,8 +41,7 @@ public final class DateTime implements Serializable {
     if (index == -1)
       throw new IllegalArgumentException("dateTime == " + string);
 
-    final Time time = Time.parseTime(string.substring(index + 1));
-    return new DateTime(date, time);
+    return new DateTime(date, Time.parse(string.substring(index + 1)));
   }
 
   protected static final TimeZone GMT = TimeZone.getTimeZone("GMT");
@@ -129,19 +132,19 @@ public final class DateTime implements Serializable {
   }
 
   protected String toEmbededString() {
-    final StringBuffer buffer = new StringBuffer();
+    final StringBuilder builder = new StringBuilder();
     if (date != null)
-      buffer.append(date.toEmbededString());
+      builder.append(date.toEmbededString());
 
-    buffer.append("T");
+    builder.append("T");
     if (time != null)
-      buffer.append(time.toEmbededString());
+      builder.append(time.toEmbededString());
 
-    return buffer.toString();
+    return builder.toString();
   }
 
   @Override
   public String toString() {
-    return new StringBuffer(toEmbededString()).append(Time.formatTimeZone(getTimeZone())).toString();
+    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(getTimeZone())).toString();
   }
 }

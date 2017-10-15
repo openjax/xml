@@ -28,9 +28,13 @@ import org.lib4j.util.CalendarUtil;
 public final class Year implements Serializable {
   private static final long serialVersionUID = 1715357512840880045L;
 
-  public static Year parseYear(String string) {
+  public static String print(final Year binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static Year parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (string.length() < YEAR_FRAG_MIN_LENGTH)
@@ -142,21 +146,21 @@ public final class Year implements Serializable {
   }
 
   protected String toEmbededString() {
-    final StringBuffer buffer = new StringBuffer();
+    final StringBuilder builder = new StringBuilder();
     if (year < 10)
-      buffer.append("000").append(year);
+      builder.append("000").append(year);
     else if (year < 100)
-      buffer.append("00").append(year);
+      builder.append("00").append(year);
     else if (year < 1000)
-      buffer.append("0").append(year);
+      builder.append("0").append(year);
     else
-      buffer.append(year);
+      builder.append(year);
 
-    return buffer.toString();
+    return builder.toString();
   }
 
   @Override
   public String toString() {
-    return new StringBuffer(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
   }
 }

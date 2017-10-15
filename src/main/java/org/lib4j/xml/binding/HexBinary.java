@@ -26,7 +26,11 @@ import java.util.Arrays;
 public final class HexBinary implements Serializable {
   private static final long serialVersionUID = 3972638444033283159L;
 
-  public static HexBinary parseHexBinary(final String string) {
+  public static String print(final HexBinary binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static HexBinary parse(final String string) {
     if (string == null)
       return null;
 
@@ -75,13 +79,13 @@ public final class HexBinary implements Serializable {
 
   public HexBinary(final byte[] bytes) {
     this.bytes = bytes;
-    final StringBuffer buffer = new StringBuffer(bytes.length * 2);
+    final StringBuilder builder = new StringBuilder(bytes.length * 2);
     for (int i = 0; i < bytes.length; i++) {
-      buffer.append(convertDigit(bytes[i] >> 4));
-      buffer.append(convertDigit(bytes[i] & 0x0f));
+      builder.append(convertDigit(bytes[i] >> 4));
+      builder.append(convertDigit(bytes[i] & 0x0f));
     }
 
-    this.encoded = buffer.toString();
+    this.encoded = builder.toString();
   }
 
   public byte[] getBytes() {

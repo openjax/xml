@@ -26,9 +26,13 @@ import java.util.TimeZone;
 public final class MonthDay implements Serializable {
   private static final long serialVersionUID = 6702644782424414369L;
 
-  public static MonthDay parseMonthDay(String string) {
+  public static String print(final MonthDay binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static MonthDay parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (!string.startsWith(PAD_FRAG) || string.length() < PAD_FRAG.length() + MONTH_DAY_FRAG_MIN_LENGTH)
@@ -135,19 +139,19 @@ public final class MonthDay implements Serializable {
   }
 
   protected String toEmbededString() {
-    final StringBuffer buffer = new StringBuffer();
-    buffer.append(month.toEmbededString());
-    buffer.append("-");
+    final StringBuilder builder = new StringBuilder();
+    builder.append(month.toEmbededString());
+    builder.append("-");
     if (getDay() < 10)
-      buffer.append("0").append(getDay());
+      builder.append("0").append(getDay());
     else
-      buffer.append(getDay());
+      builder.append(getDay());
 
-    return buffer.toString();
+    return builder.toString();
   }
 
   @Override
   public String toString() {
-    return new StringBuffer(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
   }
 }

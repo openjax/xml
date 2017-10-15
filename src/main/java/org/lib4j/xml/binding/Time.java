@@ -28,9 +28,13 @@ import org.lib4j.util.CalendarUtil;
 public final class Time implements Serializable {
   private static final long serialVersionUID = -9015566323752593968L;
 
-  public static Time parseTime(String string) {
+  public static String print(final Time binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static Time parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (string.length() < TIME_FRAG_MIN_LENGTH)
@@ -81,7 +85,7 @@ public final class Time implements Serializable {
     if (ch2 < '0' || '9' < ch2)
       throw new IllegalArgumentException("second == " + string);
 
-    final StringBuffer secondString = new StringBuffer();
+    final StringBuilder secondString = new StringBuilder();
     secondString.append(ch1);
     secondString.append(ch2);
     int index = 2;
@@ -240,46 +244,46 @@ public final class Time implements Serializable {
   }
 
   protected String toEmbededString() {
-    final StringBuffer buffer = new StringBuffer();
+    final StringBuilder builder = new StringBuilder();
     if (hour < 10)
-      buffer.append("0").append(hour);
+      builder.append("0").append(hour);
     else
-      buffer.append(hour);
+      builder.append(hour);
 
-    buffer.append(":");
+    builder.append(":");
     if (minute < 10)
-      buffer.append("0").append(minute);
+      builder.append("0").append(minute);
     else
-      buffer.append(minute);
+      builder.append(minute);
 
-    buffer.append(":");
+    builder.append(":");
     if (second < 10f) {
       if (second != 0f) {
-        buffer.append("0").append(second);
-        while (buffer.charAt(buffer.length() - 1) == '0')
-          buffer.deleteCharAt(buffer.length() - 1);
+        builder.append("0").append(second);
+        while (builder.charAt(builder.length() - 1) == '0')
+          builder.deleteCharAt(builder.length() - 1);
       }
       else
-        buffer.append("00");
+        builder.append("00");
     }
     else {
-      buffer.append(second);
+      builder.append(second);
     }
 
     // Add trailing ".?00" to conform to XML millisecond standard
-    final int lastDotIndex = buffer.lastIndexOf(".");
+    final int lastDotIndex = builder.lastIndexOf(".");
     if (lastDotIndex != -1) {
-      if (buffer.length() - lastDotIndex == 2)
-        buffer.append("00");
-      else if (buffer.length() - lastDotIndex == 3)
-        buffer.append("0");
+      if (builder.length() - lastDotIndex == 2)
+        builder.append("00");
+      else if (builder.length() - lastDotIndex == 3)
+        builder.append("0");
     }
 
-    return buffer.toString();
+    return builder.toString();
   }
 
   @Override
   public String toString() {
-    return new StringBuffer(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
   }
 }

@@ -23,162 +23,157 @@ import org.lib4j.xml.binding.Duration;
 public class DurationTest {
   @Test
   public void testDuration() {
-    try {
-      Duration.parseDuration(null);
-      Assert.fail("Expected a NullPointerException");
-    }
-    catch (final NullPointerException e) {
-    }
+    Assert.assertNull(Duration.parse(null));
 
     try {
-      Duration.parseDuration("");
+      Duration.parse("");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("X1347Y");
+      Duration.parse("X1347Y");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("PTT347Y");
+      Duration.parse("PTT347Y");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P16349286492843693864932864932864293864Y3M5DT7H10M3.3S");
+      Duration.parse("P16349286492843693864932864932864293864Y3M5DT7H10M3.3S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1.Y3M5DT7H10M3.3S");
+      Duration.parse("P1.Y3M5DT7H10M3.3S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5D3.3S");
+      Duration.parse("P1Y3M5D3.3S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5DT7H10M3.3S3.3S");
+      Duration.parse("P1Y3M5DT7H10M3.3S3.3S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5DT7H10M3S3S");
+      Duration.parse("P1Y3M5DT7H10M3S3S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5DT7H10M10M3S");
+      Duration.parse("P1Y3M5DT7H10M10M3S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5DT7H3S10M");
+      Duration.parse("P1Y3M5DT7H3S10M");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5DT7H7H10M3S");
+      Duration.parse("P1Y3M5DT7H7H10M3S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5DT10M7H3S");
+      Duration.parse("P1Y3M5DT10M7H3S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5DT3S7H10M");
+      Duration.parse("P1Y3M5DT3S7H10M");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M5DT7H10M3Y");
+      Duration.parse("P1Y3M5DT7H10M3Y");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3Y3M5D");
+      Duration.parse("P1Y3Y3M5D");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P3M1Y5D");
+      Duration.parse("P3M1Y5D");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P3D1Y");
+      Duration.parse("P3D1Y");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M3M5D");
+      Duration.parse("P1Y3M3M5D");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y5D3M");
+      Duration.parse("P1Y5D3M");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M3D3D");
+      Duration.parse("P1Y3M3D3D");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M3D7H");
+      Duration.parse("P1Y3M3D7H");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Duration.parseDuration("P1Y3M3D7S");
+      Duration.parse("P1Y3M3D7S");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
@@ -186,6 +181,6 @@ public class DurationTest {
 
     final String[] durations = new String[] {"P3Y", "-P1Y", "P10M", "-P8M", "P7D", "-P2D", "PT7H", "-PT9H", "PT8M", "-PT1M", "PT5S", "-PT4S", "PT5.555S", "-PT4.332S", "P3Y4M", "-P13Y34M", "P1Y3M5DT7H10M3.3S", "P1M", "P1D"};
     for (final String duration : durations)
-      Assert.assertEquals(duration, Duration.parseDuration(duration).toString());
+      Assert.assertEquals(duration, Duration.parse(duration).toString());
   }
 }

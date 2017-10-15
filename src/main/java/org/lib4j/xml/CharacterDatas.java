@@ -17,7 +17,7 @@
 package org.lib4j.xml;
 
 public final class CharacterDatas {
-  public static StringBuffer escape(final StringBuffer string) {
+  public static StringBuilder escape(final StringBuilder string) {
     for (int i = 0; i < string.length(); i++) {
       final char ch = string.charAt(i);
       if (ch == '&')
@@ -35,7 +35,7 @@ public final class CharacterDatas {
     return string;
   }
 
-  public static StringBuffer unescape(final StringBuffer string) {
+  public static StringBuilder unescape(final StringBuilder string) {
     char firstChar = '\0';
     int start = -1;
     int pos = 0;
@@ -101,11 +101,11 @@ public final class CharacterDatas {
   }
 
   public static String escape(final String string) {
-    return escape(new StringBuffer(string)).toString();
+    return escape(new StringBuilder(string)).toString();
   }
 
   public static String unescape(final String string) {
-    return unescape(new StringBuffer(string)).toString();
+    return unescape(new StringBuilder(string)).toString();
   }
 
   private CharacterDatas() {

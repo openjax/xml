@@ -25,9 +25,13 @@ import java.util.TimeZone;
 public final class YearMonth implements Serializable {
   private static final long serialVersionUID = -5629415172932276877L;
 
-  public static YearMonth parseYearMonth(String string) {
+  public static String print(final YearMonth binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static YearMonth parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (string.length() < YEAR_MONTH_FRAG_MIN_LENGTH)
@@ -127,19 +131,19 @@ public final class YearMonth implements Serializable {
   }
 
   protected String toEmbededString() {
-    final StringBuffer buffer = new StringBuffer();
-    buffer.append(year.toEmbededString());
-    buffer.append("-");
+    final StringBuilder builder = new StringBuilder();
+    builder.append(year.toEmbededString());
+    builder.append("-");
     if (getMonth() < 10)
-      buffer.append("0").append(getMonth());
+      builder.append("0").append(getMonth());
     else
-      buffer.append(getMonth());
+      builder.append(getMonth());
 
-    return buffer.toString();
+    return builder.toString();
   }
 
   @Override
   public String toString() {
-    return new StringBuffer(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
   }
 }

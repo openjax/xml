@@ -32,9 +32,9 @@ public final class DOMs {
    */
   public static String domToString(final Element element, final DOMStyle ... styles) {
     final DOMStyle style = DOMStyle.consolidate(styles);
-    final StringBuilder string = new StringBuilder();
-    domToString(string, element, 0, style);
-    return string.toString();
+    final StringBuilder builder = new StringBuilder();
+    domToString(builder, element, 0, style);
+    return builder.toString();
   }
 
   private static void domToString(final StringBuilder string, final Node node, int depth, final DOMStyle style) {

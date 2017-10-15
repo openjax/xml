@@ -23,71 +23,66 @@ import org.lib4j.xml.binding.Year;
 public class YearTest {
   @Test
   public void testYear() {
-    try {
-      Year.parseYear(null);
-      Assert.fail("Expected a NullPointerException");
-    }
-    catch (final NullPointerException e) {
-    }
+    Assert.assertNull(Year.parse(null));
 
     try {
-      Year.parseYear("");
+      Year.parse("");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Year.parseYear("--010");
+      Year.parse("--010");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Year.parseYear("010");
+      Year.parse("010");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Year.parseYear("10");
+      Year.parse("10");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Year.parseYear("100");
+      Year.parse("100");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Year.parseYear("AAA");
+      Year.parse("AAA");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Year.parseYear("2227-15:00");
+      Year.parse("2227-15:00");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Year.parseYear("2227+14:60");
+      Year.parse("2227+14:60");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      Year.parseYear("2227+14:60.9");
+      Year.parse("2227+14:60.9");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
@@ -95,6 +90,6 @@ public class YearTest {
 
     final String[] years = new String[] {"2500Z", "1400Z", "0003Z", "0020Z", "0310Z", "1001Z", "2007+01:00", "3017-01:00", "4027Z", "1302+12:00", "1112-12:30"};
     for (final String year : years)
-      Assert.assertEquals(year, Year.parseYear(year).toString());
+      Assert.assertEquals(year, Year.parse(year).toString());
   }
 }

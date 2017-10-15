@@ -23,134 +23,129 @@ import org.lib4j.xml.binding.MonthDay;
 public class MonthDayTest {
   @Test
   public void testMonthDay() {
-    try {
-      MonthDay.parseMonthDay(null);
-      Assert.fail("Expected a NullPointerException");
-    }
-    catch (final NullPointerException e) {
-    }
+    Assert.assertNull(MonthDay.parse(null));
 
     try {
-      MonthDay.parseMonthDay("");
+      MonthDay.parse("");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("---5");
+      MonthDay.parse("---5");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("-5-30");
+      MonthDay.parse("-5-30");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--A");
+      MonthDay.parse("--A");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--00");
+      MonthDay.parse("--00");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--13");
+      MonthDay.parse("--13");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--4");
+      MonthDay.parse("--4");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--04-32");
+      MonthDay.parse("--04-32");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--04-00");
+      MonthDay.parse("--04-00");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--04-7");
+      MonthDay.parse("--04-7");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--02-30");
+      MonthDay.parse("--02-30");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--04-31");
+      MonthDay.parse("--04-31");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--06-31");
+      MonthDay.parse("--06-31");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--09-31");
+      MonthDay.parse("--09-31");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--11Z-");
+      MonthDay.parse("--11Z-");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--12-30-15:00");
+      MonthDay.parse("--12-30-15:00");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--07-12+14:60");
+      MonthDay.parse("--07-12+14:60");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
-      MonthDay.parseMonthDay("--02-01+14:60.9");
+      MonthDay.parse("--02-01+14:60.9");
       Assert.fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
@@ -158,6 +153,6 @@ public class MonthDayTest {
 
     final String[] monthDays = new String[] {"--12-31Z", "--04-30Z", "--03-31Z", "--02-29Z", "--01-31Z", "--01-12Z", "--07-02+01:00", "--09-12-01:00", "--10-11Z", "--11-15+12:00", "--12-17-12:30"};
     for (final String monthDay : monthDays)
-      Assert.assertEquals(monthDay, MonthDay.parseMonthDay(monthDay).toString());
+      Assert.assertEquals(monthDay, MonthDay.parse(monthDay).toString());
   }
 }

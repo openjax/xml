@@ -24,9 +24,13 @@ import java.io.Serializable;
 public final class Duration implements Serializable {
   private static final long serialVersionUID = -4434035431304455290L;
 
-  public static Duration parseDuration(String string) {
+  public static String print(final Duration binding) {
+    return binding == null ? null : binding.toString();
+  }
+
+  public static Duration parse(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      return null;
 
     string = string.trim();
     if (string.length() == 0)
@@ -59,11 +63,11 @@ public final class Duration implements Serializable {
     long secondsDecimalDigits = -1;
     boolean separatorSeen = false;
 
-    final StringBuffer buffer = new StringBuffer();
+    final StringBuilder builder = new StringBuilder();
     while (++offset < string.length()) {
       final char ch = string.charAt(offset);
       if (Character.isDigit(ch)) {
-        buffer.append(ch);
+        builder.append(ch);
       }
       else if (ch == T) {
         if (separatorSeen)
@@ -73,23 +77,23 @@ public final class Duration implements Serializable {
       }
       else {
         long digits;
-        if (buffer.length() == 0) {
+        if (builder.length() == 0) {
           digits = 0;
         }
         else {
           try {
-            digits = Long.parseLong(buffer.toString());
+            digits = Long.parseLong(builder.toString());
           }
           catch (final NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid duration: "  + string + " (max long value exceeded by " + buffer + ")");
+            throw new IllegalArgumentException("Invalid duration: "  + string + " (max long value exceeded by " + builder + ")");
           }
 
-          buffer.setLength(0);
+          builder.setLength(0);
         }
 
         if (secondsDecimalDigits > -1) {
           if (ch != S)
-            throw new IllegalArgumentException("Invalid duration: " + string + " (Duration point not allowed here: " + secondsDecimalDigits + "." + buffer + ch + ")");
+            throw new IllegalArgumentException("Invalid duration: " + string + " (Duration point not allowed here: " + secondsDecimalDigits + "." + builder + ch + ")");
 
           if (!separatorSeen)
             throw new IllegalArgumentException("Invalid duration: " + string + "(seconds specified before date/time separator 'T' seen)");
@@ -243,57 +247,57 @@ public final class Duration implements Serializable {
 
   @Override
   public String toString() {
-    final StringBuffer buffer;
+    final StringBuilder builder;
     if (isNegative)
-      buffer = new StringBuffer("-");
+      builder = new StringBuilder("-");
     else
-      buffer = new StringBuffer();
+      builder = new StringBuilder();
 
-    buffer.append(String.valueOf(P));
+    builder.append(String.valueOf(P));
     if (years != -1) {
       if (years != 0) {
-        buffer.append(years);
-        buffer.append(Y);
+        builder.append(years);
+        builder.append(Y);
       }
 
       if (months != 0) {
-        buffer.append(months);
-        buffer.append(M);
+        builder.append(months);
+        builder.append(M);
       }
 
       if (days != 0) {
-        buffer.append(days);
-        buffer.append(D);
+        builder.append(days);
+        builder.append(D);
       }
     }
 
     if (hours != 0 || minutes != 0 || seconds != 0) {
-      buffer.append(T);
+      builder.append(T);
       if (hours != 0) {
-        buffer.append(hours);
-        buffer.append(H);
+        builder.append(hours);
+        builder.append(H);
       }
 
       if (minutes != 0) {
-        buffer.append(minutes);
-        buffer.append(M);
+        builder.append(minutes);
+        builder.append(M);
       }
 
       if (seconds != 0) {
-        buffer.append(seconds);
-        while (buffer.charAt(buffer.length() - 1) == '0')
-          buffer.deleteCharAt(buffer.length() - 1);
+        builder.append(seconds);
+        while (builder.charAt(builder.length() - 1) == '0')
+          builder.deleteCharAt(builder.length() - 1);
 
-        if (buffer.charAt(buffer.length() - 1) == '.')
-          buffer.deleteCharAt(buffer.length() - 1);
+        if (builder.charAt(builder.length() - 1) == '.')
+          builder.deleteCharAt(builder.length() - 1);
 
-        buffer.append(S);
+        builder.append(S);
       }
     }
 
-    if (buffer.length() == 1)
-      buffer.append(0).append(D);
+    if (builder.length() == 1)
+      builder.append(0).append(D);
 
-    return buffer.toString();
+    return builder.toString();
   }
 }
