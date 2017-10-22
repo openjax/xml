@@ -36,7 +36,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class XMLHandler extends DefaultHandler {
   protected static String getPath(final String referrer, final String location) {
-    return URLs.isAbsolute(location) ? location : Paths.newPath(Paths.getParent(referrer), location);
+    return URLs.isAbsolute(location) ? location : Paths.newPath(Paths.getCanonicalParent(referrer), location);
   }
 
   protected static String getPath(final URI referrer, final String location) {
