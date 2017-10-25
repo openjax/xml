@@ -16,9 +16,9 @@
 
 package org.lib4j.xml.validate;
 
-import org.lib4j.xml.XMLException;
+import org.lib4j.xml.XMLRuntimeException;
 
-public final class ValidationException extends XMLException {
+public final class ValidationException extends XMLRuntimeException {
   private static final long serialVersionUID = -5730844996681538725L;
 
   public ValidationException() {
