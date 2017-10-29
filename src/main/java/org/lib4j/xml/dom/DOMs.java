@@ -22,7 +22,7 @@ import java.util.Set;
 
 import javax.xml.XMLConstants;
 
-import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -33,11 +33,10 @@ public final class DOMs {
    *
    * Note: this only handles elements, attributes and text nodes. It will not handle processing instructions, comments, CDATA or anything else.
    *
-   * @param element
-   *          element to convert.
+   * @param node node to convert.
    */
-  public static String domToString(final Element element, final DOMStyle ... styles) {
-    return domToString(element, null, styles);
+  public static String domToString(final Node node, final DOMStyle ... styles) {
+    return domToString(node, null, styles);
   }
 
   /**
@@ -45,13 +44,12 @@ public final class DOMs {
    *
    * Note: this only handles elements, attributes and text nodes. It will not handle processing instructions, comments, CDATA or anything else.
    *
-   * @param element
-   *          element to convert.
+   * @param node node to convert.
    */
-  public static String domToString(final Element element, final Map<String,String> schemaLocations, final DOMStyle ... styles) {
+  public static String domToString(final Node node, final Map<String,String> schemaLocations, final DOMStyle ... styles) {
     final DOMStyle style = DOMStyle.consolidate(styles);
     final Set<String> namespaces = style.isIgnoreNamespaces() || schemaLocations == null ? null : new HashSet<String>();
-    final StringBuilder string = domToString(new StringBuilder(), namespaces, element, 0, style);
+    final StringBuilder string = domToString(new StringBuilder(), namespaces, node, 0, style);
     if (schemaLocations == null || schemaLocations.size() == 0 || namespaces.size() == 0)
       return string.toString();
 
@@ -85,6 +83,9 @@ public final class DOMs {
   private static StringBuilder domToString(final StringBuilder string, final Set<String> namespaces, final Node node, int depth, final DOMStyle style) {
     if (node == null)
       return string;
+
+    if (node instanceof Attr)
+      return attributeToString(string, namespaces, (Attr)node, depth, style);
 
     final String nodeName;
     if (style.isIgnoreNamespaces()) {
@@ -138,35 +139,38 @@ public final class DOMs {
     return string;
   }
 
-  private static void attributesToString(final StringBuilder string, final Set<String> namespaces, final Node node, int depth, final DOMStyle style) {
+  private static StringBuilder attributeToString(final StringBuilder string, final Set<String> namespaces, final Attr attribute, int depth, final DOMStyle style) {
+    final String nodeName = attribute.getNodeName();
+    if (style.isIndentAttributes()) {
+      string.append("\n");
+      for (int j = 0; j < depth; j++)
+        string.append("  ");
+    }
+    else {
+      string.append(" ");
+      if (namespaces != null && validNamespaceURI(attribute.getNamespaceURI()))
+        namespaces.add(attribute.getNamespaceURI());
+    }
+
+    string.append(nodeName);
+    string.append("=\"");
+    entityConvert(string, attribute.getNodeValue());
+    string.append("\"");
+    return string;
+  }
+
+  private static StringBuilder attributesToString(final StringBuilder string, final Set<String> namespaces, final Node node, int depth, final DOMStyle style) {
     final NamedNodeMap attributes = node.getAttributes();
     if (attributes == null)
-      return;
+      return string;
 
     for (int i = 0; i < attributes.getLength(); i++) {
-      final Node attribute = attributes.item(i);
-      final String nodeName = attribute.getNodeName();
-      if (!style.isIgnoreNamespaces()) {
-        if (namespaces != null && validNamespaceURI(node.getNamespaceURI()))
-          namespaces.add(attribute.getNamespaceURI());
-      }
-      else if (nodeName.startsWith("xmlns"))
-        continue;
-
-      if (style.isIndentAttributes()) {
-        string.append("\n");
-        for (int j = 0; j < depth; j++)
-          string.append("  ");
-      }
-      else {
-        string.append(" ");
-      }
-
-      string.append(nodeName);
-      string.append("=\"");
-      entityConvert(string, attribute.getNodeValue());
-      string.append("\"");
+      final Attr attribute = (Attr)attributes.item(i);
+      if (!style.isIgnoreNamespaces() || !attribute.getNodeName().startsWith("xmlns"))
+        attributeToString(string, namespaces, attribute, depth, style);
     }
+
+    return string;
   }
 
   /**
