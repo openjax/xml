@@ -32,7 +32,7 @@ public final class NamespaceURI {
   public static final QName XS = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "", W3C_XML_SCHEMA_PREFIX);
   public static final QName XSI = new QName(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI, "", W3C_XML_SCHEMA_INSTANCE_PREFIX);
 
-  // staticly defined
+  // statically defined
   public static final QName XML = new QName(XMLConstants.XML_NS_URI, "", XMLConstants.XML_NS_PREFIX);
   public static final QName XMLNS = new QName(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "", XMLConstants.XMLNS_ATTRIBUTE);
 
@@ -60,18 +60,18 @@ public final class NamespaceURI {
   }
 
   private final String namespaceURI;
-  private final String _package;
+  private final NamespaceBinding namespaceBinding;
 
   private NamespaceURI(final String namespaceURI) {
     if (namespaceURI == null)
       throw new NullPointerException("namespaceURI == null");
 
     this.namespaceURI = namespaceURI.intern();
-    this._package = NamespaceBinding.getPackageFromNamespace(namespaceURI);
+    this.namespaceBinding = NamespaceBinding.parseNamespace(namespaceURI);
   }
 
-  public String getPackage() {
-    return _package;
+  public NamespaceBinding getNamespaceBinding() {
+    return namespaceBinding;
   }
 
   @Override

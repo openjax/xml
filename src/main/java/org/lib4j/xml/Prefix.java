@@ -23,6 +23,7 @@ public final class Prefix {
   private static final Map<String,Prefix> instances = new HashMap<String,Prefix>();
 
   public static final Prefix EMPTY = getInstance("");
+  public static final Prefix DEFAULT = getInstance("$");
 
   public static Prefix getInstance(final String prefix) {
     Prefix value = instances.get(prefix);
@@ -54,6 +55,9 @@ public final class Prefix {
 
   @Override
   public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+
     if (!(obj instanceof Prefix))
       return false;
 

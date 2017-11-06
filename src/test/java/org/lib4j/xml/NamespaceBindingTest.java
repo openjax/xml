@@ -16,70 +16,60 @@
 
 package org.lib4j.xml;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class NamespaceBindingTest {
-  private final Map<String,String> map = new HashMap<String,String>();
-
-  @Before
-  public void setUp() {
-    map.put("http://www.w3.org/2001/XMLSchema", "org.w3.x2001.xmlschema");
-    map.put("http://java.sun.com/xml/ns/j2ee", "com.sun.java.xml.ns.j2ee");
-    map.put("http://openuri.org/nameworld", "org.openuri.nameworld");
-    map.put("http://schemas.xmlsoap.org/soap/envelope/", "org.xmlsoap.schemas.soap.envelope");
-    map.put("http://www.safris.com/schema/test", "com.safris.schema.test");
-    map.put("http://www.w3.org/1999/xhtml", "org.w3.x1999.xhtml");
-    map.put("http://www.w3.org/1999/xlink", "org.w3.x1999.xlink");
-    map.put("http://www.w3.org/2000/09/xmldsig#", "org.w3.x2000.x09.xmldsig");
-    map.put("http://www.w3.org/2001/04/xmlenc#", "org.w3.x2001.x04.xmlenc");
-    map.put("http://www.w3.org/2001/10/xml-exc-c14n#", "org.w3.x2001.x10.xmlexcc14n");
-    map.put("http://www.w3.org/2001/XMLSchema", "org.w3.x2001.xmlschema");
-    map.put("http://www.w3.org/2001/XMLSchema", "org.w3.x2001.xmlschema");
-    map.put("http://www.w3.org/XML/1998/namespace", "org.w3.xml.x1998.namespace");
-    map.put("http://xml.safris.org/schema/binding/test/unit/attributes.xsd", "org.safris.xml.schema.binding.test.unit.attributes");
-    map.put("http://xml.safris.org/schema/binding/test/unit/complexTypes.xsd", "org.safris.xml.schema.binding.test.unit.complextypes");
-    map.put("http://xml.safris.org/schema/binding/test/unit/everything.xsd", "org.safris.xml.schema.binding.test.unit.everything");
-    map.put("http://xml.safris.org/schema/binding/test/unit/lists.xsd", "org.safris.xml.schema.binding.test.unit.lists");
-    map.put("http://xml.safris.org/schema/binding/test/unit/mixed.xsd", "org.safris.xml.schema.binding.test.unit.mixed");
-    map.put("http://xml.safris.org/schema/binding/test/unit/namespace.xsd", "org.safris.xml.schema.binding.test.unit.namespace");
-    map.put("http://xml.safris.org/schema/binding/test/unit/simpleTypes.xsd", "org.safris.xml.schema.binding.test.unit.simpletypes");
-    map.put("http://xml.safris.org/schema/binding/test/unit/types.xsd", "org.safris.xml.schema.binding.test.unit.types");
-    map.put("http://xml.safris.org/schema/binding/dbb.xsd", "org.safris.xml.schema.binding.dbb");
-    map.put("http://xml.safris.org/toolkit/binding/manifest.xsd", "org.safris.xml.toolkit.binding.manifest");
-    map.put("http://xml.safris.org/toolkit/binding/test/maven.xsd", "org.safris.xml.toolkit.binding.test.maven");
-    map.put("http://xml.safris.org/toolkit/binding/tutorial/invoice.xsd", "org.safris.xml.toolkit.binding.tutorial.invoice");
-    map.put("http://xml.safris.org/toolkit/sample/binding/any.xsd", "org.safris.xml.toolkit.sample.binding.any");
-    map.put("http://xml.safris.org/toolkit/sample/binding/any.xsd", "org.safris.xml.toolkit.sample.binding.any");
-    map.put("http://xml.safris.org/toolkit/sample/binding/enums.xsd", "org.safris.xml.toolkit.sample.binding.enums");
-    map.put("http://xml.safris.org/toolkit/sample/binding/enums.xsd", "org.safris.xml.toolkit.sample.binding.enums");
-    map.put("http://xml.safris.org/toolkit/sample/binding/simple.xsd", "org.safris.xml.toolkit.sample.binding.simple");
-    map.put("http://xml.safris.org/toolkit/sample/binding/simple.xsd", "org.safris.xml.toolkit.sample.binding.simple");
-    map.put("http://xml.safris.org/toolkit/sample/binding/xsitype.xsd", "org.safris.xml.toolkit.sample.binding.xsitype");
-    map.put("http://xml.safris.org/toolkit/sample/binding/xsitype.xsd", "org.safris.xml.toolkit.sample.binding.xsitype");
-    map.put("http://xml.safris.org/toolkit/tutorial/binding/beginner/invoice.xsd", "org.safris.xml.toolkit.tutorial.binding.beginner.invoice");
-    map.put("test-namespace-targetNamespace", "test_namespace_targetnamespace");
-    map.put("urn:aol:liberty:config", "aol_liberty_config");
-    map.put("urn:berkeley:safris:game:chess", "berkeley_safris_game_chess");
-    map.put("urn:liberty:ac:2003-08", "liberty_ac_2003_08");
-    map.put("urn:liberty:ac:2004-12", "liberty_ac_2004_12");
-    map.put("urn:liberty:disco:2003-08", "liberty_disco_2003_08");
-    map.put("urn:liberty:id-sis-pp:2003-08", "liberty_id_sis_pp_2003_08");
-    map.put("urn:liberty:iff:2003-08", "liberty_iff_2003_08");
-    map.put("urn:liberty:metadata:2003-08", "liberty_metadata_2003_08");
-    map.put("urn:liberty:sb:2003-08", "liberty_sb_2003_08");
-    map.put("urn:oasis:names:tc:SAML:1.0:assertion", "_0_assertion.oasis_names_tc_saml_1");
-    map.put("urn:oasis:names:tc:SAML:1.0:protocol", "_0_protocol.oasis_names_tc_saml_1");
-    map.put("xhttp://www.safris.com/schema/testtwo", "com.safris.schema.testtwo");
+  private static void assertEquals(final String expected, final String uri) {
+    final NamespaceBinding namespaceBinding = NamespaceBinding.parseNamespace(uri);
+    final NamespaceBinding decodedBinding = NamespaceBinding.parsePackageName(namespaceBinding.getClassName());
+    Assert.assertEquals("Explicit", expected, namespaceBinding.getClassName());
+    Assert.assertEquals("Diff", uri, decodedBinding.getNamespaceUri().toString());
   }
 
   @Test
   public void testNamespaceToPackage() {
-    for (final Map.Entry<String,String> entry : map.entrySet())
-      Assert.assertEquals(NamespaceBinding.getPackageFromNamespace(entry.getKey()), entry.getValue());
+    assertEquals("org.w3.www._2001.XMLSchema.xIEcGGcJdlCXaI_A", "http://www.w3.org/2001/XMLSchema");
+    assertEquals("com.sun.java.xml.ns.j2ee.xERwYfJd8lwA", "http://java.sun.com/xml/ns/j2ee");
+    assertEquals("org.openuri.nameworld.xERwYfJcA", "http://openuri.org/nameworld");
+    assertEquals("org.xmlsoap.schemas.soap.envelope.xKCODDHBLs8Eu6gS8", "http://schemas.xmlsoap.org/soap/envelope/");
+    assertEquals("com.safris.www.schema.test.xGI4MNxLvRLg", "http://www.safris.com/schema/test");
+    assertEquals("org.w3.www._1999.xhtml.xIEcGGcJdlCXaI9A", "http://www.w3.org/1999/xhtml");
+    assertEquals("org.w3.www._1999.xlink.xIEcGGcJdlCXaI9A", "http://www.w3.org/1999/xlink");
+    assertEquals("org.w3.www._2000._09.xmldsig.xIEcGGcJdlCXaI6o9AkY", "http://www.w3.org/2000/09/xmldsig#");
+    assertEquals("org.w3.www._2001._04.xmlenc.xIEcGGcJdlCXaI6o8gkY", "http://www.w3.org/2001/04/xmlenc#");
+    assertEquals("org.w3.www._2001._10.xmlexcc14n.xGI4MNxLtRLuJ6nwS3YS3gSM", "http://www.w3.org/2001/10/xml-exc-c14n#");
+    assertEquals("org.w3.www.XML._1998.namespace.xIEcGGcJdlCXcI_A", "http://www.w3.org/XML/1998/namespace");
+    assertEquals("org.safris.xml.schema.binding.test.unit.attributes.xMBHBhhwJdjQJdzghc8ObIA", "http://xml.safris.org/schema/binding/test/unit/attributes.xsd");
+    assertEquals("org.safris.xml.schema.binding.test.unit.complexTypes.xMBHBhhwJdjQJd0ghc8ObIA", "http://xml.safris.org/schema/binding/test/unit/complexTypes.xsd");
+    assertEquals("org.safris.xml.schema.binding.test.unit.everything.xMBHBhhwJdjQJdzghc8ObIA", "http://xml.safris.org/schema/binding/test/unit/everything.xsd");
+    assertEquals("org.safris.xml.schema.binding.test.unit.lists.xMBHBhhwJdjQJdxAhc8ObIA", "http://xml.safris.org/schema/binding/test/unit/lists.xsd");
+    assertEquals("org.safris.xml.schema.binding.test.unit.mixed.xMBHBhhwJdjQJdxAhc8ObIA", "http://xml.safris.org/schema/binding/test/unit/mixed.xsd");
+    assertEquals("org.safris.xml.schema.binding.test.unit.namespace.xMBHBhhwJdjQJdzAhc8ObIA", "http://xml.safris.org/schema/binding/test/unit/namespace.xsd");
+    assertEquals("org.safris.xml.schema.binding.test.unit.simpleTypes.xMBHBhhwJdjQJd0Ahc8ObIA", "http://xml.safris.org/schema/binding/test/unit/simpleTypes.xsd");
+    assertEquals("org.safris.xml.schema.binding.test.unit.types.xMBHBhhwJdjQJdxAhc8ObIA", "http://xml.safris.org/schema/binding/test/unit/types.xsd");
+    assertEquals("org.safris.xml.schema.binding.dbb.xKCODDHBLs0Eu7BC54c2Q", "http://xml.safris.org/schema/binding/dbb.xsd");
+    assertEquals("org.safris.xml.toolkit.binding.manifest.xKCODDHBLs0Eu$BC54c2Q", "http://xml.safris.org/toolkit/binding/manifest.xsd");
+    assertEquals("org.safris.xml.toolkit.binding.test.maven.xKCODDHBLs0Eu_BC54c2Q", "http://xml.safris.org/toolkit/binding/test/maven.xsd");
+    assertEquals("org.safris.xml.toolkit.binding.tutorial.invoice.xMBHBhhwJdjQJdyAhc8ObIA", "http://xml.safris.org/toolkit/binding/tutorial/invoice.xsd");
+    assertEquals("org.safris.xml.toolkit.sample.binding.any.xKCODDHBLs0Eu_BC54c2Q", "http://xml.safris.org/toolkit/sample/binding/any.xsd");
+    assertEquals("org.safris.xml.toolkit.sample.binding.enums.xMBHBhhwJdjQJdwAhc8ObIA", "http://xml.safris.org/toolkit/sample/binding/enums.xsd");
+    assertEquals("org.safris.xml.toolkit.sample.binding.simple.xMBHBhhwJdjQJdwghc8ObIA", "http://xml.safris.org/toolkit/sample/binding/simple.xsd");
+    assertEquals("org.safris.xml.toolkit.sample.binding.xsitype.xMBHBhhwJdjQJdxAhc8ObIA", "http://xml.safris.org/toolkit/sample/binding/xsitype.xsd");
+    assertEquals("org.safris.xml.toolkit.tutorial.binding.beginner.invoice.xMBHBhhwJdjQJd2ghc8ObIA", "http://xml.safris.org/toolkit/tutorial/binding/beginner/invoice.xsd");
+    assertEquals("test_namespace_targetNamespace.xJpCW8wlo", "test-namespace-targetNamespace");
+    assertEquals("aol_liberty_config.xGR1cm463E6_E6A", "urn:aol:liberty:config");
+    assertEquals("aol_liberty_config.xGR1cm463E6_E68E6", "urn:aol:liberty:config:");
+    assertEquals("berkeley_safris_game_chess.xII6uTcdcQnW0J1pCdA", "urn:berkeley:safris:game:chess");
+    assertEquals("liberty_ac_2003_08.xGR1cm46_E61E65Et", "urn:liberty:ac:2003-08");
+    assertEquals("liberty_ac_2004_12.xGR1cm46_E61E65Et", "urn:liberty:ac:2004-12");
+    assertEquals("liberty_disco_2003_08.xGR1cm46_E67E65Et", "urn:liberty:disco:2003-08");
+    assertEquals("liberty_id_sis_pp_2003_08.xGR1cm46_E61Et3Et1E65EtA", "urn:liberty:id-sis-pp:2003-08");
+    assertEquals("liberty_iff_2003_08.xGR1cm46_E63E65Et", "urn:liberty:iff:2003-08");
+    assertEquals("liberty_metadata_2003_08.xII6uTcdbwnXEJ1pCWg", "urn:liberty:metadata:2003-08");
+    assertEquals("liberty_sb_2003_08.xGR1cm46_E61E65Et", "urn:liberty:sb:2003-08");
+    assertEquals("oasis_names_tc_SAML_1_0_assertion.xGR1cm467E67E61E65E6zEuzE6A", "urn:oasis:names:tc:SAML:1.0:assertion");
+    assertEquals("oasis_names_tc_SAML_1_0_protocol.xGR1cm467E67E61E65E6zEuzE6A", "urn:oasis:names:tc:SAML:1.0:protocol");
+    assertEquals("com.safris.www.schema.testtwo.xGI4MNxLvRLg", "http://www.safris.com/schema/testtwo");
   }
 }
