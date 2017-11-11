@@ -24,9 +24,18 @@ import java.util.Map;
 import org.lib4j.net.Service;
 import org.lib4j.net.Services;
 import org.lib4j.net.URIs;
+import org.lib4j.util.BiMap;
 import org.lib4j.util.Diff;
+import org.lib4j.util.HashBiMap;
 import org.lib4j.util.JavaIdentifiers;
 
+/**
+ * This class models the binding between an XML namespace URI and a Java
+ * package name. This model asserts that a unique package exists for every
+ * different XML namespace.
+ * @see NamespaceBinding#parseNamespace(URI)
+ * @see NamespaceBinding#parseClassName(String)
+ */
 public final class NamespaceBinding {
   private static StringBuilder buildHost(final StringBuilder builder, final String host) {
     if (host == null)
@@ -89,10 +98,6 @@ public final class NamespaceBinding {
     return builder;
   }
 
-  public static NamespaceBinding parseNamespace(final String uri) {
-    return uri == null ? null : getPackageFromNamespace(URIs.makeURI(uri));
-  }
-
   private static final Base64.Encoder base64Encoder = Base64.getEncoder().withoutPadding();
 
   private static String flipNamespaceURI(final String uri, final boolean replaceServicePort) {
@@ -106,34 +111,133 @@ public final class NamespaceBinding {
     final StringBuilder builder = new StringBuilder();
     buildHost(builder, uri.substring(start, end));
     builder.delete(0, 1);
-    final Service service = replaceServicePort ? Services.getService(uri.substring(0, colon)) : null;
-    if (service == null)
-      builder.insert(0, uri.substring(0, start));
-    else
-      builder.insert(0, service.getPort());
-
+    builder.insert(0, uri.substring(0, start));
     builder.append(uri.substring(end));
+    if (replaceServicePort)
+      addPrefixForDigits(builder);
+    else
+      removePrefixForDigits(builder);
+
     return builder.toString();
   }
 
-  private static String getDiff(final String packageName, final String namespaceURI) {
-    final String packageNameForDiff = packageName.replace('.', '/');
+  private static final BiMap<String,Character> schemeToPrefix = new HashBiMap<String,Character>();
+  private static final char defaultPrefix = 'x';
 
-    final Diff diff = new Diff(packageNameForDiff, namespaceURI);
-    final byte[] bytes = diff.toBytes();
-    return base64Encoder.encodeToString(bytes).replace('+', '$').replace('/', '_');
+  static {
+    schemeToPrefix.put("http", 'h');
+    schemeToPrefix.put("https", 's');
+    schemeToPrefix.put("file", 'f');
+    schemeToPrefix.put("data", 'd');
+    schemeToPrefix.put("urn", 'u');
   }
 
-  public static NamespaceBinding parsePackageName(final String packageName) {
-    final int index = packageName.lastIndexOf('.');
-    final String simpleClassName = packageName.substring(index + 2);
+  private static String getDiff(final String packageName, final String namespaceURI) {
+    int start = namespaceURI.indexOf(":");
+    char prefix;
+    final StringBuilder namespaceForDiff = new StringBuilder();
+    if (start > -1) {
+      if (start + 1 < namespaceURI.length() && namespaceURI.charAt(start + 1) == '/') {
+        final String scheme = namespaceURI.substring(0, start);
+        while (namespaceURI.charAt(++start) == '/');
+        prefix = schemeToPrefix.getOrDefault(scheme, defaultPrefix);
+        if (prefix == defaultPrefix) {
+          final Service service = Services.getService(scheme);
+          if (service != null)
+            namespaceForDiff.append(service.getPort());
+          else
+            namespaceForDiff.append(namespaceURI.substring(0, start));
+        }
+      }
+      else if ("urn".equals(namespaceURI.substring(0, start))) {
+        ++start;
+        prefix = 'n';
+      }
+      else {
+        prefix = defaultPrefix;
+      }
+    }
+    else {
+      prefix = defaultPrefix;
+    }
+
+    if (namespaceURI.endsWith(".xsd")) {
+      prefix = Character.toUpperCase(prefix);
+      namespaceForDiff.append(start > -1 ? namespaceURI.substring(start, namespaceURI.length() - 4) : namespaceURI.substring(0, namespaceURI.length() - 4));
+    }
+    else {
+      namespaceForDiff.append(start > -1 ? namespaceURI.substring(start) : namespaceURI);
+    }
+
+    final String packageNameForDiff = packageName.replace('.', '/');
+    final Diff diff = new Diff(packageNameForDiff, namespaceForDiff.toString());
+    final byte[] bytes = diff.toBytes();
+    return prefix + base64Encoder.encodeToString(bytes).replace('+', '$').replace('/', '_');
+  }
+
+  private static StringBuilder addPrefixForDigits(final StringBuilder builder) {
+    boolean match = false;
+    for (int i = builder.length() - 1; i >= 0; --i) {
+      final char ch = builder.charAt(i);
+      if (match && ch == '/')
+        builder.insert(i + 1, '_');
+
+      match = Character.isDigit(ch);
+    }
+
+    return builder;
+  }
+
+  private static StringBuilder removePrefixForDigits(final StringBuilder builder) {
+    boolean match = false;
+    for (int i = builder.length() - 1; i >= 0; --i) {
+      final char ch = builder.charAt(i);
+      if (match && (ch == '/' || ch == '.'))
+        builder.delete(i + 1, i + 2);
+
+      match = ch == '_';
+    }
+
+    return builder;
+  }
+
+  /**
+   * Create a <code>NamespaceBinding</code> from a fully qualified class name.
+   * This method is intended for class names created by
+   * <code>NamespaceBinding.getClassName()<code>, which contain a simple class
+   * name as a Base64-encoded diff between the package name and the original
+   * namespace URI. If such a class name is inputted to this method, the
+   * resulting <code>NamespaceBinding</code> is guaranteed to the unique
+   * binding between that class name and the namespace URI from which it
+   * originated.
+   * @param className The fully qualified class name previously encoded by
+   *        <code>NamespaceBinding.getClassName()<code>.
+   * @return A guaranteed unique <code>NamespaceBinding</code> for the package
+   *         name.
+   * @see NamespaceBinding#getClassName()
+   * @see NamespaceBinding#parseNamespace(URI)
+   */
+  public static NamespaceBinding parseClassName(final String className) {
+    final int index = className.lastIndexOf('.');
+    char prefix = className.charAt(index + 1);
+    String suffix = "";
+    if (Character.isUpperCase(prefix)) {
+      prefix = Character.toLowerCase(prefix);
+      suffix = ".xsd";
+    }
+
+    final String scheme = prefix == defaultPrefix ? null : schemeToPrefix.inverse().get(prefix);
+    final String simpleClassName = className.substring(index + 2);
     final byte[] diffBytes = Base64.getDecoder().decode(simpleClassName.replace('$', '+').replace('_', '/'));
     final Diff diff = Diff.decode(diffBytes);
-    final String source = packageName.substring(0, index).replace('.', '/');
+    final String source = className.substring(0, index).replace('.', '/');
 
-    String decodedUri = diff.patch(source);
+    final String decodedUri = diff.patch(source);
+    if (scheme != null)
+      return new NamespaceBinding(URIs.makeURI(flipNamespaceURI(scheme + "://" + decodedUri, false) + suffix), className, simpleClassName);
+
     if (!Character.isDigit(decodedUri.charAt(0)))
-      return new NamespaceBinding(URIs.makeURI(decodedUri), packageName, simpleClassName);
+      return new NamespaceBinding(URIs.makeURI(flipNamespaceURI((prefix == 'n' ? "urn:" : "") + decodedUri, false) + suffix), className, simpleClassName);
 
     final StringBuilder port = new StringBuilder().append(decodedUri.charAt(0));
     int i = 1;
@@ -141,10 +245,38 @@ public final class NamespaceBinding {
       port.append(decodedUri.charAt(i++));
 
     final Service service = Services.getService(Integer.parseInt(port.toString()));
-    return new NamespaceBinding(URIs.makeURI(service == null ? decodedUri : flipNamespaceURI(service.getName() + "://" + decodedUri.substring(i), false)), packageName, simpleClassName);
+    return new NamespaceBinding(URIs.makeURI(service == null ? decodedUri : flipNamespaceURI(service.getName() + "://" + decodedUri.substring(i), false) + suffix), className, simpleClassName);
   }
 
-  public static NamespaceBinding getPackageFromNamespace(final URI uri) {
+  /**
+   * Create a <code>NamespaceBinding</code> from a <code>URI</code>. This
+   * method guarantees that a unique package name will be created for each
+   * unique <code>URI</code>. Examples of namespaces that would otherwise
+   * seem to result in the same package name are:
+   * <p>
+   * <code>http://www.foo.com/bar.xsd</code>
+   * <p>
+   * <code>http://www.foo.com/bar</code>
+   * <p>
+   * <code>https://www.foo.com/bar.xsd</code>
+   * <p>
+   * <code>https://www.foo.com/bar</code>
+   * <p>
+   * <code>file://www.foo.com/bar.xsd</code>
+   * <p>
+   * The resulting package name for each of these namespaces is:
+   * <p>
+   * <code>com.foo.www.bar</code>
+   * <p>
+   * The simple class name is based on a Base64 string representation of a diff
+   * between the original namespace URI and the resulting package name. The
+   * package name carries enough information within itself to be able to
+   * translate directly back to the unique namespace URI from which it was
+   * generated.
+   * @param uri The namespace URI.
+   * @return A guaranteed unique <code>NamespaceBinding</code> to the uri.
+   */
+  public static NamespaceBinding parseNamespace(final URI uri) {
     if (uri == null)
       return null;
 
@@ -163,6 +295,39 @@ public final class NamespaceBinding {
     return new NamespaceBinding(uri, packageName);
   }
 
+  /**
+   * Create a <code>NamespaceBinding</code> from a <code>String</code> uri.
+   * This method guarantees that a unique package name will be created for each
+   * unique <code>URI</code>. Examples of namespaces that would otherwise
+   * seem to result in the same package name are:
+   * <p>
+   * <code>http://www.foo.com/bar.xsd</code>
+   * <p>
+   * <code>http://www.foo.com/bar</code>
+   * <p>
+   * <code>https://www.foo.com/bar.xsd</code>
+   * <p>
+   * <code>https://www.foo.com/bar</code>
+   * <p>
+   * <code>file://www.foo.com/bar.xsd</code>
+   * <p>
+   * The resulting package name for each of these namespaces is:
+   * <p>
+   * <code>com.foo.www.bar</code>
+   * <p>
+   * The simple class name is based on a Base64 string representation of a diff
+   * between the original namespace URI and the resulting package name. The
+   * package name carries enough information within itself to be able to
+   * translate directly back to the unique namespace URI from which it was
+   * generated.
+   * @param uri The namespace URI.
+   * @return A guaranteed unique <code>NamespaceBinding</code> to the uri.
+   * @see NamespaceBinding#parseNamespace(URI)
+   */
+  public static NamespaceBinding parseNamespace(final String uri) {
+    return uri == null ? null : parseNamespace(URIs.makeURI(uri));
+  }
+
   private final URI namespaceUri;
   private final String packageName;
   private final String simpleClassName;
@@ -176,21 +341,34 @@ public final class NamespaceBinding {
   }
 
   private NamespaceBinding(final URI namespaceUri, final String packageName) {
-    this(namespaceUri, packageName, "x" + getDiff(packageName, flipNamespaceURI(namespaceUri.toString(), true)));
+    this(namespaceUri, packageName, getDiff(packageName, flipNamespaceURI(namespaceUri.toString(), true)));
   }
 
+  /**
+   * @return The namespace URI for this binding.
+   */
   public URI getNamespaceUri() {
     return this.namespaceUri;
   }
 
+  /**
+   * @return The package name for this binding.
+   */
   public String getPackageName() {
     return this.packageName;
   }
 
+  /**
+   * @return The simple class name (i.e. class name without the package name)
+   * for this binding.
+   */
   public String getSimpleClassName() {
     return this.simpleClassName;
   }
 
+  /**
+   * @return The fully qualified class name for this binding.
+   */
   public String getClassName() {
     return this.className;
   }
