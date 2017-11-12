@@ -24,9 +24,7 @@ import java.util.Map;
 import org.lib4j.net.Service;
 import org.lib4j.net.Services;
 import org.lib4j.net.URIs;
-import org.lib4j.util.BiMap;
 import org.lib4j.util.Diff;
-import org.lib4j.util.HashBiMap;
 import org.lib4j.util.JavaIdentifiers;
 
 /**
@@ -37,6 +35,91 @@ import org.lib4j.util.JavaIdentifiers;
  * @see NamespaceBinding#parseClassName(String)
  */
 public final class NamespaceBinding {
+  /**
+   * Utility class for optimization of diff compression.
+   */
+  private static class Rule {
+    private final String start;
+    private final String end;
+    private final char prefix1;
+    private final char prefix2;
+
+    protected Rule(final String start, final String end, final char prefix1, final char prefix2) {
+      this.start = start;
+      this.end = end;
+      this.prefix1 = prefix1;
+      this.prefix2 = prefix2;
+    }
+
+    /**
+     * If the start of <code>builder</code> does not match <code>start</code>,
+     * then there is no match.
+     * <p>
+     * If the end of <code>builder</code> does not match, then encode the
+     * start, and return <code>prefix1</code>.
+     * <p>
+     * If the end of <code>builder</code> matches, then encode the start and
+     * end, and return <code>prefix2</code>.
+     *
+     * @param builder The builder.
+     * @return '\0' if there is no match. <code>prefix1</code> if only the
+     *         start matches. <code>prefix2</code> if the start and end match.
+     */
+    protected char encode(final StringBuilder builder) {
+      if (start == null) {
+        int index = builder.indexOf(":");
+        if (index > -1 && index + 1 < builder.length() && builder.charAt(index + 1) == '/') {
+          final String scheme = builder.substring(0, index);
+          while (builder.charAt(++index) == '/');
+          final Service service = Services.getService(scheme);
+          if (service != null) {
+            builder.delete(0, index);
+            builder.insert(0, service.getPort());
+          }
+        }
+      }
+      else {
+        if (!start.equals(builder.substring(0, start.length())))
+          return '\0';
+
+        builder.delete(0, start.length());
+      }
+
+      if (!end.equals(builder.substring(builder.length() - end.length())))
+        return prefix1;
+
+      builder.delete(builder.length() - end.length(), builder.length());
+      return prefix2;
+    }
+
+    /**
+     * If <code>prefix == prefix1</code>, then prepend <code>start</code>, and
+     * return the string.
+     * <p>
+     * If <code>prefix == prefix2</code>, then prepend <code>start</code> and
+     * append <code>end</code>, and return the string.
+     * <p>
+     * Otherwise, return <code>null</code>.
+     *
+     * @param prefix The prefix to the encoding.
+     * @param string The string to decode.
+     * @return The string translated with respect to <code>prefix</code>.
+     */
+    protected String decode(final char prefix, final String string) {
+      return prefix == prefix1 ? (start == null ? string : start + string) : prefix == prefix2 ? (start == null ? string : start + string) + end : null;
+    }
+  }
+
+  private static final Rule[] rules = {
+    new Rule("http://", ".xsd", 'h', 'H'),
+    new Rule("https://", ".xsd", 's', 'S'),
+    new Rule("data://", ".xsd", 'd', 'D'),
+    new Rule("file://", ".xsd", 'f', 'F'),
+    new Rule("urn://", ".xsd", 'u', 'U'),
+    new Rule("urn:", ".xsd", 'n', 'N'),
+    new Rule(null, ".xsd", 'x', 'X'),
+  };
+
   private static StringBuilder buildHost(final StringBuilder builder, final String host) {
     if (host == null)
       return builder;
@@ -121,53 +204,19 @@ public final class NamespaceBinding {
     return builder.toString();
   }
 
-  private static final BiMap<String,Character> schemeToPrefix = new HashBiMap<String,Character>();
-  private static final char defaultPrefix = 'x';
-
-  static {
-    schemeToPrefix.put("http", 'h');
-    schemeToPrefix.put("https", 's');
-    schemeToPrefix.put("file", 'f');
-    schemeToPrefix.put("data", 'd');
-    schemeToPrefix.put("urn", 'u');
-  }
-
   private static String getDiff(final String packageName, final String namespaceURI) {
-    int start = namespaceURI.indexOf(":");
-    char prefix;
-    final StringBuilder namespaceForDiff = new StringBuilder();
-    if (start > -1) {
-      if (start + 1 < namespaceURI.length() && namespaceURI.charAt(start + 1) == '/') {
-        final String scheme = namespaceURI.substring(0, start);
-        while (namespaceURI.charAt(++start) == '/');
-        prefix = schemeToPrefix.getOrDefault(scheme, defaultPrefix);
-        if (prefix == defaultPrefix) {
-          final Service service = Services.getService(scheme);
-          if (service != null)
-            namespaceForDiff.append(service.getPort());
-          else
-            namespaceForDiff.append(namespaceURI.substring(0, start));
-        }
+    char prefix = '\0';
+    final StringBuilder namespaceForDiff = new StringBuilder(namespaceURI);
+    for (final Rule rule : rules) {
+      final char ch = rule.encode(namespaceForDiff);
+      if (ch != '\0') {
+        prefix = ch;
+        break;
       }
-      else if ("urn".equals(namespaceURI.substring(0, start))) {
-        ++start;
-        prefix = 'n';
-      }
-      else {
-        prefix = defaultPrefix;
-      }
-    }
-    else {
-      prefix = defaultPrefix;
     }
 
-    if (namespaceURI.endsWith(".xsd")) {
-      prefix = Character.toUpperCase(prefix);
-      namespaceForDiff.append(start > -1 ? namespaceURI.substring(start, namespaceURI.length() - 4) : namespaceURI.substring(0, namespaceURI.length() - 4));
-    }
-    else {
-      namespaceForDiff.append(start > -1 ? namespaceURI.substring(start) : namespaceURI);
-    }
+    if (prefix == '\0')
+      throw new UnsupportedOperationException("Unsupported namespace format: " + namespaceURI);
 
     final String packageNameForDiff = packageName.replace('.', '/');
     final Diff diff = new Diff(packageNameForDiff, namespaceForDiff.toString());
@@ -219,25 +268,24 @@ public final class NamespaceBinding {
    */
   public static NamespaceBinding parseClassName(final String className) {
     final int index = className.lastIndexOf('.');
-    char prefix = className.charAt(index + 1);
-    String suffix = "";
-    if (Character.isUpperCase(prefix)) {
-      prefix = Character.toLowerCase(prefix);
-      suffix = ".xsd";
-    }
+    final char prefix = className.charAt(index + 1);
 
-    final String scheme = prefix == defaultPrefix ? null : schemeToPrefix.inverse().get(prefix);
     final String simpleClassName = className.substring(index + 2);
     final byte[] diffBytes = Base64.getDecoder().decode(simpleClassName.replace('$', '+').replace('_', '/'));
     final Diff diff = Diff.decode(diffBytes);
     final String source = className.substring(0, index).replace('.', '/');
 
-    final String decodedUri = diff.patch(source);
-    if (scheme != null)
-      return new NamespaceBinding(URIs.makeURI(flipNamespaceURI(scheme + "://" + decodedUri, false) + suffix), className, simpleClassName);
+    String decodedUri = diff.patch(source);
+    for (final Rule rule : rules) {
+      final String decode = rule.decode(prefix, decodedUri);
+      if (decode != null) {
+        decodedUri = decode;
+        break;
+      }
+    }
 
     if (!Character.isDigit(decodedUri.charAt(0)))
-      return new NamespaceBinding(URIs.makeURI(flipNamespaceURI((prefix == 'n' ? "urn:" : "") + decodedUri, false) + suffix), className, simpleClassName);
+      return new NamespaceBinding(URIs.makeURI(flipNamespaceURI(decodedUri, false)), className, simpleClassName);
 
     final StringBuilder port = new StringBuilder().append(decodedUri.charAt(0));
     int i = 1;
@@ -245,7 +293,7 @@ public final class NamespaceBinding {
       port.append(decodedUri.charAt(i++));
 
     final Service service = Services.getService(Integer.parseInt(port.toString()));
-    return new NamespaceBinding(URIs.makeURI(service == null ? decodedUri : flipNamespaceURI(service.getName() + "://" + decodedUri.substring(i), false) + suffix), className, simpleClassName);
+    return new NamespaceBinding(URIs.makeURI(service == null ? decodedUri : flipNamespaceURI(service.getName() + "://" + decodedUri.substring(i), false)), className, simpleClassName);
   }
 
   /**
