@@ -18,10 +18,7 @@ package org.lib4j.xml.sax;
 
 import com.sun.org.apache.xerces.internal.impl.Constants;
 
-@SuppressWarnings("restriction")
 public final class SAXFeature {
-  // SAX Features
-
   /**
    * Namespace awareness.
    */
@@ -243,11 +240,11 @@ public final class SAXFeature {
 
   private final String feature;
 
-  public SAXFeature(final String feature) {
+  private SAXFeature(final String feature) {
     this.feature = feature;
   }
 
-  protected String getFeature() {
+  public String getFeature() {
     return feature;
   }
 

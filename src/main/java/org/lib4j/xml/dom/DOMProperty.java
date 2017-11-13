@@ -18,7 +18,6 @@ package org.lib4j.xml.dom;
 
 import com.sun.org.apache.xerces.internal.impl.Constants;
 
-@SuppressWarnings("restriction")
 public final class DOMProperty {
   /**
    * DOM node.
@@ -36,31 +35,6 @@ public final class DOMProperty {
   public static final DOMProperty SCHEMA_LANGUAGE = new DOMProperty(Constants.JAXP_PROPERTY_PREFIX + Constants.SCHEMA_LANGUAGE);
 
   /**
-   * Resource resolver.
-   */
-  public static final DOMFeature DOM_RESOURCE_RESOLVER = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_RESOURCE_RESOLVER);
-
-  /**
-   * Error handler.
-   */
-  public static final DOMFeature DOM_ERROR_HANDLER = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_ERROR_HANDLER);
-
-  /**
-   * Schema type.
-   */
-  public static final DOMFeature DOM_SCHEMA_TYPE = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_SCHEMA_TYPE);
-
-  /**
-   * Schema Location.
-   */
-  public static final DOMFeature DOM_SCHEMA_LOCATION = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_SCHEMA_LOCATION);
-
-  /**
-   * XSModel.
-   */
-  public static final DOMFeature DOM_PSVI = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_PSVI);
-
-  /**
    * Current element node.
    */
   public static final DOMProperty CURRENT_ELEMENT_NODE = new DOMProperty(Constants.XERCES_PROPERTY_PREFIX + Constants.CURRENT_ELEMENT_NODE_PROPERTY);
@@ -72,11 +46,11 @@ public final class DOMProperty {
 
   private final String property;
 
-  protected DOMProperty(final String property) {
+  private DOMProperty(final String property) {
     this.property = property;
   }
 
-  protected String getProperty() {
+  public String getProperty() {
     return property;
   }
 

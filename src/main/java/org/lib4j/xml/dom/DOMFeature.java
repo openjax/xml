@@ -18,7 +18,6 @@ package org.lib4j.xml.dom;
 
 import com.sun.org.apache.xerces.internal.impl.Constants;
 
-@SuppressWarnings("restriction")
 public final class DOMFeature {
   /**
    * Comments.
@@ -165,13 +164,38 @@ public final class DOMFeature {
    */
   public static final DOMFeature INCLUDE_IGNORABLE_WHITESPACE = new DOMFeature(Constants.XERCES_FEATURE_PREFIX + Constants.INCLUDE_IGNORABLE_WHITESPACE);
 
+  /**
+   * Resource resolver.
+   */
+  public static final DOMFeature DOM_RESOURCE_RESOLVER = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_RESOURCE_RESOLVER);
+
+  /**
+   * Error handler.
+   */
+  public static final DOMFeature DOM_ERROR_HANDLER = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_ERROR_HANDLER);
+
+  /**
+   * Schema type.
+   */
+  public static final DOMFeature DOM_SCHEMA_TYPE = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_SCHEMA_TYPE);
+
+  /**
+   * Schema Location.
+   */
+  public static final DOMFeature DOM_SCHEMA_LOCATION = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_SCHEMA_LOCATION);
+
+  /**
+   * XSModel.
+   */
+  public static final DOMFeature DOM_PSVI = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_PSVI);
+
   private final String feature;
 
-  public DOMFeature(final String feature) {
+  private DOMFeature(final String feature) {
     this.feature = feature;
   }
 
-  protected String getFeature() {
+  public String getFeature() {
     return feature;
   }
 

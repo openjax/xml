@@ -18,7 +18,6 @@ package org.lib4j.xml.sax;
 
 import com.sun.org.apache.xerces.internal.impl.Constants;
 
-@SuppressWarnings("restriction")
 public final class SAXProperty {
   /**
    * Declaration handler.
@@ -177,11 +176,11 @@ public final class SAXProperty {
 
   private final String property;
 
-  protected SAXProperty(final String property) {
+  private SAXProperty(final String property) {
     this.property = property;
   }
 
-  protected String getProperty() {
+  public String getProperty() {
     return property;
   }
 
