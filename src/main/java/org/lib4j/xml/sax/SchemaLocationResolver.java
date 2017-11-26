@@ -17,8 +17,6 @@
 package org.lib4j.xml.sax;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.XMLConstants;
@@ -27,46 +25,12 @@ import org.lib4j.lang.Resources;
 import org.lib4j.net.CachedURL;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 
-public final class ValidationHandler extends DefaultHandler implements LSResourceResolver {
+public class SchemaLocationResolver implements LSResourceResolver {
   private final Map<String,SchemaLocation> schemaLocations;
-  private final ErrorHandler errorHandler;
 
-  public ValidationHandler(final Map<String,SchemaLocation> schemaLocations, final ErrorHandler errorHandler) {
+  public SchemaLocationResolver(final Map<String,SchemaLocation> schemaLocations) {
     this.schemaLocations = schemaLocations;
-    this.errorHandler = errorHandler;
-  }
-
-  private List<SAXParseException> errors;
-
-  @Override
-  public void fatalError(final SAXParseException e) throws SAXException {
-    if (errorHandler != null)
-      errorHandler.fatalError(e);
-  }
-
-  @Override
-  public void error(final SAXParseException e) throws SAXException {
-    if (errors == null)
-      errors = new ArrayList<SAXParseException>();
-
-    errors.add(e);
-    if (errorHandler != null)
-      errorHandler.error(e);
-  }
-
-  @Override
-  public void warning(final SAXParseException e) throws SAXException {
-    if (errorHandler != null)
-      errorHandler.warning(e);
-  }
-
-  public List<SAXParseException> getErrors() {
-    return errors;
   }
 
   @Override
@@ -77,7 +41,7 @@ public final class ValidationHandler extends DefaultHandler implements LSResourc
     if (systemId == null)
       systemId = namespaceURI;
     else if (baseURI != null)
-      systemId = XMLHandler.getPath(baseURI, systemId);
+      systemId = SchemaLocationHandler.getPath(baseURI, systemId);
 
     try {
       SchemaLocation schemaLocation = schemaLocations.get(namespaceURI);
@@ -95,7 +59,7 @@ public final class ValidationHandler extends DefaultHandler implements LSResourc
           schemaLocation.getLocation().put(namespaceURI, new CachedURL(Resources.getResource("xmlschema/XMLSchema.xsd").getURL()));
           locations = schemaLocation.getLocation();
         }
-        else if ("http://www.w3.org/XML/1998/namespace".equals(namespaceURI) && "http://www.w3.org/2001/xml.xsd".equals(systemId)) {
+        else if (XMLConstants.XML_NS_URI.equals(namespaceURI) && "http://www.w3.org/2001/xml.xsd".equals(systemId)) {
           schemaLocations.put(namespaceURI, schemaLocation = new SchemaLocation(systemId));
           schemaLocation.getLocation().put(systemId, new CachedURL(Resources.getResource("xmlschema/xml.xsd").getURL()));
           locations = schemaLocation.getLocation();
@@ -112,10 +76,10 @@ public final class ValidationHandler extends DefaultHandler implements LSResourc
       if (url == null) {
         if (namespaceURI == null) {
           if ("http://www.w3.org/2001/XMLSchema.dtd".equals(systemId)) {
-            locations.put(systemId, url = new CachedURL(Resources.getResource("xmlschema/XMLSchema.dtd").getURL()));
+            locations.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.dtd")));
           }
           else if ("http://www.w3.org/2001/datatypes.dtd".equals(systemId)) {
-            locations.put(systemId, url = new CachedURL(Resources.getResource("xmlschema/datatypes.dtd").getURL()));
+            locations.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/datatypes.dtd")));
           }
           else {
             return new LSInputImpl(systemId, publicId, baseURI);

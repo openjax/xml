@@ -53,11 +53,12 @@ public final class Validator {
       return cachedURL;
     }
 
-    final ValidationHandler handler = new ValidationHandler(schemaReferences, errorHandler);
+    final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler);
+    final SchemaLocationResolver schemaLocationResolver = new SchemaLocationResolver(schemaReferences);
     if (xmlDocument.isXSD()) {
       final SchemaFactory factory = SchemaFactory.newInstance(XML_11_URI);
-      factory.setResourceResolver(handler);
-      factory.setErrorHandler(handler);
+      factory.setResourceResolver(schemaLocationResolver);
+      factory.setErrorHandler(validatorErrorHandler);
 
       try (final InputStream in = cachedURL.toURL().openStream()) {
         factory.newSchema(new StreamSource(in, cachedURL.toString()));
@@ -65,8 +66,8 @@ public final class Validator {
     }
     else {
       final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
-      validator.setResourceResolver(handler);
-      validator.setErrorHandler(handler);
+      validator.setResourceResolver(schemaLocationResolver);
+      validator.setErrorHandler(validatorErrorHandler);
 
       try (final InputStream in = url.openStream()) {
         validator.validate(new StreamSource(in, cachedURL.toString()));
@@ -75,12 +76,12 @@ public final class Validator {
 
     for (final Map.Entry<String,SchemaLocation> schemaLocation : schemaReferences.entrySet()) {
       final Map<String,CachedURL> locations = schemaLocation.getValue().getLocation();
-      for (final Map.Entry<String,CachedURL> location : locations.entrySet())
-        location.getValue().destroy();
+      for (final CachedURL cachedUrl : locations.values())
+        cachedUrl.destroy();
     }
 
-    if (handler.getErrors() != null) {
-      final Iterator<SAXParseException> iterator = handler.getErrors().iterator();
+    if (validatorErrorHandler.getErrors() != null) {
+      final Iterator<SAXParseException> iterator = validatorErrorHandler.getErrors().iterator();
       final SAXParseException firstException = iterator.next();
       final SAXException exception = new SAXException(firstException);
       exception.setStackTrace(firstException.getStackTrace());

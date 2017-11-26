@@ -34,7 +34,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XMLHandler extends DefaultHandler {
+public class SchemaLocationHandler extends DefaultHandler {
   protected static String getPath(final String referrer, final String location) {
     return URLs.isAbsolute(location) ? location : Paths.newPath(Paths.getCanonicalParent(referrer), location);
   }
@@ -52,7 +52,7 @@ public class XMLHandler extends DefaultHandler {
   private final boolean validating;
   protected final CachedURL url;
 
-  protected XMLHandler(final CachedURL url, final boolean validating) {
+  protected SchemaLocationHandler(final CachedURL url, final boolean validating) {
     this.url = url;
     this.validating = validating;
   }

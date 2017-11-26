@@ -68,7 +68,7 @@ public final class XMLDocuments {
 
   public static XMLDocument parse(final URL url, final DocumentHandler documentHandler, final boolean offline, final boolean validating) throws IOException, SAXException {
     final CachedURL cachedURL = new CachedURL(url);
-    final XMLHandler handler = new XMLHandler(cachedURL, validating);
+    final SchemaLocationHandler handler = new SchemaLocationHandler(cachedURL, validating);
     if (offline)
       Sockets.disableNetwork();
 
@@ -95,7 +95,7 @@ public final class XMLDocuments {
     for (final Map.Entry<String,CachedURL> schemaLocation : schemaLocations.entrySet()) {
       if (!references.containsKey(schemaLocation.getKey())) {
         if (!offline || (referencesOnlyLocal = schemaLocation.getValue().isLocal() && referencesOnlyLocal)) {
-          final XMLHandler handler = new XMLHandler(schemaLocation.getValue(), false);
+          final SchemaLocationHandler handler = new SchemaLocationHandler(schemaLocation.getValue(), false);
           try {
             if (documentHandler != null)
               documentHandler.schemaLocation(schemaLocation.getValue().openConnection());
@@ -129,7 +129,7 @@ public final class XMLDocuments {
     boolean referencesOnlyLocal = false;
     for (final CachedURL include : includes) {
       if (!offline || (referencesOnlyLocal = include.isLocal() && referencesOnlyLocal)) {
-        final XMLHandler handler = new XMLHandler(include, false);
+        final SchemaLocationHandler handler = new SchemaLocationHandler(include, false);
         try {
           if (documentHandler != null)
             documentHandler.schemaLocation(include.openConnection());
