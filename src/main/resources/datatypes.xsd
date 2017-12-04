@@ -56,6 +56,12 @@
     </xs:restriction>
   </xs:simpleType>
   
+  <xs:simpleType name="hexBinaryNonEmpty">
+    <xs:restriction base="xs:hexBinary">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="NCWName">
     <xs:restriction base="xs:NCName">
       <xs:pattern value="[\S]*"/>
