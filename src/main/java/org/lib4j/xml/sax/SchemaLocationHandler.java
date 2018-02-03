@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
 
 import org.lib4j.lang.Paths;
 import org.lib4j.net.CachedURL;
@@ -78,6 +79,15 @@ public class SchemaLocationHandler extends DefaultHandler {
     return isXSD;
   }
 
+  private QName rootElement;
+
+  public QName getRootElement() {
+    if (rootElement == null)
+      throw new IllegalStateException();
+
+    return rootElement;
+  }
+
   public String getTargetNamespace() {
     return this.targetNamespace;
   }
@@ -88,8 +98,10 @@ public class SchemaLocationHandler extends DefaultHandler {
 
   @Override
   public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
-    if (isXSD == null)
-      isXSD = XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(uri) && "schema".equals(localName);
+    if (isXSD == null) {
+      isXSD = XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(uri);
+      rootElement = new QName(uri, localName);
+    }
 
     if (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(uri)) {
       if ("schema".equals(localName)) {
@@ -121,9 +133,8 @@ public class SchemaLocationHandler extends DefaultHandler {
         try {
           final String path = getPath(URLs.toExternalForm(url), schemaLocation);
           referencesOnlyLocal = Paths.isLocal(path) && referencesOnlyLocal;
-          final CachedURL locationURL = new CachedURL(path);
           if (!imports.containsKey(namespace))
-            imports.put(namespace, locationURL);
+            imports.put(namespace, new CachedURL(path));
         }
         catch (final MalformedURLException e) {
           throw new SAXException(e);
@@ -163,9 +174,8 @@ public class SchemaLocationHandler extends DefaultHandler {
                 try {
                   final String path = getPath(URLs.toExternalForm(url), location);
                   referencesOnlyLocal = Paths.isLocal(path) && referencesOnlyLocal;
-                  final CachedURL locationURL = new CachedURL(path);
                   if (!imports.containsKey(schemaNamespaceURI))
-                    imports.put(schemaNamespaceURI, locationURL);
+                    imports.put(schemaNamespaceURI, new CachedURL(path));
                 }
                 catch (final MalformedURLException e) {
                   throw new SAXException();

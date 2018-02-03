@@ -489,7 +489,7 @@ public class XJCompiler {
         args.add(metaInfDir.getAbsolutePath());
       }
 
-      final Process process = new ProcessBuilder(args).redirectErrorStream(true).start();
+      final Process process = new ProcessBuilder(args).inheritIO().redirectErrorStream(true).start();
       try (final Scanner scanner = new Scanner(process.getInputStream())) {
         while (scanner.hasNextLine())
           log(scanner.nextLine().trim());

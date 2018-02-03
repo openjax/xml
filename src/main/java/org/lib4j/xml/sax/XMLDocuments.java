@@ -83,7 +83,7 @@ public final class XMLDocuments {
     if (handler.isXSD())
       referencesOnlyLocal = includes(parser, documentHandler, offline, references, handler.getTargetNamespace(), handler.getIncludes()) && referencesOnlyLocal;
 
-    final XMLDocument xmlDocument = new XMLDocument(references, handler.isXSD(), handler.referencesOnlyLocal() && referencesOnlyLocal);
+    final XMLDocument xmlDocument = new XMLDocument(references, handler.getRootElement(), handler.isXSD(), handler.referencesOnlyLocal() && referencesOnlyLocal);
     if (offline)
       Sockets.enableNetwork();
 

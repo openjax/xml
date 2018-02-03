@@ -76,18 +76,30 @@ public final class JaxbUtil {
   }
 
   public static <T>T parse(final Class<T> cls, final URL url) throws IOException, SAXException {
-    return parse(cls, url, new LoggingErrorHandler(), true);
+    return parse(cls, Thread.currentThread().getContextClassLoader(), url, new LoggingErrorHandler(), true);
+  }
+
+  public static <T>T parse(final Class<T> cls, final ClassLoader classLoader, final URL url) throws IOException, SAXException {
+    return parse(cls, classLoader, url, new LoggingErrorHandler(), true);
   }
 
   public static <T>T parse(final Class<T> cls, final URL url, final boolean validate) throws IOException, SAXException {
-    return parse(cls, url, new LoggingErrorHandler(), validate);
+    return parse(cls, Thread.currentThread().getContextClassLoader(), url, new LoggingErrorHandler(), validate);
+  }
+
+  public static <T>T parse(final Class<T> cls, final ClassLoader classLoader, final URL url, final boolean validate) throws IOException, SAXException {
+    return parse(cls, classLoader, url, new LoggingErrorHandler(), validate);
   }
 
   public static <T>T parse(final Class<T> cls, final URL url, final ErrorHandler errorHandler, final boolean validate) throws IOException, SAXException {
+    return parse(cls, Thread.currentThread().getContextClassLoader(), url, errorHandler, validate);
+  }
+
+  public static <T>T parse(final Class<T> cls, final ClassLoader classLoader, final URL url, final ErrorHandler errorHandler, final boolean validate) throws IOException, SAXException {
     final CachedURL cachedURL = validate ? Validator.validate(url, false, errorHandler) : new CachedURL(url);
 
     try {
-      final Unmarshaller unmarshaller = JAXBContext.newInstance(cls).createUnmarshaller();
+      final Unmarshaller unmarshaller = JAXBContext.newInstance(cls.getPackageName(), classLoader).createUnmarshaller();
       try (final InputStream in = cachedURL.openStream()) {
         final JAXBElement<T> element = unmarshaller.unmarshal(XMLInputFactory.newInstance().createXMLStreamReader(in), cls);
         return element.getValue();
