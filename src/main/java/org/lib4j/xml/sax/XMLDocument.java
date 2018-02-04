@@ -21,20 +21,28 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.lib4j.net.CachedURL;
+
 public class XMLDocument {
+  private final CachedURL cachedUrl;
   private final Map<String,SchemaLocation> schemaReferences;
   private final boolean isXSD;
   private final QName rootElement;
   private final URL schemaLocation;
   private final boolean referencesOnlyLocal;
 
-  public XMLDocument(final Map<String,SchemaLocation> schemaReferences, final QName rootElement, final boolean isXSD, final boolean referencesOnlyLocal) {
+  public XMLDocument(final CachedURL cachedUrl, final Map<String,SchemaLocation> schemaReferences, final QName rootElement, final boolean isXSD, final boolean referencesOnlyLocal) {
+    this.cachedUrl = cachedUrl;
+    this.schemaReferences = schemaReferences;
     this.rootElement = rootElement;
     final SchemaLocation schemaLocation = schemaReferences.get(rootElement.getNamespaceURI());
     this.schemaLocation = schemaLocation == null ? null : schemaLocation.getLocation().get(rootElement.getNamespaceURI()).toURL();
-    this.schemaReferences = schemaReferences;
     this.isXSD = isXSD;
     this.referencesOnlyLocal = referencesOnlyLocal;
+  }
+
+  public CachedURL getURL() {
+    return this.cachedUrl;
   }
 
   public QName getRootElement() {
