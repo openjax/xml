@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -27,15 +28,27 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.activation.DataSource;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.LogFactory;
+import org.jvnet.annox.parser.XAnnotationParser;
+import org.jvnet.jaxb2_commons.plugin.AbstractParameterizablePlugin;
+import org.jvnet.jaxb2_commons.plugin.annotate.AnnotatePlugin;
 import org.lib4j.io.Streams;
+import org.lib4j.lang.ClassLoaders;
+import org.lib4j.lang.Resources;
 import org.lib4j.net.URLs;
 import org.lib4j.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.istack.tools.MaskingClassLoader;
 import com.sun.tools.xjc.XJCFacade;
+
+import japa.parser.ast.Node;
 
 public class XJCompiler {
   public static class Command {
@@ -216,6 +229,18 @@ public class XJCompiler {
     // </configuration>
     private LinkedHashSet<URL> xjbs;
 
+    private final LinkedHashSet<File> classpath = Collections.asCollection(new LinkedHashSet<File>(), Resources.getLocationBases(MaskingClassLoader.class, JAXBContext.class, AnnotatePlugin.class, AbstractParameterizablePlugin.class, LogFactory.class, XAnnotationParser.class, Node.class, DataSource.class, StringUtils.class));
+
+    public Command() {
+      try {
+        for (final URL path : ClassLoaders.getClassPath())
+          classpath.add(new File(path.toURI()));
+      }
+      catch (final URISyntaxException e) {
+        throw new UnsupportedOperationException(e);
+      }
+    }
+
     public boolean isAddGeneratedAnnotation() {
       return this.addGeneratedAnnotation;
     }
@@ -359,20 +384,33 @@ public class XJCompiler {
     public void setXJBs(final LinkedHashSet<URL> xjbs) {
       this.xjbs = xjbs;
     }
+
+    public LinkedHashSet<File> getClasspath() {
+      return classpath;
+    }
+
+    public void addClasspath(final File path) {
+      this.classpath.add(path);
+    }
+
+    public void addClasspath(final File ... paths) {
+      for (final File path : paths)
+        this.classpath.add(path);
+    }
   }
 
   private static final Logger logger = LoggerFactory.getLogger(XJCompiler.class);
 
-  public static void compile(final Command command, final File ... classpath) throws JAXBException {
+  public static void compile(final Command command) throws JAXBException {
     if (command.getSchemas() == null || command.getSchemas().size() == 0)
       return;
 
     final List<String> args = new ArrayList<String>();
     args.add("java");
-    if (classpath.length > 0) {
+    if (command.classpath.size() > 0) {
       args.add("-cp");
       final StringBuilder cp = new StringBuilder();
-      for (final File classpathFile : classpath)
+      for (final File classpathFile : command.classpath)
         cp.append(File.pathSeparator).append(classpathFile.getAbsolutePath());
 
       args.add(cp.substring(1));
