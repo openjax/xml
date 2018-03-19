@@ -246,20 +246,20 @@ public final class Time implements Serializable {
   protected String toEmbededString() {
     final StringBuilder builder = new StringBuilder();
     if (hour < 10)
-      builder.append("0").append(hour);
+      builder.append('0').append(hour);
     else
       builder.append(hour);
 
-    builder.append(":");
+    builder.append(':');
     if (minute < 10)
-      builder.append("0").append(minute);
+      builder.append('0').append(minute);
     else
       builder.append(minute);
 
-    builder.append(":");
+    builder.append(':');
     if (second < 10f) {
       if (second != 0f) {
-        builder.append("0").append(second);
+        builder.append('0').append(second);
         while (builder.charAt(builder.length() - 1) == '0')
           builder.deleteCharAt(builder.length() - 1);
       }
@@ -276,7 +276,7 @@ public final class Time implements Serializable {
       if (builder.length() - lastDotIndex == 2)
         builder.append("00");
       else if (builder.length() - lastDotIndex == 3)
-        builder.append("0");
+        builder.append('0');
     }
 
     return builder.toString();

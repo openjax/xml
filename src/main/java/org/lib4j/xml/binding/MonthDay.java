@@ -141,9 +141,9 @@ public final class MonthDay implements Serializable {
   protected String toEmbededString() {
     final StringBuilder builder = new StringBuilder();
     builder.append(month.toEmbededString());
-    builder.append("-");
+    builder.append('-');
     if (getDay() < 10)
-      builder.append("0").append(getDay());
+      builder.append('0').append(getDay());
     else
       builder.append(getDay());
 

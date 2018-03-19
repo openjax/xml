@@ -122,7 +122,7 @@ public final class Language implements CharSequence, Serializable {
 
     final StringBuilder builder = new StringBuilder();
     for (final String string : language)
-      builder.append("-").append(string);
+      builder.append('-').append(string);
 
     return encoded = builder.substring(1);
   }

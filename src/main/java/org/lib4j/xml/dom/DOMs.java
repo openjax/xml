@@ -49,43 +49,43 @@ public final class DOMs {
   public static String domToString(final Node node, final Map<String,String> schemaLocations, final DOMStyle ... styles) {
     final DOMStyle style = DOMStyle.consolidate(styles);
     final Set<String> namespaces = style.isIgnoreNamespaces() || schemaLocations == null ? null : new HashSet<String>();
-    final StringBuilder string = domToString(new StringBuilder(), namespaces, node, 0, style);
+    final StringBuilder builder = domToString(new StringBuilder(), namespaces, node, 0, style);
     if (schemaLocations == null || schemaLocations.size() == 0 || namespaces.size() == 0)
-      return string.toString();
+      return builder.toString();
 
     final StringBuilder locations = new StringBuilder();
     for (final String namespace : namespaces) {
       final String location = schemaLocations.get(namespace);
       if (location != null)
-        locations.append(namespace).append(" ").append(location);
+        locations.append(namespace).append(' ').append(location);
     }
 
     if (locations.length() == 0)
-      return string.toString();
+      return builder.toString();
 
-    int index = string.indexOf(">");
-    if (string.charAt(index - 1) == '/')
+    int index = builder.indexOf(">");
+    if (builder.charAt(index - 1) == '/')
       --index;
 
     locations.append('"');
     locations.insert(0, " xsi:schemaLocation=\"");
-    if (string.lastIndexOf("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", index) == -1)
+    if (builder.lastIndexOf("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", index) == -1)
       locations.insert(0, " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
 
-    string.insert(index, locations);
-    return string.toString();
+    builder.insert(index, locations);
+    return builder.toString();
   }
 
   private static final boolean validNamespaceURI(final String namespaceURI) {
     return namespaceURI != null && !XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI) && !XMLConstants.XML_NS_URI.equals(namespaceURI);
   }
 
-  private static StringBuilder domToString(final StringBuilder string, final Set<String> namespaces, final Node node, int depth, final DOMStyle style) {
+  private static StringBuilder domToString(final StringBuilder builder, final Set<String> namespaces, final Node node, int depth, final DOMStyle style) {
     if (node == null)
-      return string;
+      return builder;
 
     if (node instanceof Attr)
-      return attributeToString(string, namespaces, (Attr)node, depth, style);
+      return attributeToString(builder, namespaces, (Attr)node, depth, style);
 
     final String nodeName;
     if (style.isIgnoreNamespaces()) {
@@ -101,31 +101,31 @@ public final class DOMs {
     final String nodeValue = node.getNodeValue();
     final int type = node.getNodeType();
     if (Node.ELEMENT_NODE == type) {
-      if (style.isIndent() && string.length() > 1 && string.charAt(string.length() - 1) == '>') {
-        string.append("\n");
+      if (style.isIndent() && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
+        builder.append("\n");
         for (int i = 0; i < depth; i++)
-          string.append("  ");
+          builder.append("  ");
       }
 
-      string.append("<");
-      string.append(nodeName);
-      attributesToString(string, namespaces, node, depth + 1, style);
+      builder.append('<');
+      builder.append(nodeName);
+      attributesToString(builder, namespaces, node, depth + 1, style);
       if (node.hasChildNodes()) {
-        string.append(">");
+        builder.append('>');
         final NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++)
-          domToString(string, namespaces, nodeList.item(i), depth + 1, style);
+          domToString(builder, namespaces, nodeList.item(i), depth + 1, style);
 
-        if (style.isIndent() && string.length() > 1 && string.charAt(string.length() - 1) == '>') {
-          string.append("\n");
+        if (style.isIndent() && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
+          builder.append("\n");
           for (int i = 0; i < depth; i++)
-            string.append("  ");
+            builder.append("  ");
         }
 
-        string.append("</").append(nodeName).append(">");
+        builder.append("</").append(nodeName).append('>');
       }
       else {
-        string.append("/>");
+        builder.append("/>");
       }
     }
     else if (Node.TEXT_NODE == type && nodeValue != null && nodeValue.length() != 0) {
@@ -133,44 +133,44 @@ public final class DOMs {
       // '&amp;' becomes simply '&'. Since the string being constructed
       // here is intended to be used as XML text, we have to reconstruct
       // the standard entity references
-      entityConvert(string, nodeValue);
+      entityConvert(builder, nodeValue);
     }
 
-    return string;
+    return builder;
   }
 
-  private static StringBuilder attributeToString(final StringBuilder string, final Set<String> namespaces, final Attr attribute, int depth, final DOMStyle style) {
+  private static StringBuilder attributeToString(final StringBuilder builder, final Set<String> namespaces, final Attr attribute, int depth, final DOMStyle style) {
     final String nodeName = attribute.getNodeName();
     if (style.isIndentAttributes()) {
-      string.append("\n");
+      builder.append("\n");
       for (int j = 0; j < depth; j++)
-        string.append("  ");
+        builder.append("  ");
     }
     else {
-      string.append(" ");
+      builder.append(' ');
       if (namespaces != null && validNamespaceURI(attribute.getNamespaceURI()))
         namespaces.add(attribute.getNamespaceURI());
     }
 
-    string.append(nodeName);
-    string.append("=\"");
-    entityConvert(string, attribute.getNodeValue());
-    string.append("\"");
-    return string;
+    builder.append(nodeName);
+    builder.append("=\"");
+    entityConvert(builder, attribute.getNodeValue());
+    builder.append("\"");
+    return builder;
   }
 
-  private static StringBuilder attributesToString(final StringBuilder string, final Set<String> namespaces, final Node node, int depth, final DOMStyle style) {
+  private static StringBuilder attributesToString(final StringBuilder builder, final Set<String> namespaces, final Node node, int depth, final DOMStyle style) {
     final NamedNodeMap attributes = node.getAttributes();
     if (attributes == null)
-      return string;
+      return builder;
 
     for (int i = 0; i < attributes.getLength(); i++) {
       final Attr attribute = (Attr)attributes.item(i);
       if (!style.isIgnoreNamespaces() || !attribute.getNodeName().startsWith("xmlns"))
-        attributeToString(string, namespaces, attribute, depth, style);
+        attributeToString(builder, namespaces, attribute, depth, style);
     }
 
-    return string;
+    return builder;
   }
 
   /**
@@ -180,7 +180,7 @@ public final class DOMs {
    *          the String containing invalid entities.
    * @return String with expanded entities.
    */
-  private static void entityConvert(final StringBuilder string, String entity) {
+  private static void entityConvert(final StringBuilder builder, String entity) {
     if (entity == null)
       return;
 
@@ -189,22 +189,22 @@ public final class DOMs {
       final char ch = entity.charAt(i);
       switch (ch) {
         case '&':
-          string.append("&amp;");
+          builder.append("&amp;");
           break;
         case '>':
-          string.append("&gt;");
+          builder.append("&gt;");
           break;
         case '<':
-          string.append("&lt;");
+          builder.append("&lt;");
           break;
         case '\'':
-          string.append("&apos;");
+          builder.append("&apos;");
           break;
         case '"':
-          string.append("&quot;");
+          builder.append("&quot;");
           break;
         default:
-          string.append(ch);
+          builder.append(ch);
           break;
       }
     }

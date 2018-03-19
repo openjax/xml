@@ -136,7 +136,7 @@ public final class DateTime implements Serializable {
     if (date != null)
       builder.append(date.toEmbededString());
 
-    builder.append("T");
+    builder.append('T');
     if (time != null)
       builder.append(time.toEmbededString());
 

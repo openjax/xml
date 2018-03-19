@@ -152,9 +152,9 @@ public final class Date implements Serializable {
   protected String toEmbededString() {
     final StringBuilder builder = new StringBuilder();
     builder.append(yearMonth.toEmbededString());
-    builder.append("-");
+    builder.append('-');
     if (getDay() < 10)
-      builder.append("0").append(getDay());
+      builder.append('0').append(getDay());
     else
       builder.append(getDay());
 

@@ -152,7 +152,7 @@ public final class Year implements Serializable {
     else if (year < 100)
       builder.append("00").append(year);
     else if (year < 1000)
-      builder.append("0").append(year);
+      builder.append('0').append(year);
     else
       builder.append(year);
 

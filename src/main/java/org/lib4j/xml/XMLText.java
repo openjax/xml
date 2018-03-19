@@ -313,7 +313,7 @@ public class XMLText {
           result.append((char)value);
         }
         else {
-          result.append("&").append(escape).append(";");
+          result.append('&').append(escape).append(';');
         }
       }
 

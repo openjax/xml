@@ -133,9 +133,9 @@ public final class YearMonth implements Serializable {
   protected String toEmbededString() {
     final StringBuilder builder = new StringBuilder();
     builder.append(year.toEmbededString());
-    builder.append("-");
+    builder.append('-');
     if (getMonth() < 10)
-      builder.append("0").append(getMonth());
+      builder.append('0').append(getMonth());
     else
       builder.append(getMonth());
 
