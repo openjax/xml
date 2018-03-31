@@ -17,7 +17,6 @@
 package org.lib4j.xml.sax;
 
 import java.net.URL;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -25,18 +24,18 @@ import org.lib4j.net.CachedURL;
 
 public class XMLDocument {
   private final CachedURL cachedUrl;
-  private final Map<String,SchemaLocation> schemaReferences;
+  private final XMLCatalog catalog;
   private final boolean isXSD;
   private final QName rootElement;
   private final URL schemaLocation;
   private final boolean referencesOnlyLocal;
 
-  public XMLDocument(final CachedURL cachedUrl, final Map<String,SchemaLocation> schemaReferences, final QName rootElement, final boolean isXSD, final boolean referencesOnlyLocal) {
+  public XMLDocument(final CachedURL cachedUrl, final XMLCatalog catalog, final QName rootElement, final boolean isXSD, final boolean referencesOnlyLocal) {
     this.cachedUrl = cachedUrl;
-    this.schemaReferences = schemaReferences;
+    this.catalog = catalog;
     this.rootElement = rootElement;
-    final SchemaLocation schemaLocation = schemaReferences.get(rootElement.getNamespaceURI());
-    this.schemaLocation = schemaLocation == null ? null : schemaLocation.getLocation().get(rootElement.getNamespaceURI()).toURL();
+    final SchemaLocation schemaLocation = catalog.get(rootElement.getNamespaceURI());
+    this.schemaLocation = schemaLocation == null ? null : schemaLocation.getDirectory().get(rootElement.getNamespaceURI()).toURL();
     this.isXSD = isXSD;
     this.referencesOnlyLocal = referencesOnlyLocal;
   }
@@ -53,8 +52,8 @@ public class XMLDocument {
     return schemaLocation;
   }
 
-  public Map<String,SchemaLocation> getSchemaReferences() {
-    return schemaReferences;
+  public XMLCatalog getCatalog() {
+    return catalog;
   }
 
   public boolean isXSD() {
@@ -63,5 +62,33 @@ public class XMLDocument {
 
   public boolean referencesOnlyLocal() {
     return referencesOnlyLocal;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+
+    if (!(obj instanceof XMLDocument))
+      return false;
+
+    final XMLDocument that = (XMLDocument)obj;
+    return isXSD == that.isXSD && referencesOnlyLocal == that.referencesOnlyLocal && (cachedUrl != null ? cachedUrl.equals(that.cachedUrl) : that.cachedUrl == null) && (catalog != null ? catalog.equals(that.catalog) : that.catalog == null) && (rootElement != null ? rootElement.equals(that.rootElement) : that.rootElement == null);
+  }
+
+  @Override
+  public int hashCode() {
+    int hashCode = 17;
+    hashCode = 31 * hashCode + (isXSD ? 1 : 0);
+    hashCode = 31 * hashCode + (referencesOnlyLocal ? 1 : 0);
+    hashCode = 31 * hashCode + cachedUrl.hashCode();
+    hashCode = 31 * hashCode + catalog.hashCode();
+    hashCode = 31 * hashCode + rootElement.hashCode();
+    return hashCode;
+  }
+
+  @Override
+  public String toString() {
+    return "URL: " + cachedUrl.toExternalForm() + "\nIsXSD: " + isXSD + "\nReferencesOnlyLocal: " + referencesOnlyLocal + "\nCatalog:\n" + catalog.toTR9401();
   }
 }

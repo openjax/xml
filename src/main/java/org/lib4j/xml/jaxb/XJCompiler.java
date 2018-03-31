@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -401,7 +402,7 @@ public class XJCompiler {
 
   private static final Logger logger = LoggerFactory.getLogger(XJCompiler.class);
 
-  public static void compile(final Command command) throws JAXBException {
+  public static void compile(final Command command) throws JAXBException, MalformedURLException {
     if (command.getSchemas() == null || command.getSchemas().size() == 0)
       return;
 
@@ -422,8 +423,9 @@ public class XJCompiler {
       args.add("-mark-generated");
 
     if (command.getCatalog() != null) {
+      args.add(1, "-Dxml.catalog.ignoreMissing");
       args.add("-catalog");
-      args.add(command.getCatalog().getAbsolutePath());
+      args.add(command.getCatalog().toURI().toURL().toExternalForm());
     }
 
     if (command.isEnableIntrospection())
@@ -544,7 +546,7 @@ public class XJCompiler {
       if (exitCode != 0)
         throw new JAXBException("xjc finished with code: " + exitCode + "\n" + Collections.toString(args, " "));
     }
-    catch (final InterruptedException | IOException e) {
+    catch (final IOException | InterruptedException e) {
       throw new JAXBException(e.getMessage(), e);
     }
   }

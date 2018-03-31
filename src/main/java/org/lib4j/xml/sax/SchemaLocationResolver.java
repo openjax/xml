@@ -17,6 +17,7 @@
 package org.lib4j.xml.sax;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 
 import javax.xml.XMLConstants;
@@ -27,10 +28,13 @@ import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
 public class SchemaLocationResolver implements LSResourceResolver {
-  private final Map<String,SchemaLocation> schemaLocations;
+  private static URL xmlSchemaXsd = null;
+  private static URL xmlXsd = null;
 
-  public SchemaLocationResolver(final Map<String,SchemaLocation> schemaLocations) {
-    this.schemaLocations = schemaLocations;
+  private final XMLCatalog catalog;
+
+  public SchemaLocationResolver(final XMLCatalog catalog) {
+    this.catalog = catalog;
   }
 
   @Override
@@ -44,42 +48,48 @@ public class SchemaLocationResolver implements LSResourceResolver {
       systemId = SchemaLocationHandler.getPath(baseURI, systemId);
 
     try {
-      SchemaLocation schemaLocation = schemaLocations.get(namespaceURI);
-      final Map<String,CachedURL> locations;
+      SchemaLocation schemaLocation = catalog.get(namespaceURI);
+      final Map<String,CachedURL> directory;
       if (schemaLocation == null) {
         if (namespaceURI == null) {
-          SchemaLocation nullLocation = schemaLocations.get(null);
+          SchemaLocation nullLocation = catalog.get(null);
           if (nullLocation == null)
-            schemaLocations.put(null, nullLocation = new SchemaLocation(null));
+            catalog.put(null, nullLocation = new SchemaLocation(null));
 
-          locations = nullLocation.getLocation();
+          directory = nullLocation.getDirectory();
         }
         else if (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(namespaceURI)) {
-          schemaLocations.put(XMLConstants.W3C_XML_SCHEMA_NS_URI, schemaLocation = new SchemaLocation(namespaceURI));
-          schemaLocation.getLocation().put(namespaceURI, new CachedURL(Resources.getResource("xmlschema/XMLSchema.xsd").getURL()));
-          locations = schemaLocation.getLocation();
+          if (xmlSchemaXsd == null)
+            xmlSchemaXsd = Resources.getResource("xmlschema/XMLSchema.xsd").getURL();
+
+          catalog.put(XMLConstants.W3C_XML_SCHEMA_NS_URI, schemaLocation = new SchemaLocation(namespaceURI));
+          schemaLocation.getDirectory().put(namespaceURI, new CachedURL(xmlSchemaXsd));
+          directory = schemaLocation.getDirectory();
         }
         else if (XMLConstants.XML_NS_URI.equals(namespaceURI) && "http://www.w3.org/2001/xml.xsd".equals(systemId)) {
-          schemaLocations.put(namespaceURI, schemaLocation = new SchemaLocation(systemId));
-          schemaLocation.getLocation().put(systemId, new CachedURL(Resources.getResource("xmlschema/xml.xsd").getURL()));
-          locations = schemaLocation.getLocation();
+          if (xmlXsd == null)
+            xmlXsd = Resources.getResource("xmlschema/xml.xsd").getURL();
+
+          catalog.put(namespaceURI, schemaLocation = new SchemaLocation(systemId));
+          schemaLocation.getDirectory().put(systemId, new CachedURL(xmlXsd));
+          directory = schemaLocation.getDirectory();
         }
         else {
           return new LSInputImpl(systemId, publicId, baseURI);
         }
       }
       else {
-        locations = schemaLocation.getLocation();
+        directory = schemaLocation.getDirectory();
       }
 
-      CachedURL url = locations.get(systemId);
+      CachedURL url = directory.get(systemId);
       if (url == null) {
         if (namespaceURI == null) {
           if ("http://www.w3.org/2001/XMLSchema.dtd".equals(systemId)) {
-            locations.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.dtd")));
+            directory.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.dtd")));
           }
           else if ("http://www.w3.org/2001/datatypes.dtd".equals(systemId)) {
-            locations.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/datatypes.dtd")));
+            directory.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/datatypes.dtd")));
           }
           else {
             return new LSInputImpl(systemId, publicId, baseURI);
@@ -95,7 +105,7 @@ public class SchemaLocationResolver implements LSResourceResolver {
       return input;
     }
     catch (final IOException e) {
-      throw new UnsupportedOperationException(e);
+      throw new RuntimeException(e);
     }
   }
 }

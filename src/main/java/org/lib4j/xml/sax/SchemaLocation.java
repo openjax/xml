@@ -16,13 +16,11 @@
 
 package org.lib4j.xml.sax;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.lib4j.lang.Paths;
 import org.lib4j.net.CachedURL;
-import org.lib4j.net.URLs;
 
 public class SchemaLocation {
   private final String namespace;
@@ -33,20 +31,42 @@ public class SchemaLocation {
     this.location = new HashMap<String,CachedURL>();
   }
 
-  public SchemaLocation(final String namespace, final CachedURL location) throws IOException {
+  public SchemaLocation(final String namespace, final CachedURL location) {
     this(namespace);
     if (location == null)
       throw new NullPointerException("location == null");
 
     this.location.put(namespace, location);
-    this.location.put(Paths.canonicalize(URLs.toExternalForm(location)), location);
+    this.location.put(Paths.canonicalize(location.toExternalForm()), location);
   }
 
   public String getNamespace() {
     return namespace;
   }
 
-  public Map<String,CachedURL> getLocation() {
+  public Map<String,CachedURL> getDirectory() {
     return location;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+
+    if (!(obj instanceof SchemaLocation))
+      return false;
+
+    final SchemaLocation that = (SchemaLocation)obj;
+    return (namespace != null ? namespace.equals(that.namespace) : that.namespace == null) && location.equals(that.location);
+  }
+
+  @Override
+  public int hashCode() {
+    return (namespace != null ? namespace.hashCode() : 0) + location.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "{" + namespace + ", " + location + "}";
   }
 }

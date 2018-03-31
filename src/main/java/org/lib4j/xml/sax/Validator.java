@@ -42,7 +42,7 @@ public final class Validator {
   public static CachedURL validate(final URL url, final boolean offline, final ErrorHandler errorHandler) throws IOException, SAXException {
     final CachedURL cachedURL = new CachedURL(url);
     final XMLDocument xmlDocument = XMLDocuments.parse(cachedURL.toURL(), offline, true);
-    final Map<String,SchemaLocation> schemaReferences = xmlDocument.getSchemaReferences();
+    final XMLCatalog schemaReferences = xmlDocument.getCatalog();
     if (offline && !xmlDocument.referencesOnlyLocal()) {
       errorHandler.warning(new SAXParseException("Offline execution not checking remote schemas.", URLs.toExternalForm(url), null, 0, 0));
       return cachedURL;
@@ -74,9 +74,9 @@ public final class Validator {
       }
     }
 
-    for (final Map.Entry<String,SchemaLocation> schemaLocation : schemaReferences.entrySet()) {
-      final Map<String,CachedURL> locations = schemaLocation.getValue().getLocation();
-      for (final CachedURL cachedUrl : locations.values())
+    for (final Map.Entry<String,SchemaLocation> entry : schemaReferences.entrySet()) {
+      final Map<String,CachedURL> directory = entry.getValue().getDirectory();
+      for (final CachedURL cachedUrl : directory.values())
         cachedUrl.destroy();
     }
 

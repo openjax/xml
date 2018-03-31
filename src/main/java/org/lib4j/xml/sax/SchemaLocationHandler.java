@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -45,8 +44,9 @@ public class SchemaLocationHandler extends DefaultHandler {
   }
 
   private final Set<String> namespaceURIs = new HashSet<String>();
+  private final Map<String,CachedURL> absoluteIncludes = new LinkedHashMap<String,CachedURL>();
   private final Map<String,CachedURL> imports = new LinkedHashMap<String,CachedURL>();
-  private final Set<CachedURL> includes = new LinkedHashSet<CachedURL>();
+  private final Map<String,CachedURL> includes = new LinkedHashMap<String,CachedURL>();
   private boolean referencesOnlyLocal = true;
   private String targetNamespace = null;
 
@@ -66,7 +66,7 @@ public class SchemaLocationHandler extends DefaultHandler {
     return imports;
   }
 
-  public Set<CachedURL> getIncludes() {
+  public Map<String,CachedURL> getIncludes() {
     return includes;
   }
 
@@ -74,7 +74,7 @@ public class SchemaLocationHandler extends DefaultHandler {
 
   public boolean isXSD() {
     if (isXSD == null)
-      throw new IllegalStateException();
+      throw new IllegalStateException("Parsing has not been performed");
 
     return isXSD;
   }
@@ -83,7 +83,7 @@ public class SchemaLocationHandler extends DefaultHandler {
 
   public QName getRootElement() {
     if (rootElement == null)
-      throw new IllegalStateException();
+      throw new IllegalStateException("Parsing has not been performed");
 
     return rootElement;
   }
@@ -131,8 +131,9 @@ public class SchemaLocationHandler extends DefaultHandler {
         }
 
         try {
-          final String path = getPath(URLs.toExternalForm(url), schemaLocation);
+          final String path = getPath(url.toExternalForm(), schemaLocation);
           referencesOnlyLocal = Paths.isLocal(path) && referencesOnlyLocal;
+          namespaceURIs.add(namespace);
           if (!imports.containsKey(namespace))
             imports.put(namespace, new CachedURL(path));
         }
@@ -145,10 +146,13 @@ public class SchemaLocationHandler extends DefaultHandler {
           if ("schemaLocation".equals(attributes.getLocalName(i))) {
             final String schemaLocation = attributes.getValue(i);
             try {
-              final String path = getPath(URLs.toExternalForm(url), schemaLocation);
-              referencesOnlyLocal = Paths.isLocal(path) && referencesOnlyLocal;
-              final CachedURL locationURL = new CachedURL(path);
-              includes.add(locationURL);
+              final String absolutePath = getPath(URLs.toExternalForm(url), schemaLocation);
+              referencesOnlyLocal = Paths.isLocal(absolutePath) && referencesOnlyLocal;
+              CachedURL cachedURL = absoluteIncludes.get(absolutePath);
+              if (cachedURL == null)
+                absoluteIncludes.put(absolutePath, cachedURL = new CachedURL(absolutePath));
+
+              includes.put(schemaLocation, cachedURL);
             }
             catch (final MalformedURLException e) {
               throw new SAXException(e);
@@ -178,18 +182,18 @@ public class SchemaLocationHandler extends DefaultHandler {
                     imports.put(schemaNamespaceURI, new CachedURL(path));
                 }
                 catch (final MalformedURLException e) {
-                  throw new SAXException();
+                  throw new SAXException(e);
                 }
               }
             }
           }
         }
-        else if (!namespaceURI.isEmpty()) {
+        else if (namespaceURI.length() != 0) {
           namespaceURIs.add(namespaceURI);
         }
       }
 
-      if (!XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI.equals(uri) && !uri.isEmpty())
+      if (!XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI.equals(uri) && uri.length() != 0)
         namespaceURIs.add(uri);
     }
   }
