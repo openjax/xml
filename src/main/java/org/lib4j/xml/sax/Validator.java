@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
@@ -40,44 +39,53 @@ public final class Validator {
   }
 
   public static CachedURL validate(final URL url, final boolean offline, final ErrorHandler errorHandler) throws IOException, SAXException {
-    final CachedURL cachedURL = new CachedURL(url);
-    final XMLDocument xmlDocument = XMLDocuments.parse(cachedURL.toURL(), offline, true);
-    final XMLCatalog schemaReferences = xmlDocument.getCatalog();
+    final CachedURL cachedUrl = new CachedURL(url);
+    final XMLDocument xmlDocument = XMLDocuments.parse(cachedUrl, offline, true);
+    final XMLCatalog catalog = xmlDocument.getCatalog();
     if (offline && !xmlDocument.referencesOnlyLocal()) {
       errorHandler.warning(new SAXParseException("Offline execution not checking remote schemas.", URLs.toExternalForm(url), null, 0, 0));
-      return cachedURL;
+      return cachedUrl;
     }
 
-    if (schemaReferences.isEmpty() && !xmlDocument.isXSD()) {
+    if (catalog.isEmpty() && !xmlDocument.isXsd()) {
       errorHandler.warning(new SAXParseException("There is no schema or DTD associated with the document.", URLs.toExternalForm(url), null, 0, 0));
-      return cachedURL;
+      return cachedUrl;
     }
 
+    try (final InputStream in = cachedUrl.openStream()) {
+      validate(new StreamSource(in, url.toString()), catalog, xmlDocument.isXsd(), errorHandler);
+    }
+
+    catalog.destroy();
+    return cachedUrl;
+  }
+
+  public static CachedURL validate(final URL url, final XMLCatalog catalog, final boolean isXsd, final ErrorHandler errorHandler) throws IOException, SAXException {
+    final CachedURL cachedUrl = new CachedURL(url);
+    try (final InputStream in = cachedUrl.openStream()) {
+      validate(new StreamSource(in, url.toString()), catalog, isXsd, errorHandler);
+    }
+
+    return cachedUrl;
+  }
+
+  public static void validate(final StreamSource streamSource, final XMLCatalog catalog, final boolean isXsd, final ErrorHandler errorHandler) throws IOException, SAXException {
     final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler);
-    final SchemaLocationResolver schemaLocationResolver = new SchemaLocationResolver(schemaReferences);
-    if (xmlDocument.isXSD()) {
+    final SchemaLocationResolver schemaLocationResolver = new SchemaLocationResolver(catalog);
+    if (isXsd) {
       final SchemaFactory factory = SchemaFactory.newInstance(XML_11_URI);
       factory.setResourceResolver(schemaLocationResolver);
       factory.setErrorHandler(validatorErrorHandler);
 
-      try (final InputStream in = cachedURL.toURL().openStream()) {
-        factory.newSchema(new StreamSource(in, cachedURL.toString()));
-      }
+      factory.newSchema();
     }
     else {
       final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
       validator.setResourceResolver(schemaLocationResolver);
       validator.setErrorHandler(validatorErrorHandler);
 
-      try (final InputStream in = url.openStream()) {
-        validator.validate(new StreamSource(in, cachedURL.toString()));
-      }
-    }
-
-    for (final Map.Entry<String,SchemaLocation> entry : schemaReferences.entrySet()) {
-      final Map<String,CachedURL> directory = entry.getValue().getDirectory();
-      for (final CachedURL cachedUrl : directory.values())
-        cachedUrl.destroy();
+      System.err.println(streamSource.getSystemId());
+      validator.validate(streamSource);
     }
 
     if (validatorErrorHandler.getErrors() != null) {
@@ -90,8 +98,6 @@ public final class Validator {
 
       throw exception;
     }
-
-    return cachedURL;
   }
 
   private Validator() {

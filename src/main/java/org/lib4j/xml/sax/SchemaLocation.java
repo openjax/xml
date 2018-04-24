@@ -24,11 +24,11 @@ import org.lib4j.net.CachedURL;
 
 public class SchemaLocation {
   private final String namespace;
-  private final Map<String,CachedURL> location;
+  private final Map<String,CachedURL> directory;
 
   public SchemaLocation(final String namespace) {
     this.namespace = namespace;
-    this.location = new HashMap<String,CachedURL>();
+    this.directory = new HashMap<String,CachedURL>();
   }
 
   public SchemaLocation(final String namespace, final CachedURL location) {
@@ -36,8 +36,8 @@ public class SchemaLocation {
     if (location == null)
       throw new NullPointerException("location == null");
 
-    this.location.put(namespace, location);
-    this.location.put(Paths.canonicalize(location.toExternalForm()), location);
+    this.directory.put(namespace, location);
+    this.directory.put(Paths.canonicalize(location.toExternalForm()), location);
   }
 
   public String getNamespace() {
@@ -45,7 +45,7 @@ public class SchemaLocation {
   }
 
   public Map<String,CachedURL> getDirectory() {
-    return location;
+    return directory;
   }
 
   @Override
@@ -57,16 +57,16 @@ public class SchemaLocation {
       return false;
 
     final SchemaLocation that = (SchemaLocation)obj;
-    return (namespace != null ? namespace.equals(that.namespace) : that.namespace == null) && location.equals(that.location);
+    return (namespace != null ? namespace.equals(that.namespace) : that.namespace == null) && directory.equals(that.directory);
   }
 
   @Override
   public int hashCode() {
-    return (namespace != null ? namespace.hashCode() : 0) + location.hashCode();
+    return (namespace != null ? namespace.hashCode() : 0) + directory.hashCode();
   }
 
   @Override
   public String toString() {
-    return "{" + namespace + ", " + location + "}";
+    return "{" + namespace + ", " + directory + "}";
   }
 }

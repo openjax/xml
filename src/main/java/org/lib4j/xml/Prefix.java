@@ -38,6 +38,9 @@ public final class Prefix {
 //  private final String lower;
 
   private Prefix(final String prefix) {
+    if (prefix == null)
+      throw new NullPointerException("prefix == null");
+
     this.prefix = prefix;
     /*if (prefix.equals(prefix.toUpperCase())) {
       title = prefix;

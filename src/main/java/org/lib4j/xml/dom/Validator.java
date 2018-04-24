@@ -25,6 +25,7 @@ import java.util.Collection;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
+import org.lib4j.net.CachedURL;
 import org.lib4j.net.URLs;
 import org.lib4j.xml.validate.ValidationException;
 import org.lib4j.xml.validate.ValidatorError;
@@ -85,7 +86,7 @@ public abstract class Validator {
       if (namespaceURI == null || namespaceURI.length() == 0 || XSI.getNamespaceURI().equals(namespaceURI))
         continue;
 
-      final URL schemaLocation = getSchemaLocation(namespaceURI);
+      final CachedURL schemaLocation = getSchemaLocation(namespaceURI);
       if (schemaLocation != null) {
         try {
           namespaceLocations += " " + namespaceURI + " " + URLs.toExternalForm(schemaLocation);
@@ -116,7 +117,7 @@ public abstract class Validator {
    *
    * @return The schemaLocation <code>URL</code>.
    */
-  protected abstract URL getSchemaLocation(final String namespaceURI);
+  protected abstract CachedURL getSchemaLocation(final String namespaceURI);
 
   protected abstract void parse(final Element element) throws IOException, ValidationException;
 

@@ -61,11 +61,18 @@ public final class XMLDocuments {
   }
 
   public static XMLDocument parse(final URL url, final boolean offline, final boolean validating) throws IOException, SAXException {
-    return parse(url, null, offline, validating);
+    return parse(new CachedURL(url), null, offline, validating);
+  }
+
+  public static XMLDocument parse(final CachedURL cachedUrl, final boolean offline, final boolean validating) throws IOException, SAXException {
+    return parse(cachedUrl, null, offline, validating);
   }
 
   public static XMLDocument parse(final URL url, final DocumentHandler documentHandler, final boolean offline, final boolean validating) throws IOException, SAXException {
-    final CachedURL cachedURL = new CachedURL(url);
+    return parse(new CachedURL(url), documentHandler, offline, validating);
+  }
+
+  public static XMLDocument parse(final CachedURL cachedURL, final DocumentHandler documentHandler, final boolean offline, final boolean validating) throws IOException, SAXException {
     final SchemaLocationHandler handler = new SchemaLocationHandler(cachedURL, validating);
     if (offline)
       Sockets.disableNetwork();
@@ -75,7 +82,7 @@ public final class XMLDocuments {
     parser.reset();
     final XMLCatalog catalog = new XMLCatalog();
     if (handler.isXSD())
-      catalog.put(handler.getTargetNamespace(), new SchemaLocation(handler.getTargetNamespace(), cachedURL));
+      catalog.putSchemaLocation(handler.getTargetNamespace(), new SchemaLocation(handler.getTargetNamespace(), cachedURL));
 
     boolean referencesOnlyLocal = imports(parser, documentHandler, offline, catalog, handler.getNamespaceURIs(), handler.getImports());
     if (handler.isXSD())
@@ -91,7 +98,7 @@ public final class XMLDocuments {
   private static boolean imports(final SAXParser parser, final DocumentHandler documentHandler, final boolean offline, final XMLCatalog catalog, final Set<String> namespaceURIs, final Map<String,CachedURL> schemaLocations) throws IOException, SAXException {
     boolean referencesOnlyLocal = true;
     for (final Map.Entry<String,CachedURL> schemaLocation : schemaLocations.entrySet()) {
-      if (!catalog.containsKey(schemaLocation.getKey())) {
+      if (!catalog.hasSchemaLocation(schemaLocation.getKey())) {
         if (!offline || (referencesOnlyLocal = schemaLocation.getValue().isLocal() && referencesOnlyLocal)) {
           final SchemaLocationHandler handler = new SchemaLocationHandler(schemaLocation.getValue(), false);
           try {
@@ -105,7 +112,7 @@ public final class XMLDocuments {
             schemaLocation.getValue().reset();
           }
 
-          catalog.put(schemaLocation.getKey(), new SchemaLocation(schemaLocation.getKey(), schemaLocation.getValue()));
+          catalog.putSchemaLocation(schemaLocation.getKey(), new SchemaLocation(schemaLocation.getKey(), schemaLocation.getValue()));
           for (final String location : handler.getImports().keySet())
             namespaceURIs.add(location);
 
@@ -139,7 +146,7 @@ public final class XMLDocuments {
           include.reset();
         }
 
-        references.get(namespaceURI).getDirectory().put(entry.getKey(), include);
+        references.getSchemaLocation(namespaceURI).getDirectory().put(entry.getKey(), include);
         referencesOnlyLocal = includes(parser, documentHandler, offline, references, namespaceURI, handler.getIncludes()) && referencesOnlyLocal;
       }
     }

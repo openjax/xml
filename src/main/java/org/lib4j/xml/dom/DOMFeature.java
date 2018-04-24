@@ -16,203 +16,187 @@
 
 package org.lib4j.xml.dom;
 
-import com.sun.org.apache.xerces.internal.impl.Constants;
+import org.apache.xerces.impl.Constants;
 
-public final class DOMFeature {
+public enum DOMFeature {
   /**
    * Comments.
    */
-  public static final DOMFeature INCLUDE_COMMENTS = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.INCLUDE_COMMENTS_FEATURE);
+  INCLUDE_COMMENTS(Constants.SAX_FEATURE_PREFIX, Constants.INCLUDE_COMMENTS_FEATURE),
 
   /**
    * Create cdata nodes.
    */
-  public static final DOMFeature CREATE_CDATA_NODES = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.CREATE_CDATA_NODES_FEATURE);
+  CREATE_CDATA_NODES(Constants.SAX_FEATURE_PREFIX, Constants.CREATE_CDATA_NODES_FEATURE),
 
   /**
    * Load as infoset.
    */
-  public static final DOMFeature LOAD_AS_INFOSET = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.LOAD_AS_INFOSET);
+  LOAD_AS_INFOSET(Constants.SAX_FEATURE_PREFIX, Constants.LOAD_AS_INFOSET),
 
   /**
    * Canonical form.
    */
-  public static final DOMFeature DOM_CANONICAL_FORM = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_CANONICAL_FORM);
+  DOM_CANONICAL_FORM(Constants.SAX_FEATURE_PREFIX, Constants.DOM_CANONICAL_FORM),
 
   /**
    * Support CDATA sections.
    */
-  public static final DOMFeature DOM_CDATA_SECTIONS = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_CDATA_SECTIONS);
+  DOM_CDATA_SECTIONS(Constants.SAX_FEATURE_PREFIX, Constants.DOM_CDATA_SECTIONS),
 
   /**
    * Support comments.
    */
-  public static final DOMFeature DOM_COMMENTS = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_COMMENTS);
+  DOM_COMMENTS(Constants.SAX_FEATURE_PREFIX, Constants.DOM_COMMENTS),
 
   /**
    * Charset overrides xml encoding. REVISIT: this feature seems to have no effect for Xerces.
    */
-  public static final DOMFeature DOM_CHARSET_OVERRIDES_XML_ENCODING = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_CHARSET_OVERRIDES_XML_ENCODING);
+  DOM_CHARSET_OVERRIDES_XML_ENCODING(Constants.SAX_FEATURE_PREFIX, Constants.DOM_CHARSET_OVERRIDES_XML_ENCODING),
 
   /**
    * Data normailzation.
    */
-  public static final DOMFeature DOM_DATATYPE_NORMALIZATION = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_DATATYPE_NORMALIZATION);
+  DOM_DATATYPE_NORMALIZATION(Constants.SAX_FEATURE_PREFIX, Constants.DOM_DATATYPE_NORMALIZATION),
 
   /**
    * Support entities.
    */
-  public static final DOMFeature DOM_ENTITIES = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_ENTITIES);
+  DOM_ENTITIES(Constants.SAX_FEATURE_PREFIX, Constants.DOM_ENTITIES),
 
   /**
    * Support infoset.
    */
-  public static final DOMFeature DOM_INFOSET = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_INFOSET);
+  DOM_INFOSET(Constants.SAX_FEATURE_PREFIX, Constants.DOM_INFOSET),
 
   /**
    * Support namespaces.
    */
-  public static final DOMFeature DOM_NAMESPACES = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_NAMESPACES);
+  DOM_NAMESPACES(Constants.SAX_FEATURE_PREFIX, Constants.DOM_NAMESPACES),
 
   /**
    * Support namespace declarations.
    */
-  public static final DOMFeature DOM_NAMESPACE_DECLARATIONS = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_NAMESPACE_DECLARATIONS);
+  DOM_NAMESPACE_DECLARATIONS(Constants.SAX_FEATURE_PREFIX, Constants.DOM_NAMESPACE_DECLARATIONS),
 
   /**
    * Supported mediatypes only.
    */
-  public static final DOMFeature DOM_SUPPORTED_MEDIATYPES_ONLY = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_SUPPORTED_MEDIATYPES_ONLY);
+  DOM_SUPPORTED_MEDIATYPES_ONLY(Constants.SAX_FEATURE_PREFIX, Constants.DOM_SUPPORTED_MEDIATYPES_ONLY),
 
   /**
    * Validate if schema.
    */
-  public static final DOMFeature DOM_VALIDATE_IF_SCHEMA = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_VALIDATE_IF_SCHEMA);
+  DOM_VALIDATE_IF_SCHEMA(Constants.SAX_FEATURE_PREFIX, Constants.DOM_VALIDATE_IF_SCHEMA),
 
   /**
    * Validate.
    */
-  public static final DOMFeature DOM_VALIDATE = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_VALIDATE);
+  DOM_VALIDATE(Constants.SAX_FEATURE_PREFIX, Constants.DOM_VALIDATE),
 
   /**
    * Element content whitespace.
    */
-  public static final DOMFeature DOM_ELEMENT_CONTENT_WHITESPACE = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_ELEMENT_CONTENT_WHITESPACE);
+  DOM_ELEMENT_CONTENT_WHITESPACE(Constants.SAX_FEATURE_PREFIX, Constants.DOM_ELEMENT_CONTENT_WHITESPACE),
 
   /**
    * Discard default content.
    */
-  public static final DOMFeature DOM_DISCARD_DEFAULT_CONTENT = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_DISCARD_DEFAULT_CONTENT);
+  DOM_DISCARD_DEFAULT_CONTENT(Constants.SAX_FEATURE_PREFIX, Constants.DOM_DISCARD_DEFAULT_CONTENT),
 
   /**
    * Normalize characters.
    */
-  public static final DOMFeature DOM_NORMALIZE_CHARACTERS = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_NORMALIZE_CHARACTERS);
+  DOM_NORMALIZE_CHARACTERS(Constants.SAX_FEATURE_PREFIX, Constants.DOM_NORMALIZE_CHARACTERS),
 
   /**
    * Check char normalization.
    */
-  public static final DOMFeature DOM_CHECK_CHAR_NORMALIZATION = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_CHECK_CHAR_NORMALIZATION);
+  DOM_CHECK_CHAR_NORMALIZATION(Constants.SAX_FEATURE_PREFIX, Constants.DOM_CHECK_CHAR_NORMALIZATION),
 
   /**
    * Check wellformed.
    */
-  public static final DOMFeature DOM_WELLFORMED = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_WELLFORMED);
+  DOM_WELLFORMED(Constants.SAX_FEATURE_PREFIX, Constants.DOM_WELLFORMED),
 
   /**
    * Split CDATA.
    */
-  public static final DOMFeature DOM_SPLIT_CDATA = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_SPLIT_CDATA);
+  DOM_SPLIT_CDATA(Constants.SAX_FEATURE_PREFIX, Constants.DOM_SPLIT_CDATA),
 
   /**
    * Format pretty print.
    */
-  public static final DOMFeature DOM_FORMAT_PRETTY_PRINT = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_FORMAT_PRETTY_PRINT);
+  DOM_FORMAT_PRETTY_PRINT(Constants.SAX_FEATURE_PREFIX, Constants.DOM_FORMAT_PRETTY_PRINT),
 
   /**
    * XMLDECL.
    */
-  public static final DOMFeature DOM_XMLDECL = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_XMLDECL);
+  DOM_XMLDECL(Constants.SAX_FEATURE_PREFIX, Constants.DOM_XMLDECL),
 
   /**
    * Unknown chars.
    */
-  public static final DOMFeature DOM_UNKNOWNCHARS = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_UNKNOWNCHARS);
+  DOM_UNKNOWNCHARS(Constants.SAX_FEATURE_PREFIX, Constants.DOM_UNKNOWNCHARS),
 
   /**
    * Certified.
    */
-  public static final DOMFeature DOM_CERTIFIED = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_CERTIFIED);
+  DOM_CERTIFIED(Constants.SAX_FEATURE_PREFIX, Constants.DOM_CERTIFIED),
 
   /**
    * Disallow DOCTYPE.
    */
-  public static final DOMFeature DOM_DISALLOW_DOCTYPE = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_DISALLOW_DOCTYPE);
+  DOM_DISALLOW_DOCTYPE(Constants.SAX_FEATURE_PREFIX, Constants.DOM_DISALLOW_DOCTYPE),
 
   /**
    * Ignore unknown character denormalizations.
    */
-  public static final DOMFeature DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS = new DOMFeature(Constants.SAX_FEATURE_PREFIX + Constants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS);
+  DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS(Constants.SAX_FEATURE_PREFIX, Constants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS),
 
   /**
    * Defer node expansion.
    */
-  public static final DOMFeature DEFER_NODE_EXPANSION = new DOMFeature(Constants.XERCES_FEATURE_PREFIX + Constants.DEFER_NODE_EXPANSION_FEATURE);
+  DEFER_NODE_EXPANSION(Constants.XERCES_FEATURE_PREFIX, Constants.DEFER_NODE_EXPANSION_FEATURE),
 
   /**
    * Include ignorable whitespace .
    */
-  public static final DOMFeature INCLUDE_IGNORABLE_WHITESPACE = new DOMFeature(Constants.XERCES_FEATURE_PREFIX + Constants.INCLUDE_IGNORABLE_WHITESPACE);
+  INCLUDE_IGNORABLE_WHITESPACE(Constants.XERCES_FEATURE_PREFIX, Constants.INCLUDE_IGNORABLE_WHITESPACE),
 
   /**
    * Resource resolver.
    */
-  public static final DOMFeature DOM_RESOURCE_RESOLVER = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_RESOURCE_RESOLVER);
+  DOM_RESOURCE_RESOLVER(Constants.SAX_PROPERTY_PREFIX, Constants.DOM_RESOURCE_RESOLVER),
 
   /**
    * Error handler.
    */
-  public static final DOMFeature DOM_ERROR_HANDLER = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_ERROR_HANDLER);
+  DOM_ERROR_HANDLER(Constants.SAX_PROPERTY_PREFIX, Constants.DOM_ERROR_HANDLER),
 
   /**
    * Schema type.
    */
-  public static final DOMFeature DOM_SCHEMA_TYPE = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_SCHEMA_TYPE);
+  DOM_SCHEMA_TYPE(Constants.SAX_PROPERTY_PREFIX, Constants.DOM_SCHEMA_TYPE),
 
   /**
    * Schema Location.
    */
-  public static final DOMFeature DOM_SCHEMA_LOCATION = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_SCHEMA_LOCATION);
+  DOM_SCHEMA_LOCATION(Constants.SAX_PROPERTY_PREFIX, Constants.DOM_SCHEMA_LOCATION),
 
   /**
    * XSModel.
    */
-  public static final DOMFeature DOM_PSVI = new DOMFeature(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_PSVI);
+  DOM_PSVI(Constants.SAX_PROPERTY_PREFIX, Constants.DOM_PSVI);
 
   private final String feature;
 
-  private DOMFeature(final String feature) {
-    this.feature = feature;
+  private DOMFeature(final String prefix, final String feature) {
+    this.feature = prefix + feature;
   }
 
-  public String getFeature() {
+  @Override
+  public String toString() {
     return feature;
-  }
-
-  @Override
-  public int hashCode() {
-    return feature.hashCode();
-  }
-
-  @Override
-  public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-
-    if (!(obj instanceof DOMFeature))
-      return false;
-
-    final DOMFeature domFeature = (DOMFeature)obj;
-    return feature != null ? feature.equals(domFeature.feature) : domFeature.feature == null;
   }
 }

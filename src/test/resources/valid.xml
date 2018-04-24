@@ -16,6 +16,6 @@
 -->
 <parent xmlns="http://xml.lib4j.org/test.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://xml.lib4j.org.org/test.xsd test.xsd">
+  xsi:schemaLocation="http://xml.lib4j.org/test.xsd test.xsd">
   <child>1</child>
 </parent>

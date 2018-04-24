@@ -16,58 +16,42 @@
 
 package org.lib4j.xml.dom;
 
-import com.sun.org.apache.xerces.internal.impl.Constants;
+import org.apache.xerces.impl.Constants;
 
-public final class DOMProperty {
+public enum DOMProperty {
   /**
    * DOM node.
    */
-  public static final DOMProperty DOM_NODE = new DOMProperty(Constants.SAX_PROPERTY_PREFIX + Constants.DOM_NODE_PROPERTY);
+  DOM_NODE(Constants.SAX_PROPERTY_PREFIX, Constants.DOM_NODE_PROPERTY),
 
   /**
    * JAXP schemaSource: when used internally may include DTD sources (DOM).
    */
-  public static final DOMProperty SCHEMA_SOURCE = new DOMProperty(Constants.JAXP_PROPERTY_PREFIX + Constants.SCHEMA_SOURCE);
+  SCHEMA_SOURCE(Constants.JAXP_PROPERTY_PREFIX, Constants.SCHEMA_SOURCE),
 
   /**
    * JAXP schemaSource language: when used internally may include DTD namespace (DOM).
    */
-  public static final DOMProperty SCHEMA_LANGUAGE = new DOMProperty(Constants.JAXP_PROPERTY_PREFIX + Constants.SCHEMA_LANGUAGE);
+  SCHEMA_LANGUAGE(Constants.JAXP_PROPERTY_PREFIX, Constants.SCHEMA_LANGUAGE),
 
   /**
    * Current element node.
    */
-  public static final DOMProperty CURRENT_ELEMENT_NODE = new DOMProperty(Constants.XERCES_PROPERTY_PREFIX + Constants.CURRENT_ELEMENT_NODE_PROPERTY);
+  CURRENT_ELEMENT_NODE(Constants.XERCES_PROPERTY_PREFIX, Constants.CURRENT_ELEMENT_NODE_PROPERTY),
 
   /**
    * Document final class name.
    */
-  public static final DOMProperty DOCUMENT_CLASS_NAME = new DOMProperty(Constants.XERCES_PROPERTY_PREFIX + Constants.DOCUMENT_CLASS_NAME_PROPERTY);
+  DOCUMENT_CLASS_NAME(Constants.XERCES_PROPERTY_PREFIX, Constants.DOCUMENT_CLASS_NAME_PROPERTY);
 
   private final String property;
 
-  private DOMProperty(final String property) {
-    this.property = property;
+  private DOMProperty(final String prefix, String property) {
+    this.property = prefix + property;
   }
 
-  public String getProperty() {
+  @Override
+  public String toString() {
     return property;
-  }
-
-  @Override
-  public int hashCode() {
-    return property.hashCode();
-  }
-
-  @Override
-  public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-
-    if (!(obj instanceof DOMProperty))
-      return false;
-
-    final DOMProperty domProperty = (DOMProperty)obj;
-    return property != null ? property.equals(domProperty.property) : domProperty.property == null;
   }
 }

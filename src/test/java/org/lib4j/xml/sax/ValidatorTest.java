@@ -29,7 +29,7 @@ public class ValidatorTest {
 
   @Test
   public void testValidate() throws Exception {
-//    Validator.validate(new File("src/test/resources/valid.xml"), true);
+    Validator.validate(new File("src/test/resources/valid.xml").toURI().toURL(), true);
     try {
       Validator.validate(new File("src/test/resources/invalid.xml").toURI().toURL(), true);
       Assert.fail("Should have failed.");

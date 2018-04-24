@@ -48,13 +48,13 @@ public class SchemaLocationResolver implements LSResourceResolver {
       systemId = SchemaLocationHandler.getPath(baseURI, systemId);
 
     try {
-      SchemaLocation schemaLocation = catalog.get(namespaceURI);
+      SchemaLocation schemaLocation = catalog.getSchemaLocation(namespaceURI);
       final Map<String,CachedURL> directory;
       if (schemaLocation == null) {
         if (namespaceURI == null) {
-          SchemaLocation nullLocation = catalog.get(null);
+          SchemaLocation nullLocation = catalog.getSchemaLocation(null);
           if (nullLocation == null)
-            catalog.put(null, nullLocation = new SchemaLocation(null));
+            catalog.putSchemaLocation(null, nullLocation = new SchemaLocation(null));
 
           directory = nullLocation.getDirectory();
         }
@@ -62,7 +62,7 @@ public class SchemaLocationResolver implements LSResourceResolver {
           if (xmlSchemaXsd == null)
             xmlSchemaXsd = Resources.getResource("xmlschema/XMLSchema.xsd").getURL();
 
-          catalog.put(XMLConstants.W3C_XML_SCHEMA_NS_URI, schemaLocation = new SchemaLocation(namespaceURI));
+          catalog.putSchemaLocation(XMLConstants.W3C_XML_SCHEMA_NS_URI, schemaLocation = new SchemaLocation(namespaceURI));
           schemaLocation.getDirectory().put(namespaceURI, new CachedURL(xmlSchemaXsd));
           directory = schemaLocation.getDirectory();
         }
@@ -70,7 +70,7 @@ public class SchemaLocationResolver implements LSResourceResolver {
           if (xmlXsd == null)
             xmlXsd = Resources.getResource("xmlschema/xml.xsd").getURL();
 
-          catalog.put(namespaceURI, schemaLocation = new SchemaLocation(systemId));
+          catalog.putSchemaLocation(namespaceURI, schemaLocation = new SchemaLocation(systemId));
           schemaLocation.getDirectory().put(systemId, new CachedURL(xmlXsd));
           directory = schemaLocation.getDirectory();
         }

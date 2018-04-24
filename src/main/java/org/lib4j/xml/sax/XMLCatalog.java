@@ -16,33 +16,29 @@
 
 package org.lib4j.xml.sax;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.lib4j.net.CachedURL;
 
 public class XMLCatalog {
   private final Map<String,SchemaLocation> schemaLocations = new LinkedHashMap<String,SchemaLocation>();
 
-  public SchemaLocation get(final String namespaceURI) {
-    return schemaLocations.get(namespaceURI);
-  }
-
-  public void put(final String key, final SchemaLocation schemaLocation) {
+  public void putSchemaLocation(final String key, final SchemaLocation schemaLocation) {
     schemaLocations.put(key, schemaLocation);
   }
 
-  public boolean containsKey(final String key) {
+  public SchemaLocation getSchemaLocation(final String namespaceURI) {
+    return schemaLocations.get(namespaceURI);
+  }
+
+  public boolean hasSchemaLocation(final String key) {
     return schemaLocations.containsKey(key);
   }
 
   public boolean isEmpty() {
     return schemaLocations.isEmpty();
-  }
-
-  public Set<Map.Entry<String,SchemaLocation>> entrySet() {
-    return schemaLocations.entrySet();
   }
 
   public String toTR9401() {
@@ -62,6 +58,14 @@ public class XMLCatalog {
     }
 
     return builder.toString();
+  }
+
+  public void destroy() throws IOException {
+    for (final Map.Entry<String,SchemaLocation> entry : schemaLocations.entrySet()) {
+      final Map<String,CachedURL> directory = entry.getValue().getDirectory();
+      for (final CachedURL cachedUrl : directory.values())
+        cachedUrl.destroy();
+    }
   }
 
   @Override

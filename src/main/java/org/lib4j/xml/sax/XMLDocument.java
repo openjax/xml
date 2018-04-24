@@ -34,7 +34,7 @@ public class XMLDocument {
     this.cachedUrl = cachedUrl;
     this.catalog = catalog;
     this.rootElement = rootElement;
-    final SchemaLocation schemaLocation = catalog.get(rootElement.getNamespaceURI());
+    final SchemaLocation schemaLocation = catalog.getSchemaLocation(rootElement.getNamespaceURI());
     this.schemaLocation = schemaLocation == null ? null : schemaLocation.getDirectory().get(rootElement.getNamespaceURI()).toURL();
     this.isXSD = isXSD;
     this.referencesOnlyLocal = referencesOnlyLocal;
@@ -56,7 +56,7 @@ public class XMLDocument {
     return catalog;
   }
 
-  public boolean isXSD() {
+  public boolean isXsd() {
     return isXSD;
   }
 
