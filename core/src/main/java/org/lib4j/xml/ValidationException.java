@@ -16,7 +16,9 @@
 
 package org.lib4j.xml;
 
-public final class ValidationException extends Exception {
+import org.xml.sax.SAXException;
+
+public final class ValidationException extends SAXException {
   private static final long serialVersionUID = -5730844996681538725L;
 
   public ValidationException() {
@@ -27,12 +29,11 @@ public final class ValidationException extends Exception {
     super(message);
   }
 
-  public ValidationException(final Throwable cause) {
-    super(cause.getMessage(), cause.getCause());
-    setStackTrace(cause.getStackTrace());
+  public ValidationException(final Exception e) {
+    super(e);
   }
 
-  public ValidationException(final String message, final Throwable cause) {
-    super(message, cause);
+  public ValidationException(final String message, final Exception e) {
+    super(message, e);
   }
 }

@@ -86,7 +86,6 @@ public final class Validator {
       validator.setResourceResolver(schemaLocationResolver);
       validator.setErrorHandler(validatorErrorHandler);
 
-      System.err.println(streamSource.getSystemId());
       validator.validate(streamSource);
     }
 
