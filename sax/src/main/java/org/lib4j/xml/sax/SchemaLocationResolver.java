@@ -60,7 +60,7 @@ public class SchemaLocationResolver implements LSResourceResolver {
         }
         else if (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(namespaceURI)) {
           if (xmlSchemaXsd == null)
-            xmlSchemaXsd = Resources.getResource("xmlschema/XMLSchema.xsd").getURL();
+            xmlSchemaXsd = Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.xsd");
 
           catalog.putSchemaLocation(XMLConstants.W3C_XML_SCHEMA_NS_URI, schemaLocation = new SchemaLocation(namespaceURI));
           schemaLocation.getDirectory().put(namespaceURI, new CachedURL(xmlSchemaXsd));
@@ -68,7 +68,7 @@ public class SchemaLocationResolver implements LSResourceResolver {
         }
         else if (XMLConstants.XML_NS_URI.equals(namespaceURI) && "http://www.w3.org/2001/xml.xsd".equals(systemId)) {
           if (xmlXsd == null)
-            xmlXsd = Resources.getResource("xmlschema/xml.xsd").getURL();
+            xmlXsd = Thread.currentThread().getContextClassLoader().getResource("xmlschema/xml.xsd");
 
           catalog.putSchemaLocation(namespaceURI, schemaLocation = new SchemaLocation(systemId));
           schemaLocation.getDirectory().put(systemId, new CachedURL(xmlXsd));
