@@ -254,16 +254,16 @@
       <xs:pattern value="[a-zA-Z]([.]?([a-zA-Z0-9_-]+)*)?@([a-zA-Z0-9\-_]+\.)+[a-zA-Z]{2,4}"/>
     </xs:restriction>
   </xs:simpleType>
-
-  <xs:simpleType name="javaIdentifier">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[a-zA-Z_$][a-zA-Z\d_$]*"/>
-    </xs:restriction>
-  </xs:simpleType>
   
   <xs:simpleType name="javaQualifiedIdentifier">
     <xs:restriction base="xs:string">
       <xs:pattern value="(([a-zA-Z_$][a-zA-Z\d_$]*)\.)*[a-zA-Z_$][a-zA-Z\d_$]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="javaIdentifier">
+    <xs:restriction base="dt:javaQualifiedIdentifier">
+      <xs:pattern value="[a-zA-Z_$][a-zA-Z\d_$]*"/>
     </xs:restriction>
   </xs:simpleType>
   
