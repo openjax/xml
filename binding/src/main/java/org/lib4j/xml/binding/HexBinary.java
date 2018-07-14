@@ -23,11 +23,11 @@ import java.util.Arrays;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#hexBinary
  */
-public final class HexBinary implements Serializable {
+public class HexBinary implements Serializable {
   private static final long serialVersionUID = 3972638444033283159L;
 
-  public static String print(final HexBinary binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final HexBinary hexBinary) {
+    return hexBinary == null ? null : hexBinary.toString();
   }
 
   public static HexBinary parse(final String string) {
@@ -75,17 +75,12 @@ public final class HexBinary implements Serializable {
   }
 
   private final byte[] bytes;
-  private final String encoded;
+  private String encoded;
 
   public HexBinary(final byte[] bytes) {
     this.bytes = bytes;
-    final StringBuilder builder = new StringBuilder(bytes.length * 2);
-    for (int i = 0; i < bytes.length; i++) {
-      builder.append(convertDigit(bytes[i] >> 4));
-      builder.append(convertDigit(bytes[i] & 0x0f));
-    }
-
-    this.encoded = builder.toString();
+    if (bytes == null)
+      throw new IllegalArgumentException("bytes == null");
   }
 
   public byte[] getBytes() {
@@ -94,19 +89,19 @@ public final class HexBinary implements Serializable {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj)
+    if (obj == this)
       return true;
 
     if (!(obj instanceof Base64Binary))
       return false;
 
     final HexBinary that = (HexBinary)obj;
-    return bytes != null ? Arrays.equals(bytes, that.bytes) : that.bytes == null;
+    return Arrays.equals(bytes, that.bytes);
   }
 
   @Override
   public int hashCode() {
-    return bytes != null ? Arrays.hashCode(bytes) : -1;
+    return Arrays.hashCode(bytes);
   }
 
   /**
@@ -116,6 +111,15 @@ public final class HexBinary implements Serializable {
    */
   @Override
   public String toString() {
-    return encoded;
+    if (encoded != null)
+      return encoded;
+
+    final StringBuilder builder = new StringBuilder(bytes.length * 2);
+    for (int i = 0; i < bytes.length; i++) {
+      builder.append(convertDigit(bytes[i] >> 4));
+      builder.append(convertDigit(bytes[i] & 0x0f));
+    }
+
+    return this.encoded = builder.toString();
   }
 }

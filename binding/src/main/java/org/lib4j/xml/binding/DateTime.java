@@ -21,11 +21,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.TimeZone;
 
-public final class DateTime implements Serializable {
+public class DateTime extends TemporalType implements Serializable {
   private static final long serialVersionUID = 7756729079060501414L;
 
-  public static String print(final DateTime binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final DateTime dateTime) {
+    return dateTime == null ? null : dateTime.toString();
   }
 
   public static DateTime parse(String string) {
@@ -36,12 +36,11 @@ public final class DateTime implements Serializable {
     if (string.length() < Year.YEAR_FRAG_MIN_LENGTH + 1 + Month.MONTH_FRAG_MIN_LENGTH + 1 + Day.DAY_FRAG_MIN_LENGTH + 1 + Time.HOUR_FRAG_MIN_LENGTH + 1 + Time.MINUTE_FRAG_MIN_LENGTH + 1 + Time.SECOND_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException(string);
 
-    final Date date = Date.parseDateFrag(string);
     final int index = string.indexOf("T", Date.DATE_FRAG_MIN_LENGTH);
     if (index == -1)
       throw new IllegalArgumentException("dateTime == " + string);
 
-    return new DateTime(date, Time.parse(string.substring(index + 1)));
+    return new DateTime(Date.parseDateFrag(string), Time.parse(string.substring(index + 1)));
   }
 
   protected static final TimeZone GMT = TimeZone.getTimeZone("GMT");
@@ -51,11 +50,9 @@ public final class DateTime implements Serializable {
   private final long epochTime;
 
   protected DateTime(final Date date, final Time time) {
+    super(time.getTimeZone());
     if (date == null)
-      throw new NullPointerException("date == null");
-
-    if (time == null)
-      throw new NullPointerException("time == null");
+      throw new IllegalArgumentException("date == null");
 
     this.date = date;
     this.time = time;
@@ -106,31 +103,11 @@ public final class DateTime implements Serializable {
     return time.getSecond();
   }
 
-  public TimeZone getTimeZone() {
-    return time.getTimeZone();
-  }
-
   public long getTime() {
     return epochTime;
   }
 
   @Override
-  public boolean equals(final Object obj) {
-    if (obj == this)
-      return true;
-
-    if (!(obj instanceof DateTime))
-      return false;
-
-    final DateTime that = (DateTime)obj;
-    return (date != null ? date.equals(that.date) : that.date == null) && (time != null ? time.equals(that.time) : that.time == null);
-  }
-
-  @Override
-  public int hashCode() {
-    return (date != null ? date.hashCode() : -1) + (time != null ? time.hashCode() : -1);
-  }
-
   protected String toEmbededString() {
     final StringBuilder builder = new StringBuilder();
     if (date != null)
@@ -144,7 +121,19 @@ public final class DateTime implements Serializable {
   }
 
   @Override
-  public String toString() {
-    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(getTimeZone())).toString();
+  public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+
+    if (!(obj instanceof DateTime))
+      return false;
+
+    final DateTime that = (DateTime)obj;
+    return date.equals(that.date) && time.equals(that.time);
+  }
+
+  @Override
+  public int hashCode() {
+    return date.hashCode() ^ 3 + time.hashCode() ^ 7;
   }
 }

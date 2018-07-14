@@ -24,11 +24,11 @@ import java.util.TimeZone;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#date
  */
-public final class Date implements Serializable {
+public class Date extends TemporalType implements Serializable {
   private static final long serialVersionUID = -9016233681424543761L;
 
-  public static String print(final Date binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final Date date) {
+    return date == null ? null : date.toString();
   }
 
   public static Date parse(String string) {
@@ -47,18 +47,13 @@ public final class Date implements Serializable {
     if (index == -1)
       index = string.indexOf("+", DATE_FRAG_MIN_LENGTH);
 
-    final TimeZone timeZone;
-    if (index != -1)
-      timeZone = Time.parseTimeZoneFrag(string.substring(index));
-    else
-      timeZone = null;
-
+    final TimeZone timeZone = index == -1 ? null : Time.parseTimeZoneFrag(string.substring(index));
     return new Date(date.getYear(), date.getMonth(), date.getDay(), timeZone);
   }
 
   protected static Date parseDateFrag(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      throw new IllegalArgumentException("string == null");
 
     if (string.length() < DATE_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("date == " + string);
@@ -75,19 +70,18 @@ public final class Date implements Serializable {
   protected static final int DATE_FRAG_MIN_LENGTH = Year.YEAR_FRAG_MIN_LENGTH + 1 + Month.MONTH_FRAG_MIN_LENGTH + 1 + Day.DAY_FRAG_MIN_LENGTH;
   private final YearMonth yearMonth;
   private final Day day;
-  private final TimeZone timeZone;
   private final long epochTime;
 
   protected Date(final YearMonth yearMonth, final Day day, final TimeZone timeZone) {
+    super(timeZone);
     if (yearMonth == null)
-      throw new NullPointerException("yearMonth == null");
+      throw new IllegalArgumentException("yearMonth == null");
 
     if (day == null)
-      throw new NullPointerException("day == null");
+      throw new IllegalArgumentException("day == null");
 
     this.yearMonth = yearMonth;
     this.day = day;
-    this.timeZone = timeZone != null ? timeZone : TimeZone.getDefault();
 
     this.epochTime = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), day.getDay(), 0, 0, 0).toEpochSecond(ZoneOffset.ofTotalSeconds(getTimeZone().getRawOffset() / 1000));
   }
@@ -124,12 +118,20 @@ public final class Date implements Serializable {
     return day.getDay();
   }
 
-  public TimeZone getTimeZone() {
-    return timeZone;
-  }
-
   public long getTime() {
     return epochTime;
+  }
+
+  @Override
+  protected String toEmbededString() {
+    final StringBuilder builder = new StringBuilder();
+    builder.append(yearMonth.toEmbededString()).append('-');
+    if (getDay() < 10)
+      builder.append('0').append(getDay());
+    else
+      builder.append(getDay());
+
+    return builder.toString();
   }
 
   @Override
@@ -141,28 +143,11 @@ public final class Date implements Serializable {
       return false;
 
     final Date that = (Date)obj;
-    return (yearMonth != null ? yearMonth.equals(that.yearMonth) : that.yearMonth == null) && (day != null ? day.equals(that.day) : that.day == null) && (timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null);
+    return super.equals(obj) && yearMonth.equals(that.yearMonth) && day.equals(that.day);
   }
 
   @Override
   public int hashCode() {
-    return (yearMonth != null ? yearMonth.hashCode() : -1) + (day != null ? day.hashCode() : -1) + (timeZone != null ? timeZone.hashCode() : -1);
-  }
-
-  protected String toEmbededString() {
-    final StringBuilder builder = new StringBuilder();
-    builder.append(yearMonth.toEmbededString());
-    builder.append('-');
-    if (getDay() < 10)
-      builder.append('0').append(getDay());
-    else
-      builder.append(getDay());
-
-    return builder.toString();
-  }
-
-  @Override
-  public String toString() {
-    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return super.hashCode() + yearMonth.hashCode() ^ 3 + day.hashCode() ^ 7;
   }
 }

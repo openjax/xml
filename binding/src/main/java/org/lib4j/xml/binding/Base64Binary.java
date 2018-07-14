@@ -23,11 +23,11 @@ import java.util.Base64;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#base64Binary
  */
-public final class Base64Binary implements Serializable {
+public class Base64Binary implements Serializable {
   private static final long serialVersionUID = 2865426282252687625L;
 
-  public static String print(final Base64Binary binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final Base64Binary base64Binary) {
+    return base64Binary == null ? null : base64Binary.toString();
   }
 
   public static Base64Binary parse(final String string) {
@@ -35,7 +35,7 @@ public final class Base64Binary implements Serializable {
   }
 
   private final byte[] bytes;
-  private String encoded = null;
+  private String encoded;
 
   public Base64Binary(final byte[] bytes) {
     this.bytes = bytes;
@@ -47,7 +47,7 @@ public final class Base64Binary implements Serializable {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj)
+    if (obj == this)
       return true;
 
     if (!(obj instanceof Base64Binary))
@@ -59,7 +59,7 @@ public final class Base64Binary implements Serializable {
 
   @Override
   public int hashCode() {
-    return bytes != null ? Arrays.hashCode(bytes) : -1;
+    return bytes == null ? 0 : Arrays.hashCode(bytes);
   }
 
   /**

@@ -23,12 +23,12 @@ import java.util.TimeZone;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#time
  */
-public final class Time implements Serializable {
+public class Time extends TemporalType implements Serializable {
   private static final long serialVersionUID = -9015566323752593968L;
 
   static Calendar newCalendar(final long time, final TimeZone timeZone) {
     if (timeZone == null)
-      throw new NullPointerException("timeZone == null");
+      throw new IllegalArgumentException("timeZone == null");
 
     final Calendar calendar = Calendar.getInstance(timeZone);
     calendar.setTimeInMillis(time);
@@ -41,8 +41,8 @@ public final class Time implements Serializable {
     return calendar;
   }
 
-  public static String print(final Time binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final Time time) {
+    return time == null ? null : time.toString();
   }
 
   public static Time parse(String string) {
@@ -85,7 +85,7 @@ public final class Time implements Serializable {
 
   protected static float parseSecondFrag(final String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      throw new IllegalArgumentException("string == null");
 
     if (string.length() < SECOND_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("second == " + string);
@@ -123,7 +123,7 @@ public final class Time implements Serializable {
 
   protected static TimeZone parseTimeZoneFrag(final String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      throw new IllegalArgumentException("string == null");
 
     if (string.length() == 0)
       return null;
@@ -148,8 +148,9 @@ public final class Time implements Serializable {
 
       timeZone = TimeZone.getTimeZone("GMT" + zPlusMinus + hourString + ":" + minuteString);
     }
-    else
+    else {
       throw new IllegalArgumentException("timeZone == " + string);
+    }
 
     if (index != string.length())
       throw new IllegalArgumentException("timeZone == " + string);
@@ -180,9 +181,9 @@ public final class Time implements Serializable {
   private final int hour;
   private final int minute;
   private final float second;
-  private final TimeZone timeZone;
 
   public Time(final int hour, final int minute, float second, final TimeZone timeZone) {
+    super(timeZone);
     this.hour = hour;
     if (24 < hour || hour < 0)
       throw new IllegalArgumentException("hour == " + hour);
@@ -194,8 +195,6 @@ public final class Time implements Serializable {
     this.second = second;
     if (60 < second || second < 0)
       throw new IllegalArgumentException("second == " + second);
-
-    this.timeZone = timeZone != null ? timeZone : TimeZone.getDefault();
   }
 
   public Time(final int hours, final int minutes, final float seconds) {
@@ -203,8 +202,7 @@ public final class Time implements Serializable {
   }
 
   public Time(final long time, final TimeZone timeZone) {
-    this.timeZone = timeZone != null ? timeZone : TimeZone.getDefault();
-
+    super(timeZone);
     final Calendar calendar = newCalendar(time, this.timeZone);
     this.hour = calendar.get(Calendar.HOUR);
     this.minute = calendar.get(Calendar.MINUTE);
@@ -231,56 +229,31 @@ public final class Time implements Serializable {
     return second;
   }
 
-  public TimeZone getTimeZone() {
-    return timeZone;
-  }
-
   public long getTime() {
     return (int)(second * 1000) + minute * 60000 + hour * 3600000;
   }
 
   @Override
-  public boolean equals(final Object obj) {
-    if (obj == this)
-      return true;
-
-    if (!(obj instanceof Time))
-      return false;
-
-    final Time that = (Time)obj;
-    return this.hour == that.hour && this.minute == that.minute && this.second == that.second && (timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null);
-  }
-
-  @Override
-  public int hashCode() {
-    return hour ^ 3 + minute ^ 5 + (int)(second * 1000) ^ 7 + (timeZone != null ? timeZone.hashCode() : -1);
-  }
-
   protected String toEmbededString() {
     final StringBuilder builder = new StringBuilder();
     if (hour < 10)
-      builder.append('0').append(hour);
-    else
-      builder.append(hour);
+      builder.append('0');
 
-    builder.append(':');
+    builder.append(hour).append(':');
     if (minute < 10)
-      builder.append('0').append(minute);
-    else
-      builder.append(minute);
+      builder.append('0');
 
-    builder.append(':');
-    if (second < 10f) {
-      if (second != 0f) {
-        builder.append('0').append(second);
-        while (builder.charAt(builder.length() - 1) == '0')
-          builder.deleteCharAt(builder.length() - 1);
-      }
-      else
-        builder.append("00");
+    builder.append(minute).append(':');
+    if (second >= 10f) {
+      builder.append(second);
+    }
+    else if (second != 0f) {
+      builder.append('0').append(second);
+      while (builder.charAt(builder.length() - 1) == '0')
+        builder.deleteCharAt(builder.length() - 1);
     }
     else {
-      builder.append(second);
+      builder.append("00");
     }
 
     // Add trailing ".?00" to conform to XML millisecond standard
@@ -296,7 +269,19 @@ public final class Time implements Serializable {
   }
 
   @Override
-  public String toString() {
-    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+  public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+
+    if (!(obj instanceof Time))
+      return false;
+
+    final Time that = (Time)obj;
+    return super.equals(obj) && this.hour == that.hour && this.minute == that.minute && this.second == that.second;
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode() + hour ^ 3 + minute ^ 5 + (int)(second * 1000) ^ 7;
   }
 }

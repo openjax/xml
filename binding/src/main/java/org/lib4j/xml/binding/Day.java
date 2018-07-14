@@ -22,11 +22,11 @@ import java.util.TimeZone;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gDay
  */
-public final class Day implements Serializable {
+public class Day extends TemporalType implements Serializable {
   private static final long serialVersionUID = -2605382792284795205L;
 
-  public static String print(final Day binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final Day day) {
+    return day == null ? null : day.toString();
   }
 
   public static Day parse(String string) {
@@ -44,14 +44,13 @@ public final class Day implements Serializable {
 
   protected static int parseDayFrag(final String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      throw new IllegalArgumentException("string == null");
 
     if (string.length() < DAY_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("day == " + string);
 
-    int index = 0;
-    final char ch = string.charAt(index);
-    final char ch2 = string.charAt(++index);
+    final char ch = string.charAt(0);
+    final char ch2 = string.charAt(1);
     if (ch == '0') {
       if (ch2 < '1' || '9' < ch2)
         throw new IllegalArgumentException("day == " + string);
@@ -64,33 +63,28 @@ public final class Day implements Serializable {
       if (ch2 < '0' || '1' < ch2)
         throw new IllegalArgumentException("day == " + string);
     }
-    else
+    else {
       throw new IllegalArgumentException("day == " + string);
+    }
 
-    final String dayString = "" + ch + ch2;
-    int day;
     try {
-      day = Integer.parseInt(dayString);
+      return Integer.parseInt("" + ch + ch2);
     }
     catch (final NumberFormatException e) {
       throw new IllegalArgumentException(string, e);
     }
-
-    return day;
   }
 
   protected static final int DAY_FRAG_MIN_LENGTH = 2;
   private static final String PAD_FRAG = "---";
 
   private final int day;
-  private final TimeZone timeZone;
 
   public Day(final int day, final TimeZone timeZone) {
+    super(timeZone);
     this.day = day;
     if (day < 0 || 31 < day)
       throw new IllegalArgumentException("day == " + day);
-
-    this.timeZone = timeZone != null ? timeZone : TimeZone.getDefault();
   }
 
   public Day(final int day) {
@@ -99,9 +93,9 @@ public final class Day implements Serializable {
 
   @SuppressWarnings("deprecation")
   public Day(final long time) {
+    super(TimeZone.getDefault());
     final java.util.Date date = new java.util.Date(time);
     this.day = date.getDate();
-    this.timeZone = TimeZone.getDefault();
   }
 
   public Day() {
@@ -112,8 +106,9 @@ public final class Day implements Serializable {
     return day;
   }
 
-  public TimeZone getTimeZone() {
-    return timeZone;
+  @Override
+  protected String toEmbededString() {
+    return (day < 10 ? "---0" : "---") + day;
   }
 
   @Override
@@ -125,26 +120,11 @@ public final class Day implements Serializable {
       return false;
 
     final Day that = (Day)obj;
-    return this.day == that.day && (timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null);
+    return super.equals(obj) && this.day == that.day;
   }
 
   @Override
   public int hashCode() {
-    return day ^ 17 + (timeZone != null ? timeZone.hashCode() : -1);
-  }
-
-  protected String toEmbededString() {
-    final StringBuilder builder = new StringBuilder();
-    if (day < 10)
-      builder.append("---0").append(day);
-    else
-      builder.append("---").append(day);
-
-    return builder.toString();
-  }
-
-  @Override
-  public String toString() {
-    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return super.hashCode() + day ^ 3;
   }
 }

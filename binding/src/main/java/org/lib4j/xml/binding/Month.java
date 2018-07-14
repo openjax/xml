@@ -22,11 +22,11 @@ import java.util.TimeZone;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gMonth
  */
-public final class Month implements Serializable {
+public class Month extends TemporalType implements Serializable {
   private static final long serialVersionUID = 9191134240521332696L;
 
-  public static String print(final Month binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final Month month) {
+    return month == null ? null : month.toString();
   }
 
   public static Month parse(String string) {
@@ -44,14 +44,13 @@ public final class Month implements Serializable {
 
   protected static int parseMonthFrag(final String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      throw new IllegalArgumentException("string == null");
 
     if (string.length() < MONTH_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("month == " + string);
 
-    int index = 0;
-    final char ch = string.charAt(index);
-    final char ch2 = string.charAt(++index);
+    final char ch = string.charAt(0);
+    final char ch2 = string.charAt(1);
     if (ch == '0') {
       if (ch2 < '1' || '9' < ch2)
         throw new IllegalArgumentException("month == " + string);
@@ -60,34 +59,28 @@ public final class Month implements Serializable {
       if (ch2 < '0' || '2' < ch2)
         throw new IllegalArgumentException("month == " + string);
     }
-    else
+    else {
       throw new IllegalArgumentException("month == " + string);
+    }
 
-
-    final String monthString = "" + ch + ch2;
-    int month;
     try {
-      month = Integer.parseInt(monthString);
+      return Integer.parseInt("" + ch + ch2);
     }
     catch (final NumberFormatException e) {
       throw new IllegalArgumentException("month == " + string, e);
     }
-
-    return month;
   }
 
   protected static final int MONTH_FRAG_MIN_LENGTH = 2;
   private static final String PAD_FRAG = "--";
 
   private final int month;
-  private final TimeZone timeZone;
 
   public Month(final int month, final TimeZone timeZone) {
+    super(timeZone);
     this.month = month;
     if (month < 0 || 12 < month)
       throw new IllegalArgumentException("month == " + month);
-
-    this.timeZone = timeZone != null ? timeZone : TimeZone.getDefault();
   }
 
   public Month(final int month) {
@@ -96,9 +89,9 @@ public final class Month implements Serializable {
 
   @SuppressWarnings("deprecation")
   public Month(final long time) {
+    super(TimeZone.getDefault());
     final java.util.Date date = new java.util.Date(time);
     this.month = date.getMonth() + 1;
-    this.timeZone = TimeZone.getDefault();
   }
 
   public Month() {
@@ -109,8 +102,9 @@ public final class Month implements Serializable {
     return month;
   }
 
-  public TimeZone getTimeZone() {
-    return timeZone;
+  @Override
+  protected String toEmbededString() {
+    return (month < 10 ? "--0" : "--") + month;
   }
 
   @Override
@@ -122,26 +116,11 @@ public final class Month implements Serializable {
       return false;
 
     final Month that = (Month)obj;
-    return this.month == that.month && (timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null);
+    return super.equals(obj) && this.month == that.month;
   }
 
   @Override
   public int hashCode() {
-    return month ^ 13 + (timeZone != null ? timeZone.hashCode() : -1);
-  }
-
-  protected String toEmbededString() {
-    final StringBuilder builder = new StringBuilder();
-    if (month < 10)
-      builder.append("--0").append(month);
-    else
-      builder.append("--").append(month);
-
-    return builder.toString();
-  }
-
-  @Override
-  public String toString() {
-    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return super.hashCode() + month ^ 3;
   }
 }

@@ -21,11 +21,11 @@ import java.io.Serializable;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#duration
  */
-public final class Duration implements Serializable {
+public class Duration implements Serializable {
   private static final long serialVersionUID = -4434035431304455290L;
 
-  public static String print(final Duration binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final Duration duration) {
+    return duration == null ? null : duration.toString();
   }
 
   public static Duration parse(String string) {
@@ -39,16 +39,11 @@ public final class Duration implements Serializable {
     int offset = 0;
     final boolean isNegative;
     final char signChar = string.charAt(0);
-    if (signChar == '-') {
-      isNegative = true;
+    if (isNegative = signChar == '-') {
       ++offset;
     }
     else if (signChar == '+') {
-      isNegative = false;
       ++offset;
-    }
-    else {
-      isNegative = false;
     }
 
     if (string.charAt(offset) != P)
@@ -136,8 +131,9 @@ public final class Duration implements Serializable {
 
               hours = digits;
             }
-            else if (ch == Y || ch == D)
+            else if (ch == Y || ch == D) {
               throw new IllegalArgumentException("Invalid duration: " + string + " (years or days of month specified after date/time separator 'T' seen)");
+            }
           }
           else {
             if (ch == Y) {
@@ -167,8 +163,9 @@ public final class Duration implements Serializable {
 
               days = digits;
             }
-            else if (ch == H || ch == S)
+            else if (ch == H || ch == S) {
               throw new IllegalArgumentException("Invalid duration: " + string + " (hours or seconds specified before date/time separator 'T' seen)");
+            }
           }
         }
       }
@@ -236,7 +233,7 @@ public final class Duration implements Serializable {
       return false;
 
     final Duration that = (Duration)obj;
-    return (isNegative == that.isNegative) && (years == that.years) && (months == that.months) && (days == that.days) && (hours == that.hours) && (minutes == that.minutes) && (seconds == that.seconds);
+    return isNegative == that.isNegative && years == that.years && months == that.months && days == that.days && hours == that.hours && minutes == that.minutes && seconds == that.seconds;
   }
 
   // FIXME: Come up with a better hash algorithm
@@ -247,12 +244,7 @@ public final class Duration implements Serializable {
 
   @Override
   public String toString() {
-    final StringBuilder builder;
-    if (isNegative)
-      builder = new StringBuilder("-");
-    else
-      builder = new StringBuilder();
-
+    final StringBuilder builder = isNegative ? new StringBuilder("-") : new StringBuilder();
     builder.append(String.valueOf(P));
     if (years != -1) {
       if (years != 0) {

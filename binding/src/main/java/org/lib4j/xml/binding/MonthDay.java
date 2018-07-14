@@ -23,11 +23,11 @@ import java.util.TimeZone;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gMonthDay
  */
-public final class MonthDay implements Serializable {
+public class MonthDay extends TemporalType implements Serializable {
   private static final long serialVersionUID = 6702644782424414369L;
 
-  public static String print(final MonthDay binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final MonthDay monthDay) {
+    return monthDay == null ? null : monthDay.toString();
   }
 
   public static MonthDay parse(String string) {
@@ -39,19 +39,16 @@ public final class MonthDay implements Serializable {
       throw new IllegalArgumentException("month-day == " + string);
 
     final MonthDay monthDay = parseMonthDayFrag(string = string.substring(PAD_FRAG.length()));
-
-    final TimeZone timeZone;
-    if (MONTH_DAY_FRAG_MIN_LENGTH < string.length())
-      timeZone = Time.parseTimeZoneFrag(string.substring(MONTH_DAY_FRAG_MIN_LENGTH));
-    else
+    if (MONTH_DAY_FRAG_MIN_LENGTH >= string.length())
       return monthDay;
 
+    final TimeZone timeZone = Time.parseTimeZoneFrag(string.substring(MONTH_DAY_FRAG_MIN_LENGTH));
     return new MonthDay(monthDay.getMonth(), monthDay.getDay(), timeZone);
   }
 
   protected static MonthDay parseMonthDayFrag(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      throw new IllegalArgumentException("string == null");
 
     if (string.length() < MONTH_DAY_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("month-day == " + string);
@@ -73,18 +70,18 @@ public final class MonthDay implements Serializable {
 
   private final Month month;
   private final Day day;
-  private final TimeZone timeZone;
 
   public MonthDay(final int month, final int day, final TimeZone timeZone) {
     this(new Month(month), new Day(day), timeZone);
   }
 
   protected MonthDay(final Month month, final Day day, final TimeZone timeZone) {
+    super(timeZone);
     if (month == null)
-      throw new NullPointerException("month == null");
+      throw new IllegalArgumentException("month == null");
 
     if (day == null)
-      throw new NullPointerException("day == null");
+      throw new IllegalArgumentException("day == null");
 
     this.month = month;
     this.day = day;
@@ -93,8 +90,6 @@ public final class MonthDay implements Serializable {
 
     if (Arrays.binarySearch(LONG_MONTHS, month.getMonth()) < 0 && 30 < day.getDay())
       throw new IllegalArgumentException("month == " + month + " day == " + day);
-
-    this.timeZone = timeZone != null ? timeZone : TimeZone.getDefault();
   }
 
   public MonthDay(final int month, final int day) {
@@ -117,8 +112,15 @@ public final class MonthDay implements Serializable {
     return day.getDay();
   }
 
-  public TimeZone getTimeZone() {
-    return timeZone;
+  @Override
+  protected String toEmbededString() {
+    final StringBuilder builder = new StringBuilder();
+    builder.append(month.toEmbededString()).append('-');
+    if (getDay() < 10)
+      builder.append('0');
+
+    builder.append(getDay());
+    return builder.toString();
   }
 
   @Override
@@ -130,28 +132,11 @@ public final class MonthDay implements Serializable {
       return false;
 
     final MonthDay that = (MonthDay)obj;
-    return (month != null ? month.equals(that.month) : that.month == null) && (day != null ? day.equals(that.day) : that.day == null) && (timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null);
+    return super.equals(obj) && month.equals(that.month) && day.equals(that.day);
   }
 
   @Override
   public int hashCode() {
-    return (month != null ? month.hashCode() : -1) + (day != null ? day.hashCode() : -1) + (timeZone != null ? timeZone.hashCode() : -1);
-  }
-
-  protected String toEmbededString() {
-    final StringBuilder builder = new StringBuilder();
-    builder.append(month.toEmbededString());
-    builder.append('-');
-    if (getDay() < 10)
-      builder.append('0').append(getDay());
-    else
-      builder.append(getDay());
-
-    return builder.toString();
-  }
-
-  @Override
-  public String toString() {
-    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return super.hashCode() + month.hashCode() ^ 3 + day.hashCode() ^ 7;
   }
 }

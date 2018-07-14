@@ -22,11 +22,11 @@ import java.util.TimeZone;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gYearMonth
  */
-public final class YearMonth implements Serializable {
+public class YearMonth extends TemporalType implements Serializable {
   private static final long serialVersionUID = -5629415172932276877L;
 
-  public static String print(final YearMonth binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final YearMonth yearMonth) {
+    return yearMonth == null ? null : yearMonth.toString();
   }
 
   public static YearMonth parse(String string) {
@@ -47,12 +47,7 @@ public final class YearMonth implements Serializable {
     if (index == -1)
       index = string.indexOf("+", YEAR_MONTH_FRAG_MIN_LENGTH);
 
-    final TimeZone timeZone;
-    if (index != -1)
-      timeZone = Time.parseTimeZoneFrag(string.substring(index));
-    else
-      timeZone = null;
-
+    final TimeZone timeZone = index == -1 ? null : Time.parseTimeZoneFrag(string.substring(index));
     return new YearMonth(year, month, timeZone);
   }
 
@@ -60,20 +55,19 @@ public final class YearMonth implements Serializable {
 
   private final Year year;
   private final Month month;
-  private final TimeZone timeZone;
   private final long epochTime;
 
   @SuppressWarnings("deprecation")
   protected YearMonth(final Year year, final Month month, final TimeZone timeZone) {
+    super(timeZone);
     if (year == null)
-      throw new NullPointerException("year == null");
+      throw new IllegalArgumentException("year == null");
 
     if (month == null)
-      throw new NullPointerException("month == null");
+      throw new IllegalArgumentException("month == null");
 
     this.year = year;
     this.month = month;
-    this.timeZone = timeZone != null ? timeZone : TimeZone.getDefault();
     epochTime = java.util.Date.UTC(year.getYear() - 1900, month.getMonth() - 1, 1, 0, 0, 0) - getTimeZone().getRawOffset() - getTimeZone().getDSTSavings();
   }
 
@@ -105,12 +99,19 @@ public final class YearMonth implements Serializable {
     return month.getMonth();
   }
 
-  public TimeZone getTimeZone() {
-    return timeZone;
-  }
-
   public long getTime() {
     return epochTime;
+  }
+
+  @Override
+  protected String toEmbededString() {
+    final StringBuilder builder = new StringBuilder();
+    builder.append(year.toEmbededString()).append('-');
+    if (getMonth() < 10)
+      builder.append('0');
+
+    builder.append(getMonth());
+    return builder.toString();
   }
 
   @Override
@@ -122,28 +123,11 @@ public final class YearMonth implements Serializable {
       return false;
 
     final YearMonth that = (YearMonth)obj;
-    return (year != null ? year.equals(that.year) : that.year == null) && (month != null ? month.equals(that.month) : that.month == null) && (timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null);
+    return super.equals(obj) && (year != null ? year.equals(that.year) : that.year == null) && (month != null ? month.equals(that.month) : that.month == null);
   }
 
   @Override
   public int hashCode() {
-    return (year != null ? year.hashCode() : -1) + (month != null ? month.hashCode() : -1) + (timeZone != null ? timeZone.hashCode() : -1);
-  }
-
-  protected String toEmbededString() {
-    final StringBuilder builder = new StringBuilder();
-    builder.append(year.toEmbededString());
-    builder.append('-');
-    if (getMonth() < 10)
-      builder.append('0').append(getMonth());
-    else
-      builder.append(getMonth());
-
-    return builder.toString();
-  }
-
-  @Override
-  public String toString() {
-    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+    return super.hashCode() + (year != null ? year.hashCode() : -1) + (month != null ? month.hashCode() : -1);
   }
 }

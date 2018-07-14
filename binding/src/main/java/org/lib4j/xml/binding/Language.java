@@ -26,11 +26,11 @@ import java.util.regex.Pattern;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#language
  */
-public final class Language implements CharSequence, Serializable {
+public class Language implements CharSequence, Serializable {
   private static final long serialVersionUID = -3019968992019702549L;
 
-  public static String print(final Language binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final Language language) {
+    return language == null ? null : language.toString();
   }
 
   public static Language parse(String string) {
@@ -53,11 +53,11 @@ public final class Language implements CharSequence, Serializable {
   private static final Pattern otherPattern = Pattern.compile("[a-zA-Z0-9]{1,8}");
   private static final int LANGUAGE_FRAG_MIN_LENGTH = 1;
   private final String[] language;
-  private String encoded = null;
+  private String encoded;
 
-  public Language(String ... language) {
+  public Language(final String ... language) {
     if (language == null)
-      throw new NullPointerException("language == null");
+      throw new IllegalArgumentException("language == null");
 
     if (language.length == 0)
       throw new IllegalArgumentException("language.length == 0");
@@ -73,7 +73,7 @@ public final class Language implements CharSequence, Serializable {
   }
 
   public Language(final Collection<String> language) {
-    this(language != null ? language.toArray(new String[language.size()]) : null);
+    this(language.toArray(new String[language.size()]));
   }
 
   public String[] getLanguage() {
@@ -104,12 +104,12 @@ public final class Language implements CharSequence, Serializable {
       return false;
 
     final Language that = (Language)obj;
-    return this.language != null ? Arrays.equals(this.language, that.language) : that.language == null;
+    return Arrays.equals(this.language, that.language);
   }
 
   @Override
   public int hashCode() {
-    return language != null ? Arrays.hashCode(language) : -1;
+    return Arrays.hashCode(language);
   }
 
   @Override
@@ -117,7 +117,7 @@ public final class Language implements CharSequence, Serializable {
     if (encoded != null)
       return encoded;
 
-    if (language == null || language.length == 0)
+    if (language.length == 0)
       return encoded = "";
 
     final StringBuilder builder = new StringBuilder();

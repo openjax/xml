@@ -23,11 +23,11 @@ import java.util.TimeZone;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gYear
  */
-public final class Year implements Serializable {
+public class Year extends TemporalType implements Serializable {
   private static final long serialVersionUID = 1715357512840880045L;
 
-  public static String print(final Year binding) {
-    return binding == null ? null : binding.toString();
+  public static String print(final Year year) {
+    return year == null ? null : year.toString();
   }
 
   public static Year parse(String string) {
@@ -46,18 +46,13 @@ public final class Year implements Serializable {
     if (index == -1)
       index = string.indexOf("+", YEAR_FRAG_MIN_LENGTH);
 
-    final TimeZone timeZone;
-    if (index != -1)
-      timeZone = Time.parseTimeZoneFrag(string.substring(index));
-    else
-      timeZone = null;
-
+    final TimeZone timeZone = index == -1 ? null : Time.parseTimeZoneFrag(string.substring(index));
     return new Year(year, timeZone);
   }
 
   protected static int parseYearFrag(String string) {
     if (string == null)
-      throw new NullPointerException("string == null");
+      throw new IllegalArgumentException("string == null");
 
     if (string.length() == 0)
       throw new IllegalArgumentException(string);
@@ -88,13 +83,12 @@ public final class Year implements Serializable {
   protected static final int YEAR_FRAG_MIN_LENGTH = 4;
 
   private final int year;
-  private final TimeZone timeZone;
   private final long epochTime;
 
   @SuppressWarnings("deprecation")
   public Year(final int year, final TimeZone timeZone) {
+    super(timeZone);
     this.year = year;
-    this.timeZone = timeZone != null ? timeZone : TimeZone.getDefault();
     epochTime = java.util.Date.UTC(year - 1900, 0, 1, 0, 0, 0) - getTimeZone().getRawOffset() - getTimeZone().getDSTSavings();
   }
 
@@ -118,31 +112,11 @@ public final class Year implements Serializable {
     return year;
   }
 
-  public TimeZone getTimeZone() {
-    return timeZone;
-  }
-
   public long getTime() {
     return epochTime;
   }
 
   @Override
-  public boolean equals(final Object obj) {
-    if (obj == this)
-      return true;
-
-    if (!(obj instanceof Year))
-      return false;
-
-    final Year that = (Year)obj;
-    return this.year == that.year && (timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null);
-  }
-
-  @Override
-  public int hashCode() {
-    return year ^ 5 + (timeZone != null ? timeZone.hashCode() : -1);
-  }
-
   protected String toEmbededString() {
     final StringBuilder builder = new StringBuilder();
     if (year < 10)
@@ -158,7 +132,19 @@ public final class Year implements Serializable {
   }
 
   @Override
-  public String toString() {
-    return new StringBuilder(toEmbededString()).append(Time.formatTimeZone(timeZone)).toString();
+  public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+
+    if (!(obj instanceof Year))
+      return false;
+
+    final Year that = (Year)obj;
+    return super.equals(obj) && this.year == that.year;
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode() + year ^ 5;
   }
 }
