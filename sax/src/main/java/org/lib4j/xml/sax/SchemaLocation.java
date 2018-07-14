@@ -34,7 +34,7 @@ public class SchemaLocation {
   public SchemaLocation(final String namespace, final CachedURL location) {
     this(namespace);
     if (location == null)
-      throw new NullPointerException("location == null");
+      throw new IllegalArgumentException("location == null");
 
     this.directory.put(namespace, location);
     this.directory.put(Paths.canonicalize(location.toExternalForm()), location);
