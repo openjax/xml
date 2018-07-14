@@ -406,7 +406,7 @@ public class XJCompiler {
     if (command.getSchemas() == null || command.getSchemas().size() == 0)
       return;
 
-    final List<String> args = new ArrayList<String>();
+    final List<String> args = new ArrayList<>();
     args.add("java");
     if (command.classpath.size() > 0) {
       args.add("-cp");

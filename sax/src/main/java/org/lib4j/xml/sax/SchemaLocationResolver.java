@@ -22,7 +22,6 @@ import java.util.Map;
 
 import javax.xml.XMLConstants;
 
-import org.lib4j.lang.Resources;
 import org.lib4j.net.CachedURL;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;

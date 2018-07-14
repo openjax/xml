@@ -42,7 +42,7 @@ public abstract class Validator {
 
     final NamedNodeMap attributes = element.getAttributes();
     Node node = null;
-    final Collection<String> namespaceURIs = new ArrayList<String>(attributes.getLength());
+    final Collection<String> namespaceURIs = new ArrayList<>(attributes.getLength());
     for (int i = 0; i < attributes.getLength(); i++) {
       node = attributes.item(i);
       if (node.getNodeName().startsWith(XMLNS.getLocalPart()))

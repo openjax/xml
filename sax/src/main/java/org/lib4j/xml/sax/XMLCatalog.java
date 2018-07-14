@@ -23,7 +23,7 @@ import java.util.Map;
 import org.lib4j.net.CachedURL;
 
 public class XMLCatalog {
-  private final Map<String,SchemaLocation> schemaLocations = new LinkedHashMap<String,SchemaLocation>();
+  private final Map<String,SchemaLocation> schemaLocations = new LinkedHashMap<>();
 
   public void putSchemaLocation(final String key, final SchemaLocation schemaLocation) {
     schemaLocations.put(key, schemaLocation);

@@ -38,7 +38,7 @@ public class ValidatorErrorHandler implements ErrorHandler {
   @Override
   public void error(final SAXParseException e) throws SAXException {
     if (errors == null)
-      errors = new ArrayList<SAXParseException>();
+      errors = new ArrayList<>();
 
     errors.add(e);
     if (errorHandler != null)

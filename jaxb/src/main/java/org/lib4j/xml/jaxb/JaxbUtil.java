@@ -70,7 +70,7 @@ public final class JaxbUtil {
     }
 
     final QName qName = new QName(namespace, localName);
-    final JAXBElement<T> element = new JAXBElement<T>(qName, (Class<T>)binding.getClass(), binding);
+    final JAXBElement<T> element = new JAXBElement<>(qName, (Class<T>)binding.getClass(), binding);
     marshaller.marshal(element, stringWriter);
     return stringWriter.toString();
   }

@@ -28,7 +28,7 @@ public class SchemaLocation {
 
   public SchemaLocation(final String namespace) {
     this.namespace = namespace;
-    this.directory = new HashMap<String,CachedURL>();
+    this.directory = new HashMap<>();
   }
 
   public SchemaLocation(final String namespace, final CachedURL location) {

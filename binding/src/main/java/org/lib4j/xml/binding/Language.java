@@ -42,7 +42,7 @@ public class Language implements CharSequence, Serializable {
       throw new IllegalArgumentException(string);
 
     final StringTokenizer tokenizer = new StringTokenizer(string, "-");
-    final Collection<String> languages = new ArrayList<String>();
+    final Collection<String> languages = new ArrayList<>();
     while (tokenizer.hasMoreTokens())
       languages.add(tokenizer.nextToken());
 

@@ -48,7 +48,7 @@ public final class DOMs {
    */
   public static String domToString(final Node node, final Map<String,String> namespaceToPrefix, final Map<String,String> schemaLocations, final DOMStyle ... styles) {
     final DOMStyle style = DOMStyle.consolidate(styles);
-    final Set<String> namespaces = style.isIgnoreNamespaces() || schemaLocations == null ? null : new HashSet<String>();
+    final Set<String> namespaces = style.isIgnoreNamespaces() || schemaLocations == null ? null : new HashSet<>();
     final StringBuilder builder = domToString(new StringBuilder(), namespaces, namespaceToPrefix, node, 0, style);
     if (schemaLocations == null || schemaLocations.size() == 0 || namespaces.size() == 0)
       return builder.toString();

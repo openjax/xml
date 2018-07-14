@@ -43,10 +43,10 @@ public class SchemaLocationHandler extends DefaultHandler {
     return getPath(referrer.toASCIIString(), location);
   }
 
-  private final Set<String> namespaceURIs = new HashSet<String>();
-  private final Map<String,CachedURL> absoluteIncludes = new LinkedHashMap<String,CachedURL>();
-  private final Map<String,CachedURL> imports = new LinkedHashMap<String,CachedURL>();
-  private final Map<String,CachedURL> includes = new LinkedHashMap<String,CachedURL>();
+  private final Set<String> namespaceURIs = new HashSet<>();
+  private final Map<String,CachedURL> absoluteIncludes = new LinkedHashMap<>();
+  private final Map<String,CachedURL> imports = new LinkedHashMap<>();
+  private final Map<String,CachedURL> includes = new LinkedHashMap<>();
   private boolean referencesOnlyLocal = true;
   private String targetNamespace = null;
 
