@@ -17,13 +17,14 @@
 package org.lib4j.xml;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class Element {
   private final String name;
-  private final Collection<Attribute> attributes;
+  private final Map<String,String> attributes;
   private final Collection<Element> elements;
 
-  public Element(final String name, final Collection<Attribute> attributes, final Collection<Element> elements) {
+  public Element(final String name, final Map<String,String> attributes, final Collection<Element> elements) {
     this.name = name;
     if (name == null || name.length() == 0)
       throw new IllegalArgumentException("name == " + name);
@@ -36,7 +37,7 @@ public class Element {
     return this.name;
   }
 
-  public Collection<Attribute> getAttributes() {
+  public Map<String,String> getAttributes() {
     return this.attributes;
   }
 
@@ -49,11 +50,11 @@ public class Element {
     if (obj == this)
       return true;
 
-    if (!(obj instanceof Attribute))
+    if (!(obj instanceof Element))
       return false;
 
     final Element that = (Element)obj;
-    return name.equals(that.name) && (attributes == null ? that.attributes == null : that.attributes != null && attributes.size() == that.attributes.size() && attributes.containsAll(that.attributes)) && (elements == null ? that.elements == null : that.elements != null && elements.size() == that.elements.size() && elements.containsAll(that.elements));
+    return name.equals(that.name) && (attributes == null ? that.attributes == null : attributes.equals(that.attributes)) && (elements == null ? that.elements == null : that.elements != null && elements.size() == that.elements.size() && elements.containsAll(that.elements));
   }
 
   @Override
@@ -73,8 +74,9 @@ public class Element {
   public String toString() {
     final StringBuilder builder = new StringBuilder("<");
     builder.append(name);
-    for (final Attribute attribute : attributes)
-      builder.append(' ').append(attribute);
+    if (attributes != null && attributes.size() > 0)
+      for (final Map.Entry<String,String> entry : attributes.entrySet())
+        builder.append(' ').append(entry.getKey()).append("=\"").append(CharacterDatas.escape(entry.getValue())).append('"');
 
     if (elements == null || elements.size() == 0)
       return builder.append("/>").toString();

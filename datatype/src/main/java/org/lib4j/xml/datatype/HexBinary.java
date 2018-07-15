@@ -35,7 +35,7 @@ public class HexBinary implements Serializable {
       return null;
 
     if (string.length() % 2 != 0)
-      throw new IllegalArgumentException("odd length of hex string");
+      throw new IllegalArgumentException("Odd length of hex string: " + string.length());
 
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     for (int i = 0; i < string.length(); i += 2) {
@@ -46,22 +46,22 @@ public class HexBinary implements Serializable {
       final char c2 = string.charAt(i + 1);
       byte b = 0;
       if ('0' <= c1 && c1 <= '9')
-        b += ((c1 - '0') * 16);
+        b += (c1 - '0') * 16;
       else if ('a' <= c1 && c1 <= 'f')
-        b += ((c1 - 'a' + 10) * 16);
+        b += (c1 - 'a' + 10) * 16;
       else if ('A' <= c1 && c1 <= 'F')
-        b += ((c1 - 'A' + 10) * 16);
+        b += (c1 - 'A' + 10) * 16;
       else
-        throw new IllegalArgumentException("bad characted in hex string");
+        throw new IllegalArgumentException("Bad characted in hex string: " + c1);
 
       if ('0' <= c2 && c2 <= '9')
-        b += (c2 - '0');
+        b += c2 - '0';
       else if ('a' <= c2 && c2 <= 'f')
-        b += (c2 - 'a' + 10);
+        b += c2 - 'a' + 10;
       else if ('A' <= c2 && c2 <= 'F')
-        b += (c2 - 'A' + 10);
+        b += c2 - 'A' + 10;
       else
-        throw new IllegalArgumentException("bad characted in hex string");
+        throw new IllegalArgumentException("Bad characted in hex string: " + c2);
 
       out.write(b);
     }
@@ -105,9 +105,7 @@ public class HexBinary implements Serializable {
   }
 
   /**
-   * Returns the hex string representation of this object's byte[] data.
-   *
-   * @return  The hex string.
+   * @return the hex string representation of this object's <code>byte[]</code> data.
    */
   @Override
   public String toString() {
@@ -120,6 +118,6 @@ public class HexBinary implements Serializable {
       builder.append(convertDigit(bytes[i] & 0x0f));
     }
 
-    return this.encoded = builder.toString();
+    return encoded = builder.toString();
   }
 }

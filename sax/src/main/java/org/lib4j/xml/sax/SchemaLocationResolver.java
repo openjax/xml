@@ -27,8 +27,8 @@ import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
 public class SchemaLocationResolver implements LSResourceResolver {
-  private static URL xmlSchemaXsd = null;
-  private static URL xmlXsd = null;
+  private static URL xmlSchemaXsd;
+  private static URL xmlXsd;
 
   private final XMLCatalog catalog;
 
@@ -83,16 +83,14 @@ public class SchemaLocationResolver implements LSResourceResolver {
 
       CachedURL url = directory.get(systemId);
       if (url == null) {
-        if (namespaceURI == null) {
-          if ("http://www.w3.org/2001/XMLSchema.dtd".equals(systemId)) {
-            directory.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.dtd")));
-          }
-          else if ("http://www.w3.org/2001/datatypes.dtd".equals(systemId)) {
-            directory.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/datatypes.dtd")));
-          }
-          else {
-            return new LSInputImpl(systemId, publicId, baseURI);
-          }
+        if (namespaceURI != null)
+          return new LSInputImpl(systemId, publicId, baseURI);
+
+        if ("http://www.w3.org/2001/XMLSchema.dtd".equals(systemId)) {
+          directory.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.dtd")));
+        }
+        else if ("http://www.w3.org/2001/datatypes.dtd".equals(systemId)) {
+          directory.put(systemId, url = new CachedURL(Thread.currentThread().getContextClassLoader().getResource("xmlschema/datatypes.dtd")));
         }
         else {
           return new LSInputImpl(systemId, publicId, baseURI);
