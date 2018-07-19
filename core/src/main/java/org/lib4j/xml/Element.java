@@ -21,8 +21,8 @@ import java.util.Map;
 
 public class Element {
   private final String name;
-  private final Map<String,String> attributes;
-  private final Collection<Element> elements;
+  private Map<String,String> attributes;
+  private Collection<Element> elements;
 
   public Element(final String name, final Map<String,String> attributes, final Collection<Element> elements) {
     this.name = name;
@@ -37,8 +37,16 @@ public class Element {
     return this.name;
   }
 
+  public void setAttributes(final Map<String,String> attributes) {
+    this.attributes = attributes;
+  }
+
   public Map<String,String> getAttributes() {
     return this.attributes;
+  }
+
+  public void setElements(final Collection<Element> elements) {
+    this.elements = elements;
   }
 
   public Collection<Element> getElements() {
