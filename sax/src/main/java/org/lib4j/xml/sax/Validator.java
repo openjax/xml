@@ -24,8 +24,8 @@ import java.util.Iterator;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
+import org.lib4j.io.input.RewindableInputStream;
 import org.lib4j.net.CachedURL;
-import org.lib4j.net.URLs;
 import org.lib4j.xml.OfflineValidationException;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -39,27 +39,41 @@ public final class Validator {
     return validate(url, offline, new LoggingErrorHandler());
   }
 
+  public static CachedURL validate(final InputStream inputStream, final boolean offline) throws IOException, SAXException {
+    return validate(new CachedURL((URL)null) {
+      private RewindableInputStream in;
+
+      @Override
+      public InputStream openStream() throws IOException {
+        return in == null ? in = new RewindableInputStream(inputStream) : in;
+      }
+    }, offline, new LoggingErrorHandler());
+  }
+
   public static CachedURL validate(final URL url, final boolean offline, final ErrorHandler errorHandler) throws IOException, SAXException {
-    final CachedURL cachedUrl = new CachedURL(url);
-    final XMLDocument xmlDocument = XMLDocuments.parse(cachedUrl, offline, true);
+    return validate(new CachedURL(url), offline, errorHandler);
+  }
+
+  public static CachedURL validate(final CachedURL url, final boolean offline, final ErrorHandler errorHandler) throws IOException, SAXException {
+    final XMLDocument xmlDocument = XMLDocuments.parse(url, offline, true);
     final XMLCatalog catalog = xmlDocument.getCatalog();
     if (offline && !xmlDocument.referencesOnlyLocal()) {
-      final SAXParseException parseException = new SAXParseException("Offline execution not checking remote schemas.", URLs.toExternalForm(url), null, 0, 0);
+      final SAXParseException parseException = new SAXParseException("Offline execution not checking remote schemas.", url.toString(), null, 0, 0);
       errorHandler.warning(parseException);
       throw new OfflineValidationException(parseException);
     }
 
     if (catalog.isEmpty() && !xmlDocument.isXsd()) {
-      errorHandler.warning(new SAXParseException("There is no schema or DTD associated with the document.", URLs.toExternalForm(url), null, 0, 0));
-      return cachedUrl;
+      errorHandler.warning(new SAXParseException("There is no schema or DTD associated with the document.", url.toString(), null, 0, 0));
+      return url;
     }
 
-    try (final InputStream in = cachedUrl.openStream()) {
+    try (final InputStream in = url.openStream()) {
       validate(new StreamSource(in, url.toString()), catalog, xmlDocument.isXsd(), errorHandler);
     }
 
     catalog.destroy();
-    return cachedUrl;
+    return url;
   }
 
   public static CachedURL validate(final URL url, final XMLCatalog catalog, final boolean isXsd, final ErrorHandler errorHandler) throws IOException, SAXException {
