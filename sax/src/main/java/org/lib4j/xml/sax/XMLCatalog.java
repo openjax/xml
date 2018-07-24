@@ -16,11 +16,9 @@
 
 package org.lib4j.xml.sax;
 
-import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.lib4j.net.CachedURL;
 
 public class XMLCatalog {
   private final Map<String,SchemaLocation> schemaLocations = new LinkedHashMap<>();
@@ -45,7 +43,7 @@ public class XMLCatalog {
     final StringBuilder builder = new StringBuilder();
     boolean fistLine = true;
     for (final Map.Entry<String,SchemaLocation> locationEntry : schemaLocations.entrySet()) {
-      for (final Map.Entry<String,CachedURL> directoryEntry : locationEntry.getValue().getDirectory().entrySet()) {
+      for (final Map.Entry<String,URL> directoryEntry : locationEntry.getValue().getDirectory().entrySet()) {
         if (fistLine)
           fistLine = false;
         else
@@ -58,14 +56,6 @@ public class XMLCatalog {
     }
 
     return builder.toString();
-  }
-
-  public void destroy() throws IOException {
-    for (final Map.Entry<String,SchemaLocation> entry : schemaLocations.entrySet()) {
-      final Map<String,CachedURL> directory = entry.getValue().getDirectory();
-      for (final CachedURL cachedUrl : directory.values())
-        cachedUrl.destroy();
-    }
   }
 
   @Override

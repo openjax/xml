@@ -17,7 +17,13 @@
 package org.lib4j.xml.sax;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,11 +32,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.lib4j.net.CachedURL;
-import org.lib4j.net.Sockets;
+import org.lib4j.net.URLs;
+import org.lib4j.net.WrappedURLConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 public final class XMLDocuments {
+  private static final Logger logger = LoggerFactory.getLogger(SchemaLocationHandler.class);
   private static SAXParserFactory factory;
 
   static {
@@ -38,6 +47,7 @@ public final class XMLDocuments {
       factory = SAXParserFactory.newInstance("org.apache.xerces.jaxp.SAXParserFactoryImpl", null);
     }
     catch (final FactoryConfigurationError e) {
+      logger.warn("Unable to create SAXParserFactory of type org.apache.xerces.jaxp.SAXParserFactoryImpl", e);
       factory = SAXParserFactory.newInstance();
     }
   }
@@ -61,55 +71,77 @@ public final class XMLDocuments {
   }
 
   public static XMLDocument parse(final URL url, final boolean offline, final boolean validating) throws IOException, SAXException {
-    return parse(new CachedURL(url), null, offline, validating);
+    return parse(url, null, offline, validating);
   }
 
-  public static XMLDocument parse(final CachedURL cachedUrl, final boolean offline, final boolean validating) throws IOException, SAXException {
-    return parse(cachedUrl, null, offline, validating);
+  protected static URL disableHttp(final URL url, final boolean offline) throws MalformedURLException {
+    return offline && url.getProtocol().startsWith("http") ? new URL(url, "", new URLStreamHandler() {
+      @Override
+      protected URLConnection openConnection(final URL u) throws IOException {
+        return openConnection(u, null);
+      }
+
+      @Override
+      protected URLConnection openConnection(final URL u, final Proxy proxy) throws IOException {
+        return new WrappedURLConnection(proxy != null ? url.openConnection(proxy) : url.openConnection()) {
+          @Override
+          public InputStream getInputStream() throws IOException {
+            return new InputStream() {
+              @Override
+              public int read() throws IOException {
+                throw new IOException();
+              }
+            };
+          }
+
+          @Override
+          public OutputStream getOutputStream() throws IOException {
+            return new OutputStream() {
+              @Override
+              public void write(final int b) throws IOException {
+                throw new IOException();
+              }
+            };
+          }
+        };
+      }
+    }) : url;
   }
 
-  public static XMLDocument parse(final URL url, final DocumentHandler documentHandler, final boolean offline, final boolean validating) throws IOException, SAXException {
-    return parse(new CachedURL(url), documentHandler, offline, validating);
-  }
+  public static XMLDocument parse(URL url, final DocumentHandler documentHandler, final boolean offline, final boolean validating) throws IOException, SAXException {
+    url = disableHttp(url, offline);
 
-  public static XMLDocument parse(final CachedURL cachedURL, final DocumentHandler documentHandler, final boolean offline, final boolean validating) throws IOException, SAXException {
-    final SchemaLocationHandler handler = new SchemaLocationHandler(cachedURL, validating);
-    if (offline)
-      Sockets.disableNetwork();
+    final SchemaLocationHandler handler = new SchemaLocationHandler(url, offline, validating);
 
     final SAXParser parser = newParser();
-    parser.parse(cachedURL.openStream(), handler);
+    parser.parse(url.openStream(), handler);
     parser.reset();
     final XMLCatalog catalog = new XMLCatalog();
     if (handler.isXSD())
-      catalog.putSchemaLocation(handler.getTargetNamespace(), new SchemaLocation(handler.getTargetNamespace(), cachedURL));
+      catalog.putSchemaLocation(handler.getTargetNamespace(), new SchemaLocation(handler.getTargetNamespace(), url));
 
     boolean referencesOnlyLocal = imports(parser, documentHandler, offline, catalog, handler.getNamespaceURIs(), handler.getImports());
     if (handler.isXSD())
       referencesOnlyLocal = includes(parser, documentHandler, offline, catalog, handler.getTargetNamespace(), handler.getIncludes()) && referencesOnlyLocal;
 
-    final XMLDocument xmlDocument = new XMLDocument(cachedURL, catalog, handler.getRootElement(), handler.isXSD(), handler.referencesOnlyLocal() && referencesOnlyLocal);
-    if (offline)
-      Sockets.enableNetwork();
-
-    return xmlDocument;
+    return new XMLDocument(url, catalog, handler.getRootElement(), handler.isXSD(), handler.referencesOnlyLocal() && referencesOnlyLocal);
   }
 
-  private static boolean imports(final SAXParser parser, final DocumentHandler documentHandler, final boolean offline, final XMLCatalog catalog, final Set<String> namespaceURIs, final Map<String,CachedURL> schemaLocations) throws IOException, SAXException {
+  private static boolean imports(final SAXParser parser, final DocumentHandler documentHandler, final boolean offline, final XMLCatalog catalog, final Set<String> namespaceURIs, final Map<String,URL> schemaLocations) throws IOException, SAXException {
     boolean referencesOnlyLocal = true;
-    for (final Map.Entry<String,CachedURL> schemaLocation : schemaLocations.entrySet()) {
+    for (final Map.Entry<String,URL> schemaLocation : schemaLocations.entrySet()) {
       if (!catalog.hasSchemaLocation(schemaLocation.getKey())) {
-        if (!offline || (referencesOnlyLocal = schemaLocation.getValue().isLocal() && referencesOnlyLocal)) {
-          final SchemaLocationHandler handler = new SchemaLocationHandler(schemaLocation.getValue(), false);
-          try {
-            if (documentHandler != null)
-              documentHandler.schemaLocation(schemaLocation.getValue().openConnection());
+        if (!offline || (referencesOnlyLocal = URLs.isLocal(schemaLocation.getValue()) && referencesOnlyLocal)) {
+          final SchemaLocationHandler handler = new SchemaLocationHandler(schemaLocation.getValue(), offline, false);
+          if (documentHandler != null)
+            documentHandler.schemaLocation(schemaLocation.getValue().openConnection());
 
-            parser.reset();
-            parser.parse(schemaLocation.getValue().openStream(), handler);
+          parser.reset();
+          try (final InputStream in = schemaLocation.getValue().openStream()) {
+            parser.parse(in, handler);
           }
           catch (final SAXInterruptException e) {
-            schemaLocation.getValue().reset();
+            logger.debug("Caught " + SAXInterruptException.class.getSimpleName());
           }
 
           catalog.putSchemaLocation(schemaLocation.getKey(), new SchemaLocation(schemaLocation.getKey(), schemaLocation.getValue()));
@@ -129,21 +161,21 @@ public final class XMLDocuments {
     return referencesOnlyLocal;
   }
 
-  private static boolean includes(final SAXParser parser, final DocumentHandler documentHandler, final boolean offline, final XMLCatalog references, final String namespaceURI, final Map<String,CachedURL> includes) throws IOException, SAXException {
+  private static boolean includes(final SAXParser parser, final DocumentHandler documentHandler, final boolean offline, final XMLCatalog references, final String namespaceURI, final Map<String,URL> includes) throws IOException, SAXException {
     boolean referencesOnlyLocal = true;
-    for (final Map.Entry<String,CachedURL> entry : includes.entrySet()) {
-      final CachedURL include = entry.getValue();
-      if (!offline || (referencesOnlyLocal = include.isLocal() && referencesOnlyLocal)) {
-        final SchemaLocationHandler handler = new SchemaLocationHandler(include, false);
-        try {
-          if (documentHandler != null)
-            documentHandler.schemaLocation(include.openConnection());
+    for (final Map.Entry<String,URL> entry : includes.entrySet()) {
+      final URL include = entry.getValue();
+      if (!offline || (referencesOnlyLocal = URLs.isLocal(include) && referencesOnlyLocal)) {
+        final SchemaLocationHandler handler = new SchemaLocationHandler(include, offline, false);
+        if (documentHandler != null)
+          documentHandler.schemaLocation(include.openConnection());
 
-          parser.reset();
-          parser.parse(include.openStream(), handler);
+        parser.reset();
+        try (final InputStream in = include.openStream()) {
+          parser.parse(in, handler);
         }
         catch (final SAXInterruptException e) {
-          include.reset();
+          logger.debug("Caught " + SAXInterruptException.class.getSimpleName());
         }
 
         references.getSchemaLocation(namespaceURI).getDirectory().put(entry.getKey(), include);

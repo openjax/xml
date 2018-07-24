@@ -24,8 +24,8 @@ import java.util.Iterator;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
-import org.lib4j.io.input.RewindableInputStream;
-import org.lib4j.net.CachedURL;
+import org.lib4j.io.Streams;
+import org.lib4j.util.MemoryURLStreamHandler;
 import org.lib4j.xml.OfflineValidationException;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -35,26 +35,19 @@ public final class Validator {
   private static final String XML_11_URI = "http://www.w3.org/XML/XMLSchema/v1.1";
   private static final SchemaFactory factory = SchemaFactory.newInstance(XML_11_URI);
 
-  public static CachedURL validate(final URL url, final boolean offline) throws IOException, SAXException {
-    return validate(url, offline, new LoggingErrorHandler());
+  public static void validate(final String xml, final boolean offline) throws IOException, SAXException {
+    validate(MemoryURLStreamHandler.createURL(xml.getBytes()), offline, new LoggingErrorHandler());
   }
 
-  public static CachedURL validate(final InputStream inputStream, final boolean offline) throws IOException, SAXException {
-    return validate(new CachedURL((URL)null) {
-      private RewindableInputStream in;
-
-      @Override
-      public InputStream openStream() throws IOException {
-        return in == null ? in = new RewindableInputStream(inputStream) : in;
-      }
-    }, offline, new LoggingErrorHandler());
+  public static void validate(final InputStream in, final boolean offline) throws IOException, SAXException {
+    validate(MemoryURLStreamHandler.createURL(Streams.readBytes(in)), offline, new LoggingErrorHandler());
   }
 
-  public static CachedURL validate(final URL url, final boolean offline, final ErrorHandler errorHandler) throws IOException, SAXException {
-    return validate(new CachedURL(url), offline, errorHandler);
+  public static void validate(final URL url, final boolean offline) throws IOException, SAXException {
+    validate(url, offline, new LoggingErrorHandler());
   }
 
-  public static CachedURL validate(final CachedURL url, final boolean offline, final ErrorHandler errorHandler) throws IOException, SAXException {
+  public static void validate(final URL url, final boolean offline, final ErrorHandler errorHandler) throws IOException, SAXException {
     final XMLDocument xmlDocument = XMLDocuments.parse(url, offline, true);
     final XMLCatalog catalog = xmlDocument.getCatalog();
     if (offline && !xmlDocument.referencesOnlyLocal()) {
@@ -65,24 +58,20 @@ public final class Validator {
 
     if (catalog.isEmpty() && !xmlDocument.isXsd()) {
       errorHandler.warning(new SAXParseException("There is no schema or DTD associated with the document.", url.toString(), null, 0, 0));
-      return url;
+      return;
     }
 
     try (final InputStream in = url.openStream()) {
       validate(new StreamSource(in, url.toString()), catalog, xmlDocument.isXsd(), errorHandler);
     }
-
-    catalog.destroy();
-    return url;
   }
 
-  public static CachedURL validate(final URL url, final XMLCatalog catalog, final boolean isXsd, final ErrorHandler errorHandler) throws IOException, SAXException {
-    final CachedURL cachedUrl = new CachedURL(url);
-    try (final InputStream in = cachedUrl.openStream()) {
+  public static URL validate(final URL url, final XMLCatalog catalog, final boolean isXsd, final ErrorHandler errorHandler) throws IOException, SAXException {
+    try (final InputStream in = url.openStream()) {
       validate(new StreamSource(in, url.toString()), catalog, isXsd, errorHandler);
     }
 
-    return cachedUrl;
+    return url;
   }
 
   public static void validate(final StreamSource streamSource, final XMLCatalog catalog, final boolean isXsd, final ErrorHandler errorHandler) throws IOException, SAXException {

@@ -18,6 +18,7 @@ package org.lib4j.xml.sax;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.lib4j.xml.OfflineValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -28,8 +29,16 @@ public class ValidatorTest {
   @Test
   public void testValidate() throws Exception {
     Validator.validate(Thread.currentThread().getContextClassLoader().getResource("valid.xml"), true);
+
     try {
-      Validator.validate(Thread.currentThread().getContextClassLoader().getResource("invalid.xml").toURI().toURL(), true);
+      Validator.validate(Thread.currentThread().getContextClassLoader().getResource("remote.xml"), true);
+      Assert.fail("Expected OfflineValidationException");
+    }
+    catch (final OfflineValidationException e) {
+    }
+
+    try {
+      Validator.validate(Thread.currentThread().getContextClassLoader().getResource("invalid.xml"), true);
       Assert.fail("Should have failed.");
     }
     catch (final SAXException e) {
@@ -38,7 +47,7 @@ public class ValidatorTest {
     }
 
     try {
-      Validator.validate(Thread.currentThread().getContextClassLoader().getResource("test.xsd").toURI().toURL(), true);
+      Validator.validate(Thread.currentThread().getContextClassLoader().getResource("test.xsd"), true);
     }
     catch (final SAXException e) {
       if (e.getMessage() != null && e.getMessage().startsWith("schema_reference.4: Failed to read schema document 'http://www.w3.org/2001/"))

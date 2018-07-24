@@ -34,7 +34,6 @@ import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
-import org.lib4j.net.CachedURL;
 import org.lib4j.xml.sax.LoggingErrorHandler;
 import org.lib4j.xml.sax.Validator;
 import org.xml.sax.ErrorHandler;
@@ -96,14 +95,13 @@ public final class JaxbUtil {
   }
 
   public static <T>T parse(final Class<T> cls, final ClassLoader classLoader, final URL url, final ErrorHandler errorHandler, final boolean validate) throws IOException, SAXException {
-    final CachedURL cachedURL = validate ? Validator.validate(url, false, errorHandler) : new CachedURL(url);
+    if (validate)
+      Validator.validate(url, false, errorHandler);
 
-    try {
+    try (final InputStream in = url.openStream()) {
       final Unmarshaller unmarshaller = JAXBContext.newInstance(cls.getPackageName(), classLoader).createUnmarshaller();
-      try (final InputStream in = cachedURL.openStream()) {
-        final JAXBElement<T> element = unmarshaller.unmarshal(XMLInputFactory.newInstance().createXMLStreamReader(in), cls);
-        return element.getValue();
-      }
+      final JAXBElement<T> element = unmarshaller.unmarshal(XMLInputFactory.newInstance().createXMLStreamReader(in), cls);
+      return element.getValue();
     }
     catch (final FactoryConfigurationError | JAXBException e) {
       throw new UnsupportedOperationException(e);

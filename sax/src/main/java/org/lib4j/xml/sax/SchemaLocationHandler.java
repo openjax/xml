@@ -18,6 +18,7 @@ package org.lib4j.xml.sax;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,13 +29,16 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.lib4j.lang.Paths;
-import org.lib4j.net.CachedURL;
 import org.lib4j.net.URLs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SchemaLocationHandler extends DefaultHandler {
+  private static final Logger logger = LoggerFactory.getLogger(SchemaLocationHandler.class);
+
   protected static String getPath(final String referrer, final String location) {
     return URLs.isAbsolute(location) ? location : Paths.newPath(Paths.getCanonicalParent(referrer), location);
   }
@@ -44,29 +48,31 @@ public class SchemaLocationHandler extends DefaultHandler {
   }
 
   private final Set<String> namespaceURIs = new HashSet<>();
-  private final Map<String,CachedURL> absoluteIncludes = new LinkedHashMap<>();
-  private final Map<String,CachedURL> imports = new LinkedHashMap<>();
-  private final Map<String,CachedURL> includes = new LinkedHashMap<>();
+  private final Map<String,URL> absoluteIncludes = new LinkedHashMap<>();
+  private final Map<String,URL> imports = new LinkedHashMap<>();
+  private final Map<String,URL> includes = new LinkedHashMap<>();
   private boolean referencesOnlyLocal = true;
   private String targetNamespace = null;
 
   private final boolean validating;
-  protected final CachedURL url;
+  private final boolean offline;
+  protected final URL url;
 
-  protected SchemaLocationHandler(final CachedURL url, final boolean validating) {
+  protected SchemaLocationHandler(final URL url, final boolean offline, final boolean validating) {
     this.url = url;
     this.validating = validating;
+    this.offline = offline;
   }
 
   public Set<String> getNamespaceURIs() {
     return namespaceURIs;
   }
 
-  public Map<String,CachedURL> getImports() {
+  public Map<String,URL> getImports() {
     return imports;
   }
 
-  public Map<String,CachedURL> getIncludes() {
+  public Map<String,URL> getIncludes() {
     return includes;
   }
 
@@ -98,6 +104,11 @@ public class SchemaLocationHandler extends DefaultHandler {
 
   @Override
   public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+    if (logger.isDebugEnabled()) {
+      final String attrs = SAXUtil.toString(attributes);
+      logger.debug("<" + localName + " xmlns=\"" + uri + "\"" + (attrs != null ? " " + attrs + ">" : ">"));
+    }
+
     if (isXSD == null) {
       isXSD = XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(uri);
       rootElement = new QName(uri, localName);
@@ -135,7 +146,7 @@ public class SchemaLocationHandler extends DefaultHandler {
           referencesOnlyLocal &= Paths.isLocal(path);
           namespaceURIs.add(namespace);
           if (!imports.containsKey(namespace))
-            imports.put(namespace, new CachedURL(path));
+            imports.put(namespace, XMLDocuments.disableHttp(new URL(path), offline));
         }
         catch (final MalformedURLException e) {
           throw new SAXException(e);
@@ -148,11 +159,11 @@ public class SchemaLocationHandler extends DefaultHandler {
             try {
               final String path = getPath(url.toExternalForm(), schemaLocation);
               referencesOnlyLocal &= Paths.isLocal(path);
-              CachedURL cachedURL = absoluteIncludes.get(path);
-              if (cachedURL == null)
-                absoluteIncludes.put(path, cachedURL = new CachedURL(path));
+              URL url = absoluteIncludes.get(path);
+              if (url == null)
+                absoluteIncludes.put(path, url = XMLDocuments.disableHttp(new URL(path), offline));
 
-              includes.put(schemaLocation, cachedURL);
+              includes.put(schemaLocation, url);
             }
             catch (final MalformedURLException e) {
               throw new SAXException(e);
@@ -179,7 +190,7 @@ public class SchemaLocationHandler extends DefaultHandler {
                   final String path = getPath(url.toExternalForm(), location);
                   referencesOnlyLocal &= Paths.isLocal(path);
                   if (!imports.containsKey(schemaNamespaceURI))
-                    imports.put(schemaNamespaceURI, new CachedURL(Paths.getProtocol(path) == null ? "file:" + path : path));
+                    imports.put(schemaNamespaceURI, Paths.getProtocol(path) == null ? new URL("file:" + path) : XMLDocuments.disableHttp(new URL(path), offline));
                 }
                 catch (final MalformedURLException e) {
                   throw new SAXException(e);

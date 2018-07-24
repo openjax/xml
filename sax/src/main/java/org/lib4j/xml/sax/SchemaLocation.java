@@ -16,22 +16,22 @@
 
 package org.lib4j.xml.sax;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.lib4j.lang.Paths;
-import org.lib4j.net.CachedURL;
 
 public class SchemaLocation {
   private final String namespace;
-  private final Map<String,CachedURL> directory;
+  private final Map<String,URL> directory;
 
   public SchemaLocation(final String namespace) {
     this.namespace = namespace;
     this.directory = new HashMap<>();
   }
 
-  public SchemaLocation(final String namespace, final CachedURL location) {
+  public SchemaLocation(final String namespace, final URL location) {
     this(namespace);
     if (location == null)
       throw new IllegalArgumentException("location == null");
@@ -44,7 +44,7 @@ public class SchemaLocation {
     return namespace;
   }
 
-  public Map<String,CachedURL> getDirectory() {
+  public Map<String,URL> getDirectory() {
     return directory;
   }
 
