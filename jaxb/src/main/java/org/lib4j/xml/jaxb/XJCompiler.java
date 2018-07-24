@@ -40,7 +40,6 @@ import org.jvnet.jaxb2_commons.plugin.AbstractParameterizablePlugin;
 import org.jvnet.jaxb2_commons.plugin.annotate.AnnotatePlugin;
 import org.lib4j.io.Streams;
 import org.lib4j.lang.ClassLoaders;
-import org.lib4j.lang.Resources;
 import org.lib4j.net.URLs;
 import org.lib4j.util.Collections;
 import org.slf4j.Logger;
@@ -230,10 +229,14 @@ public class XJCompiler {
     // </configuration>
     private LinkedHashSet<URL> xjbs;
 
-    private final LinkedHashSet<File> classpath = Collections.asCollection(new LinkedHashSet<File>(), Resources.getLocationBases(MaskingClassLoader.class, JAXBContext.class, AnnotatePlugin.class, AbstractParameterizablePlugin.class, LogFactory.class, XAnnotationParser.class, Node.class, DataSource.class, StringUtils.class));
+    private final LinkedHashSet<File> classpath;
 
     public Command() {
+      classpath = new LinkedHashSet<>();
       try {
+        for (final Class<?> cls : new Class<?>[] {MaskingClassLoader.class, JAXBContext.class, AnnotatePlugin.class, AbstractParameterizablePlugin.class, LogFactory.class, XAnnotationParser.class, Node.class, DataSource.class, StringUtils.class})
+          classpath.add(new File(cls.getProtectionDomain().getCodeSource().getLocation().toURI()));
+
         for (final URL path : ClassLoaders.getClassPath())
           classpath.add(new File(path.toURI()));
       }
