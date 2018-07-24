@@ -17,6 +17,7 @@
 package org.lib4j.xml.sax;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,12 +42,11 @@ public class XMLCatalog {
 
   public String toTR9401() {
     final StringBuilder builder = new StringBuilder();
-    boolean fistLine = true;
     for (final Map.Entry<String,SchemaLocation> locationEntry : schemaLocations.entrySet()) {
-      for (final Map.Entry<String,URL> directoryEntry : locationEntry.getValue().getDirectory().entrySet()) {
-        if (fistLine)
-          fistLine = false;
-        else
+      final Iterator<Map.Entry<String,URL>> iterator = locationEntry.getValue().getDirectory().entrySet().iterator();
+      for (int i = 0; iterator.hasNext(); i++) {
+        final Map.Entry<String,URL> directoryEntry = iterator.next();
+        if (i > 0)
           builder.append('\n');
 
         final String line = "\"" + directoryEntry.getKey() + "\" \"" + directoryEntry.getValue() + "\"";

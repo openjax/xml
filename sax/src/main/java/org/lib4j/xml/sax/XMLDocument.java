@@ -26,9 +26,9 @@ public class XMLDocument {
   private final boolean isXSD;
   private final QName rootElement;
   private final URL schemaLocation;
-  private final boolean referencesOnlyLocal;
+  private final boolean referencesLocalOnly;
 
-  public XMLDocument(final URL url, final XMLCatalog catalog, final QName rootElement, final boolean isXSD, final boolean referencesOnlyLocal) {
+  public XMLDocument(final URL url, final XMLCatalog catalog, final QName rootElement, final boolean isXSD, final boolean referencesLocalOnly) {
     this.url = url;
     this.catalog = catalog;
     this.rootElement = rootElement;
@@ -36,7 +36,7 @@ public class XMLDocument {
     final SchemaLocation schemaLocation = catalog.getSchemaLocation(rootElement.getNamespaceURI());
     this.schemaLocation = schemaLocation == null ? null : schemaLocation.getDirectory().get(rootElement.getNamespaceURI());
     this.isXSD = isXSD;
-    this.referencesOnlyLocal = referencesOnlyLocal;
+    this.referencesLocalOnly = referencesLocalOnly;
   }
 
   public URL getURL() {
@@ -59,8 +59,8 @@ public class XMLDocument {
     return isXSD;
   }
 
-  public boolean referencesOnlyLocal() {
-    return referencesOnlyLocal;
+  public boolean referencesLocalOnly() {
+    return referencesLocalOnly;
   }
 
   @Override
@@ -72,14 +72,14 @@ public class XMLDocument {
       return false;
 
     final XMLDocument that = (XMLDocument)obj;
-    return isXSD == that.isXSD && referencesOnlyLocal == that.referencesOnlyLocal && (url != null ? url.equals(that.url) : that.url == null) && (catalog != null ? catalog.equals(that.catalog) : that.catalog == null) && (rootElement != null ? rootElement.equals(that.rootElement) : that.rootElement == null);
+    return isXSD == that.isXSD && referencesLocalOnly == that.referencesLocalOnly && (url != null ? url.equals(that.url) : that.url == null) && (catalog != null ? catalog.equals(that.catalog) : that.catalog == null) && (rootElement != null ? rootElement.equals(that.rootElement) : that.rootElement == null);
   }
 
   @Override
   public int hashCode() {
     int hashCode = 17;
     hashCode = 31 * hashCode + (isXSD ? 1 : 0);
-    hashCode = 31 * hashCode + (referencesOnlyLocal ? 1 : 0);
+    hashCode = 31 * hashCode + (referencesLocalOnly ? 1 : 0);
     hashCode = 31 * hashCode + url.hashCode();
     hashCode = 31 * hashCode + catalog.hashCode();
     hashCode = 31 * hashCode + rootElement.hashCode();
@@ -88,6 +88,6 @@ public class XMLDocument {
 
   @Override
   public String toString() {
-    return "URL: " + url.toExternalForm() + "\nIsXSD: " + isXSD + "\nReferencesOnlyLocal: " + referencesOnlyLocal + "\nCatalog:\n" + catalog.toTR9401();
+    return "URL: " + url.toExternalForm() + "\nIsXSD: " + isXSD + "\nReferencesOnlyLocal: " + referencesLocalOnly + "\nCatalog:\n" + catalog.toTR9401();
   }
 }

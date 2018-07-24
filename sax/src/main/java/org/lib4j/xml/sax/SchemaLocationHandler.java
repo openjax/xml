@@ -55,13 +55,13 @@ public class SchemaLocationHandler extends DefaultHandler {
   private String targetNamespace = null;
 
   private final boolean validating;
-  private final boolean offline;
+  private final boolean localOnly;
   protected final URL url;
 
-  protected SchemaLocationHandler(final URL url, final boolean offline, final boolean validating) {
+  protected SchemaLocationHandler(final URL url, final boolean localOnly, final boolean validating) {
     this.url = url;
+    this.localOnly = localOnly;
     this.validating = validating;
-    this.offline = offline;
   }
 
   public Set<String> getNamespaceURIs() {
@@ -146,7 +146,7 @@ public class SchemaLocationHandler extends DefaultHandler {
           referencesOnlyLocal &= Paths.isLocal(path);
           namespaceURIs.add(namespace);
           if (!imports.containsKey(namespace))
-            imports.put(namespace, XMLDocuments.disableHttp(new URL(path), offline));
+            imports.put(namespace, XMLDocuments.disableHttp(new URL(path), localOnly));
         }
         catch (final MalformedURLException e) {
           throw new SAXException(e);
@@ -161,7 +161,7 @@ public class SchemaLocationHandler extends DefaultHandler {
               referencesOnlyLocal &= Paths.isLocal(path);
               URL url = absoluteIncludes.get(path);
               if (url == null)
-                absoluteIncludes.put(path, url = XMLDocuments.disableHttp(new URL(path), offline));
+                absoluteIncludes.put(path, url = XMLDocuments.disableHttp(new URL(path), localOnly));
 
               includes.put(schemaLocation, url);
             }
@@ -190,7 +190,7 @@ public class SchemaLocationHandler extends DefaultHandler {
                   final String path = getPath(url.toExternalForm(), location);
                   referencesOnlyLocal &= Paths.isLocal(path);
                   if (!imports.containsKey(schemaNamespaceURI))
-                    imports.put(schemaNamespaceURI, Paths.getProtocol(path) == null ? new URL("file:" + path) : XMLDocuments.disableHttp(new URL(path), offline));
+                    imports.put(schemaNamespaceURI, Paths.getProtocol(path) == null ? new URL("file:" + path) : XMLDocuments.disableHttp(new URL(path), localOnly));
                 }
                 catch (final MalformedURLException e) {
                   throw new SAXException(e);

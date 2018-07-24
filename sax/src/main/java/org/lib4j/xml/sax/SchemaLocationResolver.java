@@ -103,7 +103,7 @@ public class SchemaLocationResolver implements LSResourceResolver {
       return input;
     }
     catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException(e);
     }
   }
 }

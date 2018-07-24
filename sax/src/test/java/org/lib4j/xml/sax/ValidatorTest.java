@@ -19,13 +19,9 @@ package org.lib4j.xml.sax;
 import org.junit.Assert;
 import org.junit.Test;
 import org.lib4j.xml.OfflineValidationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 public class ValidatorTest {
-  private static final Logger logger = LoggerFactory.getLogger(ValidatorTest.class);
-
   @Test
   public void testValidate() throws Exception {
     Validator.validate(Thread.currentThread().getContextClassLoader().getResource("valid.xml"), true);
@@ -39,7 +35,7 @@ public class ValidatorTest {
 
     try {
       Validator.validate(Thread.currentThread().getContextClassLoader().getResource("invalid.xml"), true);
-      Assert.fail("Should have failed.");
+      Assert.fail("Should have failed");
     }
     catch (final SAXException e) {
       if (!e.getMessage().startsWith("cvc-datatype-valid.1.2.1: 'a' is not a valid value for 'integer'."))
@@ -50,9 +46,7 @@ public class ValidatorTest {
       Validator.validate(Thread.currentThread().getContextClassLoader().getResource("test.xsd"), true);
     }
     catch (final SAXException e) {
-      if (e.getMessage() != null && e.getMessage().startsWith("schema_reference.4: Failed to read schema document 'http://www.w3.org/2001/"))
-        logger.info(e.getMessage());
-      else
+      if (e.getMessage() == null || !e.getMessage().startsWith("schema_reference.4: Failed to read schema document 'http://www.w3.org/2001/"))
         throw e;
     }
   }

@@ -35,29 +35,29 @@ public final class Validator {
   private static final String XML_11_URI = "http://www.w3.org/XML/XMLSchema/v1.1";
   private static final SchemaFactory factory = SchemaFactory.newInstance(XML_11_URI);
 
-  public static void validate(final String xml, final boolean offline) throws IOException, SAXException {
-    validate(MemoryURLStreamHandler.createURL(xml.getBytes()), offline, new LoggingErrorHandler());
+  public static void validate(final String xml, final boolean localOnly) throws IOException, SAXException {
+    validate(MemoryURLStreamHandler.createURL(xml.getBytes()), localOnly, new LoggingErrorHandler());
   }
 
-  public static void validate(final InputStream in, final boolean offline) throws IOException, SAXException {
-    validate(MemoryURLStreamHandler.createURL(Streams.readBytes(in)), offline, new LoggingErrorHandler());
+  public static void validate(final InputStream in, final boolean localOnly) throws IOException, SAXException {
+    validate(MemoryURLStreamHandler.createURL(Streams.readBytes(in)), localOnly, new LoggingErrorHandler());
   }
 
-  public static void validate(final URL url, final boolean offline) throws IOException, SAXException {
-    validate(url, offline, new LoggingErrorHandler());
+  public static void validate(final URL url, final boolean localOnly) throws IOException, SAXException {
+    validate(url, localOnly, new LoggingErrorHandler());
   }
 
-  public static void validate(final URL url, final boolean offline, final ErrorHandler errorHandler) throws IOException, SAXException {
-    final XMLDocument xmlDocument = XMLDocuments.parse(url, offline, true);
+  public static void validate(final URL url, final boolean localOnly, final ErrorHandler errorHandler) throws IOException, SAXException {
+    final XMLDocument xmlDocument = XMLDocuments.parse(url, localOnly, true);
     final XMLCatalog catalog = xmlDocument.getCatalog();
-    if (offline && !xmlDocument.referencesOnlyLocal()) {
-      final SAXParseException parseException = new SAXParseException("Offline execution not checking remote schemas.", url.toString(), null, 0, 0);
+    if (localOnly && !xmlDocument.referencesLocalOnly()) {
+      final SAXParseException parseException = new SAXParseException("Offline execution not checking remote schemas", url.toString(), null, 0, 0);
       errorHandler.warning(parseException);
       throw new OfflineValidationException(parseException);
     }
 
     if (catalog.isEmpty() && !xmlDocument.isXsd()) {
-      errorHandler.warning(new SAXParseException("There is no schema or DTD associated with the document.", url.toString(), null, 0, 0));
+      errorHandler.warning(new SAXParseException("There is no schema or DTD associated with the document", url.toString(), null, 0, 0));
       return;
     }
 
@@ -94,9 +94,7 @@ public final class Validator {
 
     if (validatorErrorHandler.getErrors() != null) {
       final Iterator<SAXParseException> iterator = validatorErrorHandler.getErrors().iterator();
-      final SAXParseException firstException = iterator.next();
-      final SAXException exception = new SAXException(firstException);
-      exception.setStackTrace(firstException.getStackTrace());
+      final SAXParseException exception = iterator.next();
       while (iterator.hasNext())
         exception.addSuppressed(iterator.next());
 
