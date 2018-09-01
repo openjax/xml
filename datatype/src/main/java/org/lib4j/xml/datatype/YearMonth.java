@@ -60,12 +60,6 @@ public class YearMonth extends TemporalType implements Serializable {
   @SuppressWarnings("deprecation")
   protected YearMonth(final Year year, final Month month, final TimeZone timeZone) {
     super(timeZone);
-    if (year == null)
-      throw new IllegalArgumentException("year == null");
-
-    if (month == null)
-      throw new IllegalArgumentException("month == null");
-
     this.year = year;
     this.month = month;
     epochTime = java.util.Date.UTC(year.getYear() - 1900, month.getMonth() - 1, 1, 0, 0, 0) - getTimeZone().getRawOffset() - getTimeZone().getDSTSavings();

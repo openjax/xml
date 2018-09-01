@@ -17,21 +17,21 @@
 package org.lib4j.xml.dom;
 
 public final class DOMStyle {
-  protected static DOMStyle consolidate(final DOMStyle ... options) {
-    if (options == null)
+  protected static DOMStyle merge(final DOMStyle ... styles) {
+    if (styles == null)
       return null;
 
-    if (options.length == 0)
+    if (styles.length == 0)
       return DEFAULT;
 
-    if (options.length == 1)
-      return options[0];
+    if (styles.length == 1)
+      return styles[0];
 
-    final DOMStyle consolidated = new DOMStyle(DEFAULT_MASK);
-    for (final DOMStyle option : options)
-      consolidated.mask = consolidated.mask | option.mask;
+    final DOMStyle merged = new DOMStyle(DEFAULT_MASK);
+    for (final DOMStyle style : styles)
+      merged.mask = merged.mask | style.mask;
 
-    return consolidated;
+    return merged;
   }
 
   private static final int DEFAULT_MASK = 0x000;

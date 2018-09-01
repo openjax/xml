@@ -51,9 +51,6 @@ public class DateTime extends TemporalType implements Serializable {
 
   protected DateTime(final Date date, final Time time) {
     super(time.getTimeZone());
-    if (date == null)
-      throw new IllegalArgumentException("date == null");
-
     this.date = date;
     this.time = time;
     this.epochTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDay(), time.getHour(), time.getMinute(), (int)time.getSecond(), (int)((time.getSecond() - (int)time.getSecond()) * 1000000000)).toEpochSecond(ZoneOffset.ofTotalSeconds(getTimeZone().getRawOffset() / 1000));

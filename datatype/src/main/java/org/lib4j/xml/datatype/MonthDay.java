@@ -47,9 +47,6 @@ public class MonthDay extends TemporalType implements Serializable {
   }
 
   protected static MonthDay parseMonthDayFrag(String string) {
-    if (string == null)
-      throw new IllegalArgumentException("string == null");
-
     if (string.length() < MONTH_DAY_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("month-day == " + string);
 
@@ -77,12 +74,6 @@ public class MonthDay extends TemporalType implements Serializable {
 
   protected MonthDay(final Month month, final Day day, final TimeZone timeZone) {
     super(timeZone);
-    if (month == null)
-      throw new IllegalArgumentException("month == null");
-
-    if (day == null)
-      throw new IllegalArgumentException("day == null");
-
     this.month = month;
     this.day = day;
     if (month.getMonth() == 2 && 29 < day.getDay())

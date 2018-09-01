@@ -22,25 +22,25 @@ import org.junit.Test;
 public class DOMStyleTest {
   @Test
   public void testConsolidate() {
-    Assert.assertNull(DOMStyle.consolidate((DOMStyle[])null));
+    Assert.assertNull(DOMStyle.merge((DOMStyle[])null));
 
     // Condition: default
-    DOMStyle option = DOMStyle.consolidate();
+    DOMStyle option = DOMStyle.merge();
     Assert.assertFalse(option.isIndent());
     Assert.assertFalse(option.isIgnoreNamespaces());
 
     // Condition: indent
-    option = DOMStyle.consolidate(DOMStyle.INDENT);
+    option = DOMStyle.merge(DOMStyle.INDENT);
     Assert.assertTrue(option.isIndent());
     Assert.assertFalse(option.isIgnoreNamespaces());
 
     // Condition: ignoreNamespases
-    option = DOMStyle.consolidate(DOMStyle.IGNORE_NAMESPACES);
+    option = DOMStyle.merge(DOMStyle.IGNORE_NAMESPACES);
     Assert.assertTrue(option.isIgnoreNamespaces());
     Assert.assertFalse(option.isIndent());
 
     // Condition: indent & ignoreNamespases
-    option = DOMStyle.consolidate(DOMStyle.INDENT, DOMStyle.IGNORE_NAMESPACES);
+    option = DOMStyle.merge(DOMStyle.INDENT, DOMStyle.IGNORE_NAMESPACES);
     Assert.assertTrue(option.isIgnoreNamespaces());
     Assert.assertTrue(option.isIndent());
   }

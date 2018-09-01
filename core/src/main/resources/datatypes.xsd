@@ -1089,4 +1089,10 @@
     </xs:restriction>
   </xs:simpleType>
   
+  <xs:simpleType name="url">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([a-z][a-z0-9+\-.]*):(\/\/([a-z0-9\-._~%!$&amp;'()*+,;=]+@)?([a-z0-9\-._~%]+|\[[a-f0-9:.]+\]|\[v[a-f0-9][a-z0-9\-._~%!$&amp;'()*+,;=:]+\])(:[0-9]+)?(\/[a-z0-9\-._~%!$&amp;'()*+,;=:@]+)*\/?|(\/?[a-z0-9\-._~%!$&amp;'()*+,;=:@]+(\/[a-z0-9\-._~%!$&amp;'()*+,;=:@]+)*\/?)?)(\?[a-z0-9\-._~%!$&amp;'()*+,;=:@/?]*)?(#[a-z0-9\-._~%!$&amp;'()*+,;=:@/?]*)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
 </xs:schema>

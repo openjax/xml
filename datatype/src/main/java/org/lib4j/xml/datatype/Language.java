@@ -56,9 +56,6 @@ public class Language implements CharSequence, Serializable {
   private String encoded;
 
   public Language(final String ... language) {
-    if (language == null)
-      throw new IllegalArgumentException("language == null");
-
     if (language.length == 0)
       throw new IllegalArgumentException("language.length == 0");
 

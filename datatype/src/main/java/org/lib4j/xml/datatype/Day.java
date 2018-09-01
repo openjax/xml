@@ -43,9 +43,6 @@ public class Day extends TemporalType implements Serializable {
   }
 
   protected static int parseDayFrag(final String string) {
-    if (string == null)
-      throw new IllegalArgumentException("string == null");
-
     if (string.length() < DAY_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("day == " + string);
 

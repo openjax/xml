@@ -52,9 +52,6 @@ public class Date extends TemporalType implements Serializable {
   }
 
   protected static Date parseDateFrag(String string) {
-    if (string == null)
-      throw new IllegalArgumentException("string == null");
-
     if (string.length() < DATE_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("date == " + string);
 
@@ -74,15 +71,8 @@ public class Date extends TemporalType implements Serializable {
 
   protected Date(final YearMonth yearMonth, final Day day, final TimeZone timeZone) {
     super(timeZone);
-    if (yearMonth == null)
-      throw new IllegalArgumentException("yearMonth == null");
-
-    if (day == null)
-      throw new IllegalArgumentException("day == null");
-
     this.yearMonth = yearMonth;
     this.day = day;
-
     this.epochTime = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), day.getDay(), 0, 0, 0).toEpochSecond(ZoneOffset.ofTotalSeconds(getTimeZone().getRawOffset() / 1000));
   }
 

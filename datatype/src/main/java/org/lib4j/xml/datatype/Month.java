@@ -43,9 +43,6 @@ public class Month extends TemporalType implements Serializable {
   }
 
   protected static int parseMonthFrag(final String string) {
-    if (string == null)
-      throw new IllegalArgumentException("string == null");
-
     if (string.length() < MONTH_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("month == " + string);
 

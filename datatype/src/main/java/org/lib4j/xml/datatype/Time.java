@@ -84,9 +84,6 @@ public class Time extends TemporalType implements Serializable {
   }
 
   protected static float parseSecondFrag(final String string) {
-    if (string == null)
-      throw new IllegalArgumentException("string == null");
-
     if (string.length() < SECOND_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("second == " + string);
 
@@ -122,9 +119,6 @@ public class Time extends TemporalType implements Serializable {
   }
 
   protected static TimeZone parseTimeZoneFrag(final String string) {
-    if (string == null)
-      throw new IllegalArgumentException("string == null");
-
     if (string.length() == 0)
       return null;
 

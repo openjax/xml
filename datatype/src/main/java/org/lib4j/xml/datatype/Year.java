@@ -51,9 +51,6 @@ public class Year extends TemporalType implements Serializable {
   }
 
   protected static int parseYearFrag(String string) {
-    if (string == null)
-      throw new IllegalArgumentException("string == null");
-
     if (string.length() == 0)
       throw new IllegalArgumentException(string);
 
