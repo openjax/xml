@@ -39,7 +39,7 @@ import org.jvnet.annox.parser.XAnnotationParser;
 import org.jvnet.jaxb2_commons.plugin.AbstractParameterizablePlugin;
 import org.jvnet.jaxb2_commons.plugin.annotate.AnnotatePlugin;
 import org.lib4j.io.Streams;
-import org.lib4j.net.URLs;
+import org.fastjax.net.URLs;
 import org.fastjax.util.ClassLoaders;
 import org.fastjax.util.Collections;
 import org.slf4j.Logger;

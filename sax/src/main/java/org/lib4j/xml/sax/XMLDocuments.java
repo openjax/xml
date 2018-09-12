@@ -32,8 +32,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.lib4j.net.URLs;
-import org.lib4j.net.WrappedURLConnection;
+import org.fastjax.net.URLs;
+import org.fastjax.net.WrappedURLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;

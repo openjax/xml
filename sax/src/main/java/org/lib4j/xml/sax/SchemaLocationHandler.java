@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.lib4j.net.URLs;
+import org.fastjax.net.URLs;
 import org.fastjax.util.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
