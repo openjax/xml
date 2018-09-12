@@ -25,7 +25,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.lib4j.io.Streams;
-import org.lib4j.util.MemoryURLStreamHandler;
+import org.fastjax.util.MemoryURLStreamHandler;
 import org.lib4j.xml.OfflineValidationException;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;

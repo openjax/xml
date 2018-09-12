@@ -29,7 +29,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.lib4j.net.URLs;
-import org.lib4j.util.Paths;
+import org.fastjax.util.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;

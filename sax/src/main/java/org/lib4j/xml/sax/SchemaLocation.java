@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lib4j.util.Paths;
+import org.fastjax.util.Paths;
 
 public class SchemaLocation {
   private final String namespace;
