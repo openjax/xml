@@ -28,25 +28,20 @@
   <artifactId>xml-dom</artifactId>
   <version>1.0.4-SNAPSHOT</version>
   <name>${project.groupId}:${project.artifactId}</name>
-  <properties>
-    <maven.compiler.source>9</maven.compiler.source>
-    <maven.compiler.target>9</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.opengis.cite.xerces</groupId>
-      <artifactId>xercesImpl-xsd11</artifactId>
-      <version>2.12-beta-r1667115</version>
-    </dependency>
-    <dependency>
       <groupId>org.fastjax.xml</groupId>
       <artifactId>xml-core</artifactId>
       <version>1.0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.opengis.cite.xerces</groupId>
+      <artifactId>xercesImpl-xsd11</artifactId>
+      <version>2.12-beta-r1667115</version>
     </dependency>
   </dependencies>
 </project>
