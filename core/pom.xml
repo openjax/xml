@@ -26,6 +26,5 @@
   </parent>
   <groupId>org.fastjax.xml</groupId>
   <artifactId>xml-core</artifactId>
-  <version>1.0.4-SNAPSHOT</version>
   <name>${project.groupId}:${project.artifactId}</name>
 </project>
