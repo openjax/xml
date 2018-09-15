@@ -16,8 +16,8 @@
 -->
 <xs:schema
   elementFormDefault="qualified"
-  targetNamespace="http://xml.fastjax.org/datatypes-1.0.3.xsd"
-  xmlns:dt="http://xml.fastjax.org/datatypes-1.0.3.xsd"
+  targetNamespace="http://xml.fastjax.org/datatypes-0.9.2.xsd"
+  xmlns:dt="http://xml.fastjax.org/datatypes-0.9.2.xsd"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:simpleType name="anyURINonEmpty">
@@ -254,16 +254,16 @@
       <xs:pattern value="[a-zA-Z]([.]?([a-zA-Z0-9_-]+)*)?@([a-zA-Z0-9\-_]+\.)+[a-zA-Z]{2,4}"/>
     </xs:restriction>
   </xs:simpleType>
-
-  <xs:simpleType name="javaIdentifier">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[a-zA-Z_$][a-zA-Z\d_$]*"/>
-    </xs:restriction>
-  </xs:simpleType>
   
   <xs:simpleType name="javaQualifiedIdentifier">
     <xs:restriction base="xs:string">
       <xs:pattern value="(([a-zA-Z_$][a-zA-Z\d_$]*)\.)*[a-zA-Z_$][a-zA-Z\d_$]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="javaIdentifier">
+    <xs:restriction base="dt:javaQualifiedIdentifier">
+      <xs:pattern value="[a-zA-Z_$][a-zA-Z\d_$]*"/>
     </xs:restriction>
   </xs:simpleType>
   
