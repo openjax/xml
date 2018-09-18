@@ -23,8 +23,8 @@
       <configuration>
         <id>xml</id>
         <default-phases>
-          <compile>org.fastjax.maven.plugin:xml-maven-plugin:validate</compile>
-          <genetate-resources>org.fastjax.maven.plugin:xml-maven-plugin:transform</genetate-resources>
+          <compile>org.fastjax.xml:xml-maven-plugin:validate</compile>
+          <genetate-resources>org.fastjax.xml:xml-maven-plugin:transform</genetate-resources>
         </default-phases>
       </configuration>
     </component>
@@ -38,7 +38,7 @@
           <phase>transform</phase>
         </phases>
         <default-phases>
-          <transform>org.fastjax.maven.plugin:xml-maven-plugin:transform</transform>
+          <transform>org.fastjax.xml:xml-maven-plugin:transform</transform>
         </default-phases>
       </configuration>
     </component>

@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.fastjax.maven.plugin.xml;
+package org.fastjax.xml;
 
 import java.io.File;
 import java.net.URL;
