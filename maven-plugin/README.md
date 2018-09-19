@@ -24,9 +24,9 @@ Execution with `includes` directive.
 
 ```xml
 <plugin>
-  <groupId>org.fastjax.maven.plugin</groupId>
+  <groupId>org.fastjax.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
-  <version>2.0.5-SNAPSHOT</version>
+  <version>0.9.2-SNAPSHOT</version>
   <executions>
     <execution>
       <goals>
@@ -52,9 +52,9 @@ Execution with `includes` and `excludes` directives.
 
 ```xml
 <plugin>
-  <groupId>org.fastjax.maven.plugin</groupId>
+  <groupId>org.fastjax.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
-  <version>2.0.5-SNAPSHOT</version>
+  <version>0.9.2-SNAPSHOT</version>
   <executions>
     <execution>
       <goals>
@@ -101,9 +101,9 @@ Execution with `includes` directive.
 
 ```xml
 <plugin>
-  <groupId>org.fastjax.maven.plugin</groupId>
+  <groupId>org.fastjax.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
-  <version>2.0.5-SNAPSHOT</version>
+  <version>0.9.2-SNAPSHOT</version>
   <executions>
     <execution>
       <goals>
