@@ -16,7 +16,6 @@
 
 package org.fastjax.xml;
 
-import java.io.File;
 import java.net.URL;
 import java.util.LinkedHashSet;
 
@@ -29,7 +28,6 @@ import org.fastjax.maven.mojo.FileSetMojo;
 
 @Mojo(name="xml", requiresDependencyResolution=ResolutionScope.TEST)
 public abstract class XmlMojo extends FileSetMojo {
-  protected static final File CWD = new File("").getAbsoluteFile();
   private static final String delimeter = "://";
 
   @Parameter(defaultValue="${httpProxy}", required=false, readonly=true)
