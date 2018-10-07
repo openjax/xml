@@ -71,13 +71,11 @@ public abstract class Validator {
   }
 
   /**
-   * This method allows a caller to get the schemaLocation <code>URL</code>
-   * of the declaring namespaceURI.
+   * This method allows a caller to get the schemaLocation {@code URL} of the
+   * declaring namespaceURI.
    *
-   * @param namespaceURI The namespaceURI that is defined at the
-   * schemaLocation.
-   *
-   * @return The schemaLocation <code>URL</code>.
+   * @param namespaceURI The namespaceURI that is defined at the schemaLocation.
+   * @return The schemaLocation {@code URL}.
    */
   protected abstract URL getSchemaLocation(final String namespaceURI);
 
