@@ -26,10 +26,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.fastjax.io.Files;
+import org.fastjax.io.FastFiles;
 import org.fastjax.net.URLs;
 import org.fastjax.util.Dates;
-import org.fastjax.xml.OfflineValidationException;
 import org.fastjax.xml.sax.Validator;
 import org.xml.sax.SAXException;
 
@@ -44,7 +43,7 @@ public final class ValidatorMojo extends XmlMojo {
     try {
       for (final URL url : urls) {
         final File recordFile = new File(recordDir, URLs.getName(url));
-        final String filePath = URLs.isFile(url) ? Files.relativePath(CWD.getAbsoluteFile(), new File(url.getFile()).getAbsoluteFile()) : url.toExternalForm();
+        final String filePath = URLs.isFile(url) ? FastFiles.getCwd().toPath().relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
         long lastModified = -1;
         if (recordFile.exists() && recordFile.lastModified() >= (lastModified = URLs.getLastModified(url)) && recordFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
           getLog().info("Pre-validated: " + filePath);
