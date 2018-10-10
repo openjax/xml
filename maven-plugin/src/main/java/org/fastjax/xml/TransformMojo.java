@@ -71,7 +71,7 @@ public final class TransformMojo extends XmlMojo {
       throw new MojoFailureException(e.getMessage(), e);
     }
     catch (final IOException | TransformerException e) {
-      throw new MojoExecutionException(e.getMessage(), e);
+      throw new MojoExecutionException(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
     }
   }
 }

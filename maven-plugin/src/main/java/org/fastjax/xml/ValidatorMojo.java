@@ -17,6 +17,7 @@
 package org.fastjax.xml;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashSet;
@@ -51,17 +52,16 @@ public final class ValidatorMojo extends XmlMojo {
         else {
           try {
             getLog().info("   Validating: " + filePath);
-
             Validator.validate(url, offline);
-            if (!recordFile.createNewFile())
-              recordFile.setLastModified(lastModified != -1 ? lastModified : URLs.getLastModified(url));
           }
           catch (final OfflineValidationException e) {
             if (!offline)
               throw e;
           }
-          catch (final SAXException e) {
-            final StringBuilder builder = new StringBuilder("\nURL: " + url.toExternalForm() + "\nReason: " + e.getMessage() + "\n");
+          catch (final FileNotFoundException | SAXException e) {
+            final String message = e instanceof FileNotFoundException ? e.getClass().getSimpleName() + e.getMessage() : e.getMessage();
+            final StringBuilder builder = new StringBuilder("\nURL: ").append(url.toExternalForm());
+            builder.append("\nReason: ").append(message).append('\n');
             for (final Throwable t : e.getSuppressed())
               builder.append("        ").append(t.getMessage()).append("\n");
 
@@ -69,6 +69,9 @@ public final class ValidatorMojo extends XmlMojo {
             exception.initCause(e);
             throw exception;
           }
+
+          if (!recordFile.createNewFile())
+            recordFile.setLastModified(lastModified != -1 ? lastModified : URLs.getLastModified(url));
         }
       }
     }
@@ -76,7 +79,7 @@ public final class ValidatorMojo extends XmlMojo {
       throw new MojoFailureException(e.getMessage(), e);
     }
     catch (final IOException e) {
-      throw new MojoExecutionException(e.getMessage(), e);
+      throw new MojoExecutionException(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
     }
   }
 }
