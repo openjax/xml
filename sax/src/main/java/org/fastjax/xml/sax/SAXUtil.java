@@ -18,13 +18,27 @@ package org.fastjax.xml.sax;
 
 import org.xml.sax.Attributes;
 
+/**
+ * Utility functions for operations pertaining to the {@code org.xml.sax} package.
+ */
 public final class SAXUtil {
+  /**
+   * Returns a string encoding of the specified {@code attributes}. The encoding
+   * is of the form:
+   *
+   * <pre>
+   * name = "value"
+   * </pre>
+   *
+   * @param attributes The {@code Attributes}.
+   * @return A string encoding of the specified {@code attributes}.
+   */
   public static String toString(final Attributes attributes) {
     if (attributes == null || attributes.getLength() == 0)
       return null;
 
     final StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < attributes.getLength(); i++) {
+    for (int i = 0; i < attributes.getLength(); ++i) {
       if (i > 0)
         builder.append(' ');
 

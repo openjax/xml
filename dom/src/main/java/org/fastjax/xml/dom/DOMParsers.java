@@ -30,7 +30,7 @@ public final class DOMParsers {
   private static final Logger logger = LoggerFactory.getLogger(DOMParsers.class);
 
   private static final ErrorHandler errorHandler = new ErrorHandler() {
-    // ignore fatal errors (final an exception is guaranteed)
+    // ignore fatal errors (an exception is guaranteed)
     @Override
     public void fatalError(final SAXParseException exception) throws SAXException {
     }
@@ -58,16 +58,14 @@ public final class DOMParsers {
     documentBuilderFactory.setIgnoringElementContentWhitespace(true);
     documentBuilderFactory.setValidating(false);
 
-    DocumentBuilder documentBuilder;
     try {
-      documentBuilder = documentBuilderFactory.newDocumentBuilder();
+      final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+      documentBuilder.setErrorHandler(errorHandler);
+      return documentBuilder;
     }
     catch (final ParserConfigurationException e) {
-      throw new RuntimeException(e);
+      throw new UnsupportedOperationException(e);
     }
-
-    documentBuilder.setErrorHandler(errorHandler);
-    return documentBuilder;
   }
 
   private DOMParsers() {

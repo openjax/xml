@@ -27,24 +27,38 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Utility functions for operations pertaining to classes in the
+ * {@code org.w3c.dom} package.
+ */
 public final class DOMs {
   /**
-   * Converts a DOM document to a XML string. It handles all children recursively.
+   * Returns a string representation of a {@link Node}. This method handles all
+   * child nodes recursively.
+   * <p>
+   * Note: this only handles elements, attributes and text nodes. It will not
+   * handle processing instructions, comments, CDATA or anything else.
    *
-   * Note: this only handles elements, attributes and text nodes. It will not handle processing instructions, comments, CDATA or anything else.
-   *
-   * @param node node to convert.
+   * @param node Node to convert.
+   * @param styles An array of {@link DOMStyle} style preferences.
+   * @return A string representation of a {@link Node}.
    */
   public static String domToString(final Node node, final DOMStyle ... styles) {
     return domToString(node, null, null, styles);
   }
 
   /**
-   * Converts a DOM document to a XML string. It handles all children recursively.
+   * Returns a string representation of a {@link Node}. This method handles all
+   * child nodes recursively.
+   * <p>
+   * Note: this only handles elements, attributes and text nodes. It will not
+   * handle processing instructions, comments, CDATA or anything else.
    *
-   * Note: this only handles elements, attributes and text nodes. It will not handle processing instructions, comments, CDATA or anything else.
-   *
-   * @param node node to convert.
+   * @param node Node to convert.
+   * @param namespaceToPrefix Map of namespace-to-prefix assignments.
+   * @param namespaceToPrefix Map of namespace-to-schemaLocation assignments.
+   * @param styles An array of {@link DOMStyle} style preferences.
+   * @return A string representation of a {@link Node}.
    */
   public static String domToString(final Node node, final Map<String,String> namespaceToPrefix, final Map<String,String> schemaLocations, final DOMStyle ... styles) {
     final DOMStyle style = DOMStyle.merge(styles);
@@ -100,10 +114,10 @@ public final class DOMs {
     final String nodeName = prefix == null ? node.getNodeName() : prefix.length() > 0 ? prefix + ":" + node.getLocalName() : node.getLocalName();
     final String nodeValue = node.getNodeValue();
     final int type = node.getNodeType();
-    if (Node.ELEMENT_NODE == type) {
+    if (type == Node.ELEMENT_NODE) {
       if (style.isIndent() && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
-        builder.append("\n");
-        for (int i = 0; i < depth; i++)
+        builder.append('\n');
+        for (int i = 0; i < depth; ++i)
           builder.append("  ");
       }
 
@@ -113,12 +127,12 @@ public final class DOMs {
       if (node.hasChildNodes()) {
         builder.append('>');
         final NodeList nodeList = node.getChildNodes();
-        for (int i = 0; i < nodeList.getLength(); i++)
+        for (int i = 0; i < nodeList.getLength(); ++i)
           domToString(builder, namespaces, namespaceToPrefix, nodeList.item(i), depth + 1, style);
 
         if (style.isIndent() && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
-          builder.append("\n");
-          for (int i = 0; i < depth; i++)
+          builder.append('\n');
+          for (int i = 0; i < depth; ++i)
             builder.append("  ");
         }
 
@@ -128,12 +142,12 @@ public final class DOMs {
         builder.append("/>");
       }
     }
-    else if (Node.TEXT_NODE == type && nodeValue != null && nodeValue.length() != 0) {
+    else if (type == Node.TEXT_NODE && nodeValue != null && nodeValue.length() != 0) {
       // Note: DOM expands entity references to their Unicode equivalent.
       // '&amp;' becomes simply '&'. Since the string being constructed
       // here is intended to be used as XML text, we have to reconstruct
       // the standard entity references
-      entityConvert(builder, nodeValue);
+      appendText(builder, nodeValue);
     }
 
     return builder;
@@ -141,8 +155,8 @@ public final class DOMs {
 
   private static StringBuilder attributeToString(final StringBuilder builder, final Set<String> namespaces, final Map<String,String> namespaceToPrefix, final Attr attribute, int depth, final DOMStyle style) {
     if (style.isIndentAttributes()) {
-      builder.append("\n");
-      for (int j = 0; j < depth; j++)
+      builder.append('\n');
+      for (int i = 0; i < depth; ++i)
         builder.append("  ");
     }
     else {
@@ -193,8 +207,8 @@ public final class DOMs {
       value = attribute.getNodeValue();
     }
 
-    entityConvert(builder, value);
-    builder.append("\"");
+    appendText(builder, value);
+    builder.append('"');
     return builder;
   }
 
@@ -203,7 +217,7 @@ public final class DOMs {
     if (attributes == null)
       return builder;
 
-    for (int i = 0; i < attributes.getLength(); i++) {
+    for (int i = 0; i < attributes.getLength(); ++i) {
       final Attr attribute = (Attr)attributes.item(i);
       if (!style.isIgnoreNamespaces() || !attribute.getNodeName().startsWith("xmlns"))
         attributeToString(builder, namespaces, namespaceToPrefix, attribute, depth, style);
@@ -213,39 +227,43 @@ public final class DOMs {
   }
 
   /**
-   * Convert the invalid XML characters in a string to character entities.
+   * Append the specified {@code text} string to {@code builder}, ensuring
+   * characters are properly escaped. The escaped characters are:
    *
-   * @param textToConvert
-   *          the String containing invalid entities.
-   * @return String with expanded entities.
+   * <pre>
+   * From |  To
+   * -----------------
+   *   &amp;  | &amp;amp;
+   *   &gt;  | &amp;gt;
+   *   &lt;  | &amp;lt;
+   *   &apos;  | &amp;apos;
+   *   &quot;  | &amp;quot;
+   * </pre>
+   *
+   * Note: This method removes any leading and trailing whitepace from
+   * {@code text}.
+   *
+   * @param builder The {@link StringBuilder} to which to append.
+   * @param text The text string to append.
    */
-  private static void entityConvert(final StringBuilder builder, String entity) {
-    if (entity == null)
-      return;
+  private static void appendText(final StringBuilder builder, final String text) {
+    for (int i = 0; i < text.length(); ++i) {
+      final char ch = text.charAt(i);
+      if (ch == ' ' || ch == '\n' || ch == '\r' || ch == '\t')
+        continue;
 
-    entity = entity.trim();
-    for (int i = 0; i < entity.length(); i++) {
-      final char ch = entity.charAt(i);
-      switch (ch) {
-        case '&':
-          builder.append("&amp;");
-          break;
-        case '>':
-          builder.append("&gt;");
-          break;
-        case '<':
-          builder.append("&lt;");
-          break;
-        case '\'':
-          builder.append("&apos;");
-          break;
-        case '"':
-          builder.append("&quot;");
-          break;
-        default:
-          builder.append(ch);
-          break;
-      }
+      if (ch == '&')
+        builder.append("&amp;");
+      else if (ch == '>')
+        builder.append("&gt;");
+      else if (ch == '<')
+        builder.append("&lt;");
+      else if (ch == '\'')
+        builder.append("&apos;");
+      else if (ch == '"')
+        builder.append("&quot;");
+      else
+        builder.append(ch);
     }
   }
 

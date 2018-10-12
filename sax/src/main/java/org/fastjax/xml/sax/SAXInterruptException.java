@@ -18,6 +18,9 @@ package org.fastjax.xml.sax;
 
 import org.xml.sax.SAXException;
 
+/**
+ * A {@link SAXException} used to interrupt parsing of an XML document.
+ */
 public class SAXInterruptException extends SAXException {
   private static final long serialVersionUID = -5705642570648385085L;
 }

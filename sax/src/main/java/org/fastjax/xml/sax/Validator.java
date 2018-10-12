@@ -24,6 +24,7 @@ import java.util.Iterator;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.xerces.impl.Constants;
 import org.fastjax.io.Streams;
 import org.fastjax.util.MemoryURLStreamHandler;
 import org.fastjax.xml.OfflineValidationException;
@@ -32,8 +33,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public final class Validator {
-  private static final String XML_11_URI = "http://www.w3.org/XML/XMLSchema/v1.1";
-  private static final SchemaFactory factory = SchemaFactory.newInstance(XML_11_URI);
+  private static final SchemaFactory factory = SchemaFactory.newInstance(Constants.W3C_XML_SCHEMA11_NS_URI);
 
   public static void validate(final String xml, final boolean localOnly) throws IOException, SAXException {
     validate(MemoryURLStreamHandler.createURL(xml.getBytes()), localOnly, new LoggingErrorHandler());
@@ -78,7 +78,7 @@ public final class Validator {
     final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler);
     final SchemaLocationResolver schemaLocationResolver = new SchemaLocationResolver(catalog);
     if (isXsd) {
-      final SchemaFactory factory = SchemaFactory.newInstance(XML_11_URI);
+      final SchemaFactory factory = SchemaFactory.newInstance(Constants.W3C_XML_SCHEMA11_NS_URI);
       factory.setResourceResolver(schemaLocationResolver);
       factory.setErrorHandler(validatorErrorHandler);
 

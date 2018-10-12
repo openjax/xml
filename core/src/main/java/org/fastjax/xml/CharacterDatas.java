@@ -18,7 +18,7 @@ package org.fastjax.xml;
 
 public final class CharacterDatas {
   public static StringBuilder escape(final StringBuilder string) {
-    for (int i = 0; i < string.length(); i++) {
+    for (int i = 0; i < string.length(); ++i) {
       final char ch = string.charAt(i);
       if (ch == '&')
         string.replace(i, i + 1, "&amp;");
@@ -39,7 +39,7 @@ public final class CharacterDatas {
     char firstChar = '\0';
     int start = -1;
     int pos = 0;
-    for (int i = 0; i < string.length(); i++) {
+    for (int i = 0; i < string.length(); ++i) {
       final char ch = string.charAt(i);
       if (start >= 0) {
         if (pos == 0) {

@@ -18,8 +18,6 @@ package org.fastjax.xml.dom;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -30,10 +28,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 public abstract class Validator {
-  private static final QName XSI = new QName(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI, "xsi", "xmlns");
-  private static final QName XMLNS = new QName(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns");
-
-  protected abstract URL lookupSchemaLocation(final String namespaceURI);
+  private static final QName XSI = new QName(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI, "xsi", XMLConstants.XMLNS_ATTRIBUTE);
+  private static final QName XMLNS = new QName(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, XMLConstants.XMLNS_ATTRIBUTE);
 
   public final void validate(final Element element) throws ValidationException {
     // only do validation on the root element of the document
@@ -41,22 +37,15 @@ public abstract class Validator {
       return;
 
     final NamedNodeMap attributes = element.getAttributes();
-    Node node = null;
-    final Collection<String> namespaceURIs = new ArrayList<>(attributes.getLength());
-    for (int i = 0; i < attributes.getLength(); i++) {
-      node = attributes.item(i);
-      if (node.getNodeName().startsWith(XMLNS.getLocalPart()))
-        namespaceURIs.add(node.getNodeValue());
-    }
-
-    String namespaceLocations = "";
-    for (final String namespaceURI : namespaceURIs) {
-      if (namespaceURI == null || namespaceURI.length() == 0 || XSI.getNamespaceURI().equals(namespaceURI))
-        continue;
-
-      final URL schemaLocation = getSchemaLocation(namespaceURI);
-      if (schemaLocation != null)
-        namespaceLocations += " " + namespaceURI + " " + schemaLocation.toExternalForm();
+    final StringBuilder namespaceLocations = new StringBuilder();
+    for (int i = 0; i < attributes.getLength(); ++i) {
+      final Node node = attributes.item(i);
+      final String namespaceURI = node.getNodeValue();
+      if (node.getNodeName().startsWith(XMLNS.getLocalPart()) && namespaceURI != null && namespaceURI.length() != 0 && !XSI.getNamespaceURI().equals(namespaceURI)) {
+        final URL schemaLocation = getSchemaLocation(namespaceURI);
+        if (schemaLocation != null)
+          namespaceLocations.append(' ').append(namespaceURI).append(' ').append(schemaLocation.toExternalForm());
+      }
     }
 
     element.setAttributeNS(XMLNS.getNamespaceURI(), XSI.getPrefix() + ":" + XSI.getLocalPart(), XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
@@ -70,14 +59,15 @@ public abstract class Validator {
     }
   }
 
+  protected abstract URL lookupSchemaLocation(String namespaceURI);
+
   /**
-   * This method allows a caller to get the schemaLocation {@code URL} of the
-   * declaring namespaceURI.
+   * Returns the schemaLocation {@code URL} of the declaring namespaceURI.
    *
    * @param namespaceURI The namespaceURI that is defined at the schemaLocation.
-   * @return The schemaLocation {@code URL}.
+   * @return The schemaLocation {@code URL} of the declaring namespaceURI.
    */
-  protected abstract URL getSchemaLocation(final String namespaceURI);
+  protected abstract URL getSchemaLocation(String namespaceURI);
 
-  protected abstract void parse(final Element element) throws IOException, ValidationException;
+  protected abstract void parse(Element element) throws IOException, ValidationException;
 }

@@ -47,8 +47,8 @@ public final class XMLDocuments {
       factory = SAXParserFactory.newInstance("org.apache.xerces.jaxp.SAXParserFactoryImpl", null);
     }
     catch (final FactoryConfigurationError e) {
-      logger.warn("Unable to create SAXParserFactory of type org.apache.xerces.jaxp.SAXParserFactoryImpl", e);
       factory = SAXParserFactory.newInstance();
+      logger.warn("Unable to create SAXParserFactory of type org.apache.xerces.jaxp.SAXParserFactoryImpl. Factory of " + factory.getClass().getName() + " created instead.", e);
     }
   }
 
@@ -62,7 +62,6 @@ public final class XMLDocuments {
       factory.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
       factory.setFeature("http://apache.org/xml/features/honour-all-schemaLocations", true);
       factory.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
-
       return factory.newSAXParser();
     }
     catch (final ParserConfigurationException e) {
@@ -141,7 +140,7 @@ public final class XMLDocuments {
             parser.parse(in, handler);
           }
           catch (final SAXInterruptException e) {
-            logger.debug("Caught " + SAXInterruptException.class.getSimpleName());
+            logger.debug("Caught " + SAXInterruptException.class.getName());
           }
 
           catalog.putSchemaLocation(schemaLocation.getKey(), new SchemaLocation(schemaLocation.getKey(), schemaLocation.getValue()));
@@ -175,7 +174,7 @@ public final class XMLDocuments {
           parser.parse(in, handler);
         }
         catch (final SAXInterruptException e) {
-          logger.debug("Caught " + SAXInterruptException.class.getSimpleName());
+          logger.debug("Caught " + SAXInterruptException.class.getName());
         }
 
         references.getSchemaLocation(namespaceURI).getDirectory().put(entry.getKey(), include);

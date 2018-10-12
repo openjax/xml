@@ -44,7 +44,7 @@ public class XMLCatalog {
     final StringBuilder builder = new StringBuilder();
     for (final Map.Entry<String,SchemaLocation> locationEntry : schemaLocations.entrySet()) {
       final Iterator<Map.Entry<String,URL>> iterator = locationEntry.getValue().getDirectory().entrySet().iterator();
-      for (int i = 0; iterator.hasNext(); i++) {
+      for (int i = 0; iterator.hasNext(); ++i) {
         final Map.Entry<String,URL> directoryEntry = iterator.next();
         if (i > 0)
           builder.append('\n');
