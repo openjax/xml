@@ -16,7 +16,26 @@
 
 package org.fastjax.xml;
 
+/**
+ * Utility functions for operations pertaining to XML character data.
+ */
 public final class CharacterDatas {
+  /**
+   * Returns the XML-escaped {@code string}. The escaped characters are:
+   *
+   * <pre>
+   * From |  To
+   * -------------
+   *   &amp;  | &amp;amp;
+   *   &apos;  | &amp;apos;
+   *   &quot;  | &amp;quot;
+   *   &gt;  | &amp;gt;
+   *   &lt;  | &amp;lt;
+   * </pre>
+   *
+   * @param string The string to escape.
+   * @return The XML-escaped {@code string}.
+   */
   public static StringBuilder escape(final StringBuilder string) {
     for (int i = 0; i < string.length(); ++i) {
       final char ch = string.charAt(i);
@@ -24,22 +43,36 @@ public final class CharacterDatas {
         string.replace(i, i + 1, "&amp;");
       else if (ch == '\'')
         string.replace(i, i + 1, "&apos;");
+      else if (ch == '"')
+        string.replace(i, i + 1, "&quot;");
       else if (ch == '>')
         string.replace(i, i + 1, "&gt;");
       else if (ch == '<')
         string.replace(i, i + 1, "&lt;");
-      else if (ch == '"')
-        string.replace(i, i + 1, "&quot;");
     }
 
     return string;
   }
 
+  /**
+   * Returns the XML-unescaped {@code string}. The unescaped characters are:
+   *
+   * <pre>
+   * From   | To
+   * ------------
+   * &amp;amp;  | &amp;
+   * &amp;apos; | &apos;
+   * &amp;quot; | &quot;
+   * &amp;gt;   | &gt;
+   * &amp;lt;   | &lt;
+   * </pre>
+   *
+   * @param string The string to unescape.
+   * @return The XML-unescaped {@code string}.
+   */
   public static StringBuilder unescape(final StringBuilder string) {
     char firstChar = '\0';
-    int start = -1;
-    int pos = 0;
-    for (int i = 0; i < string.length(); ++i) {
+    for (int i = 0, pos = 0, start = -1; i < string.length(); ++i) {
       final char ch = string.charAt(i);
       if (start >= 0) {
         if (pos == 0) {
@@ -82,13 +115,10 @@ public final class CharacterDatas {
           }
         }
         else if (pos == 4) {
-          if (ch == ';') {
+          if (ch == ';')
             string.replace(start, i + 1, firstChar == 'a' ? "'" : "\"");
-            start = -1;
-          }
-          else {
-            start = -1;
-          }
+
+          start = -1;
         }
       }
       else if (ch == '&') {
@@ -100,10 +130,42 @@ public final class CharacterDatas {
     return string;
   }
 
+  /**
+   * Returns the XML-escaped {@code string}. The escaped characters are:
+   *
+   * <pre>
+   * From |  To
+   * -------------
+   *   &amp;  | &amp;amp;
+   *   &apos;  | &amp;apos;
+   *   &quot;  | &amp;quot;
+   *   &gt;  | &amp;gt;
+   *   &lt;  | &amp;lt;
+   * </pre>
+   *
+   * @param string The string to escape.
+   * @return The XML-escaped {@code string}.
+   */
   public static String escape(final String string) {
     return escape(new StringBuilder(string)).toString();
   }
 
+  /**
+   * Returns the XML-unescaped {@code string}. The unescaped characters are:
+   *
+   * <pre>
+   * From   | To
+   * ------------
+   * &amp;amp;  | &amp;
+   * &amp;apos; | &apos;
+   * &amp;quot; | &quot;
+   * &amp;gt;   | &gt;
+   * &amp;lt;   | &lt;
+   * </pre>
+   *
+   * @param string The string to unescape.
+   * @return The XML-unescaped {@code string}.
+   */
   public static String unescape(final String string) {
     return unescape(new StringBuilder(string)).toString();
   }

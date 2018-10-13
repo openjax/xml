@@ -16,22 +16,47 @@
 
 package org.fastjax.xml;
 
-public class OfflineValidationException extends RuntimeException {
+import org.xml.sax.SAXException;
+
+/**
+ * A {@link SAXException} that signifies a validation exception due to an
+ * attempt to parse a remote document while offline.
+ */
+public class OfflineValidationException extends ValidationException {
   private static final long serialVersionUID = -6362835686505809259L;
 
+  /**
+   * Creates a new {@code OfflineValidationException}.
+   */
   public OfflineValidationException() {
     super();
   }
 
+  /**
+   * Creates a new {@code OfflineValidationException}.
+   *
+   * @param message The detail message.
+   */
   public OfflineValidationException(final String message) {
     super(message);
   }
 
-  public OfflineValidationException(final Throwable cause) {
-    super(cause);
+  /**
+   * Creates a new {@code OfflineValidationException}.
+   *
+   * @param cause The cause.
+   */
+  public OfflineValidationException(final Exception e) {
+    super(e);
   }
 
-  public OfflineValidationException(final String message, final Throwable cause) {
+  /**
+   * Creates a new {@code OfflineValidationException}.
+   *
+   * @param message The detail message.
+   * @param cause The cause.
+   */
+  public OfflineValidationException(final String message, final Exception cause) {
     super(message, cause);
   }
 }

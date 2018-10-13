@@ -19,11 +19,21 @@ package org.fastjax.xml;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * Lightweight encapsulation of an XML element.
+ */
 public class Element {
   private final String name;
   private Map<String,String> attributes;
   private Collection<Element> elements;
 
+  /**
+   * Creates a new {@code Element} with the specified parameters.
+   *
+   * @param name The name.
+   * @param attributes The attributes.
+   * @param elements The child elements.
+   */
   public Element(final String name, final Map<String,String> attributes, final Collection<Element> elements) {
     this.name = name;
     if (name == null || name.length() == 0)
@@ -37,18 +47,38 @@ public class Element {
     return this.name;
   }
 
+  /**
+   * Sets the attributes for this element.
+   *
+   * @param attributes The attributes.
+   */
   public void setAttributes(final Map<String,String> attributes) {
     this.attributes = attributes;
   }
 
+  /**
+   * Returns the attributes of this element.
+   *
+   * @return The attributes of this element.
+   */
   public Map<String,String> getAttributes() {
     return this.attributes;
   }
 
+  /**
+   * Sets the child elements for this element.
+   *
+   * @param elements The child elements.
+   */
   public void setElements(final Collection<Element> elements) {
     this.elements = elements;
   }
 
+  /**
+   * Returns the child elements of this element.
+   *
+   * @return The child elements of this element.
+   */
   public Collection<Element> getElements() {
     return this.elements;
   }
@@ -78,13 +108,19 @@ public class Element {
     return hashCode;
   }
 
+  /**
+   * Returns an XML string representation of this element.
+   *
+   * @return An XML string representation of this element.
+   * @throws StackOverflowError If the graph of child elements has cycles.
+   */
   @Override
   public String toString() {
     final StringBuilder builder = new StringBuilder("<");
     builder.append(name);
     if (attributes != null && attributes.size() > 0)
       for (final Map.Entry<String,String> entry : attributes.entrySet())
-        builder.append(' ').append(entry.getKey()).append("=\"").append(CharacterDatas.escape(entry.getValue())).append('"');
+        builder.append(' ').append(entry.getKey()).append("=\"").append(CharacterDatas.escape(new StringBuilder(entry.getValue()))).append('"');
 
     if (elements == null || elements.size() == 0)
       return builder.append("/>").toString();

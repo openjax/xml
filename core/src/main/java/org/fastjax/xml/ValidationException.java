@@ -18,22 +18,44 @@ package org.fastjax.xml;
 
 import org.xml.sax.SAXException;
 
-public final class ValidationException extends SAXException {
+/**
+ * A {@link SAXException} that signifies a validation exception.
+ */
+public class ValidationException extends SAXException {
   private static final long serialVersionUID = -5730844996681538725L;
 
+  /**
+   * Creates a new {@code ValidationException}.
+   */
   public ValidationException() {
     super();
   }
 
+  /**
+   * Creates a new {@code ValidationException}.
+   *
+   * @param message The detail message.
+   */
   public ValidationException(final String message) {
     super(message);
   }
 
-  public ValidationException(final Exception e) {
-    super(e);
+  /**
+   * Creates a new {@code ValidationException}.
+   *
+   * @param cause The cause.
+   */
+  public ValidationException(final Exception cause) {
+    super(cause);
   }
 
-  public ValidationException(final String message, final Exception e) {
-    super(message, e);
+  /**
+   * Creates a new {@code ValidationException}.
+   *
+   * @param message The detail message.
+   * @param cause The cause.
+   */
+  public ValidationException(final String message, final Exception cause) {
+    super(message, cause);
   }
 }

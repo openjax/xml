@@ -16,32 +16,33 @@
 
 package org.fastjax.xml.dom;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 public class DOMStyleTest {
   @Test
-  public void testConsolidate() {
-    Assert.assertNull(DOMStyle.merge((DOMStyle[])null));
+  public void testMerge() {
+    assertNull(DOMStyle.merge((DOMStyle[])null));
 
     // Condition: default
     DOMStyle option = DOMStyle.merge();
-    Assert.assertFalse(option.isIndent());
-    Assert.assertFalse(option.isIgnoreNamespaces());
+    assertFalse(option.isIndent());
+    assertFalse(option.isIgnoreNamespaces());
 
     // Condition: indent
     option = DOMStyle.merge(DOMStyle.INDENT);
-    Assert.assertTrue(option.isIndent());
-    Assert.assertFalse(option.isIgnoreNamespaces());
+    assertTrue(option.isIndent());
+    assertFalse(option.isIgnoreNamespaces());
 
     // Condition: ignoreNamespases
     option = DOMStyle.merge(DOMStyle.IGNORE_NAMESPACES);
-    Assert.assertTrue(option.isIgnoreNamespaces());
-    Assert.assertFalse(option.isIndent());
+    assertTrue(option.isIgnoreNamespaces());
+    assertFalse(option.isIndent());
 
     // Condition: indent & ignoreNamespases
     option = DOMStyle.merge(DOMStyle.INDENT, DOMStyle.IGNORE_NAMESPACES);
-    Assert.assertTrue(option.isIgnoreNamespaces());
-    Assert.assertTrue(option.isIndent());
+    assertTrue(option.isIgnoreNamespaces());
+    assertTrue(option.isIndent());
   }
 }

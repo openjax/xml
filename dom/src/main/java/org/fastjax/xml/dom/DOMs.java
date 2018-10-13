@@ -232,15 +232,15 @@ public final class DOMs {
    *
    * <pre>
    * From |  To
-   * -----------------
+   * -------------
    *   &amp;  | &amp;amp;
-   *   &gt;  | &amp;gt;
-   *   &lt;  | &amp;lt;
    *   &apos;  | &amp;apos;
    *   &quot;  | &amp;quot;
+   *   &gt;  | &amp;gt;
+   *   &lt;  | &amp;lt;
    * </pre>
    *
-   * Note: This method removes any leading and trailing whitepace from
+   * Note: This method removes any leading and trailing whitespace from
    * {@code text}.
    *
    * @param builder The {@link StringBuilder} to which to append.

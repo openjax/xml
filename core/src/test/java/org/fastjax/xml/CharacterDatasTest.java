@@ -16,7 +16,8 @@
 
 package org.fastjax.xml;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 public class CharacterDatasTest {
@@ -25,13 +26,13 @@ public class CharacterDatasTest {
 
   @Test
   public void testEscape() {
-    for (int i = 0; i < escaped.length; i++)
-      Assert.assertEquals(escaped[i], CharacterDatas.escape(unescaped[i]));
+    for (int i = 0; i < escaped.length; ++i)
+      assertEquals(escaped[i], CharacterDatas.escape(unescaped[i]));
   }
 
   @Test
   public void testUnescape() {
-    for (int i = 0; i < unescaped.length; i++)
-      Assert.assertEquals(unescaped[i], CharacterDatas.unescape(escaped[i]));
+    for (int i = 0; i < unescaped.length; ++i)
+      assertEquals(unescaped[i], CharacterDatas.unescape(escaped[i]));
   }
 }
