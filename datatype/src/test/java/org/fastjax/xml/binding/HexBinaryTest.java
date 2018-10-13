@@ -16,9 +16,9 @@
 
 package org.fastjax.xml.binding;
 
+import org.fastjax.xml.datatype.HexBinary;
 import org.junit.Assert;
 import org.junit.Test;
-import org.fastjax.xml.datatype.HexBinary;
 
 public class HexBinaryTest {
   private static void assertEquals(final String data, final String base64) {

@@ -16,13 +16,14 @@
 
 package org.fastjax.xml.transform;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
 import javax.xml.transform.TransformerException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class TransformerTest {
@@ -36,6 +37,6 @@ public class TransformerTest {
 
     Transformer.transform(Thread.currentThread().getContextClassLoader().getResource("test.xsl"), Thread.currentThread().getContextClassLoader().getResource("test.xml"), destFile);
     final String string = new String(Files.readAllBytes(destFile.toPath()));
-    Assert.assertEquals("<HTML>\n   <HEAD>\n      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n      <TITLE></TITLE>\n   </HEAD>\n   <BODY>\n      <H1>Hello, World!</H1>\n      <DIV>from <I>An XSLT Programmer</I></DIV>\n   </BODY>\n</HTML>", string);
+    assertEquals("<HTML>\n   <HEAD>\n      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n      <TITLE></TITLE>\n   </HEAD>\n   <BODY>\n      <H1>Hello, World!</H1>\n      <DIV>from <I>An XSLT Programmer</I></DIV>\n   </BODY>\n</HTML>", string);
   }
 }

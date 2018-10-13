@@ -246,12 +246,10 @@ public final class DOMs {
    * @param builder The {@link StringBuilder} to which to append.
    * @param text The text string to append.
    */
-  private static void appendText(final StringBuilder builder, final String text) {
+  private static void appendText(final StringBuilder builder, String text) {
+    text = text.trim();
     for (int i = 0; i < text.length(); ++i) {
       final char ch = text.charAt(i);
-      if (ch == ' ' || ch == '\n' || ch == '\r' || ch == '\t')
-        continue;
-
       if (ch == '&')
         builder.append("&amp;");
       else if (ch == '>')

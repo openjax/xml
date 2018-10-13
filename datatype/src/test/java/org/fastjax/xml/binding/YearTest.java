@@ -16,80 +16,80 @@
 
 package org.fastjax.xml.binding;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.fastjax.xml.datatype.Year;
 
 public class YearTest {
   @Test
   public void testYear() {
-    Assert.assertNull(Year.parse(null));
+    assertNull(Year.parse(null));
 
     try {
       Year.parse("");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
       Year.parse("--010");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
       Year.parse("010");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
       Year.parse("10");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
       Year.parse("100");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
       Year.parse("AAA");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
       Year.parse("2227-15:00");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
       Year.parse("2227+14:60");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     try {
       Year.parse("2227+14:60.9");
-      Assert.fail("Expected a IllegalArgumentException");
+      fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
     }
 
     final String[] years = new String[] {"2500Z", "1400Z", "0003Z", "0020Z", "0310Z", "1001Z", "2007+01:00", "3017-01:00", "4027Z", "1302+12:00", "1112-12:30"};
     for (final String year : years)
-      Assert.assertEquals(year, Year.parse(year).toString());
+      assertEquals(year, Year.parse(year).toString());
   }
 }

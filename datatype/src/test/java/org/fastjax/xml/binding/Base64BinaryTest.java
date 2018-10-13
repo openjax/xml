@@ -16,9 +16,9 @@
 
 package org.fastjax.xml.binding;
 
+import org.fastjax.xml.datatype.Base64Binary;
 import org.junit.Assert;
 import org.junit.Test;
-import org.fastjax.xml.datatype.Base64Binary;
 
 public class Base64BinaryTest {
   private static void assertEquals(final String data, final String base64) {

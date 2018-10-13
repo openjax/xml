@@ -16,9 +16,10 @@
 
 package org.fastjax.xml.sax;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.Assert.*;
+
 import org.fastjax.xml.OfflineValidationException;
+import org.junit.Test;
 import org.xml.sax.SAXException;
 
 public class ValidatorTest {
@@ -28,18 +29,18 @@ public class ValidatorTest {
 
     try {
       Validator.validate(Thread.currentThread().getContextClassLoader().getResource("remote.xml"), true);
-      Assert.fail("Expected OfflineValidationException");
+      fail("Expected OfflineValidationException");
     }
     catch (final OfflineValidationException e) {
     }
 
     try {
       Validator.validate(Thread.currentThread().getContextClassLoader().getResource("invalid.xml"), true);
-      Assert.fail("Should have failed");
+      fail("Should have failed");
     }
     catch (final SAXException e) {
       if (!e.getMessage().startsWith("cvc-datatype-valid.1.2.1: 'a' is not a valid value for 'integer'."))
-        Assert.fail(e.getMessage());
+        fail(e.getMessage());
     }
 
     try {

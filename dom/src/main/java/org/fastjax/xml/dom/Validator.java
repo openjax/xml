@@ -39,17 +39,23 @@ public abstract class Validator {
     final NamedNodeMap attributes = element.getAttributes();
     final StringBuilder namespaceLocations = new StringBuilder();
     for (int i = 0; i < attributes.getLength(); ++i) {
-      final Node node = attributes.item(i);
-      final String namespaceURI = node.getNodeValue();
-      if (node.getNodeName().startsWith(XMLNS.getLocalPart()) && namespaceURI != null && namespaceURI.length() != 0 && !XSI.getNamespaceURI().equals(namespaceURI)) {
+      final Node attribute = attributes.item(i);
+      final String namespaceURI = attribute.getNodeValue();
+      if (attribute.getNodeName().startsWith(XMLNS.getLocalPart()) && namespaceURI != null && namespaceURI.length() != 0 && !XSI.getNamespaceURI().equals(namespaceURI)) {
         final URL schemaLocation = getSchemaLocation(namespaceURI);
-        if (schemaLocation != null)
-          namespaceLocations.append(' ').append(namespaceURI).append(' ').append(schemaLocation.toExternalForm());
+        if (schemaLocation != null) {
+          if (i > 0)
+            namespaceLocations.append(' ');
+
+          namespaceLocations.append(namespaceURI).append(' ').append(schemaLocation.toExternalForm());
+        }
       }
     }
 
     element.setAttributeNS(XMLNS.getNamespaceURI(), XSI.getPrefix() + ":" + XSI.getLocalPart(), XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
-    element.setAttributeNS(XSI.getNamespaceURI(), "xsi:schemaLocation", namespaceLocations.substring(1));
+    element.setAttributeNS(XSI.getNamespaceURI(), "xsi:schemaLocation", namespaceLocations.toString());
+
+    System.out.println(DOMs.domToString(element));
 
     try {
       parse(element);
