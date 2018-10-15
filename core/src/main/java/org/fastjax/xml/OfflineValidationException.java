@@ -46,8 +46,8 @@ public class OfflineValidationException extends ValidationException {
    *
    * @param cause The cause.
    */
-  public OfflineValidationException(final Exception e) {
-    super(e);
+  public OfflineValidationException(final Exception cause) {
+    super(cause);
   }
 
   /**

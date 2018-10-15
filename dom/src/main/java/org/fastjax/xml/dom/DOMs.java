@@ -231,13 +231,13 @@ public final class DOMs {
    * characters are properly escaped. The escaped characters are:
    *
    * <pre>
-   * From |  To
+   * {@code From |  To
    * -------------
-   *   &amp;  | &amp;amp;
-   *   &apos;  | &amp;apos;
-   *   &quot;  | &amp;quot;
-   *   &gt;  | &amp;gt;
-   *   &lt;  | &amp;lt;
+   *   &  | &amp;
+   *   '  | &apos;
+   *   "  | &quot;
+   *   >  | &gt;
+   *   <  | &lt;}
    * </pre>
    *
    * Note: This method removes any leading and trailing whitespace from

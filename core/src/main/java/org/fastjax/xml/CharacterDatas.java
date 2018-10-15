@@ -24,13 +24,13 @@ public final class CharacterDatas {
    * Returns the XML-escaped {@code string}. The escaped characters are:
    *
    * <pre>
-   * From |  To
+   * {@code From |  To
    * -------------
-   *   &amp;  | &amp;amp;
-   *   &apos;  | &amp;apos;
-   *   &quot;  | &amp;quot;
-   *   &gt;  | &amp;gt;
-   *   &lt;  | &amp;lt;
+   *   &  | &amp;
+   *   '  | &apos;
+   *   "  | &quot;
+   *   >  | &gt;
+   *   <  | &lt;}
    * </pre>
    *
    * @param string The string to escape.
@@ -58,13 +58,13 @@ public final class CharacterDatas {
    * Returns the XML-unescaped {@code string}. The unescaped characters are:
    *
    * <pre>
-   * From   | To
+   * {@code From   | To
    * ------------
-   * &amp;amp;  | &amp;
-   * &amp;apos; | &apos;
-   * &amp;quot; | &quot;
-   * &amp;gt;   | &gt;
-   * &amp;lt;   | &lt;
+   * &amp;  | &
+   * &apos; | '
+   * &quot; | "
+   * &gt;   | >
+   * &lt;   | <}
    * </pre>
    *
    * @param string The string to unescape.
@@ -134,13 +134,13 @@ public final class CharacterDatas {
    * Returns the XML-escaped {@code string}. The escaped characters are:
    *
    * <pre>
-   * From |  To
+   * {@code From |  To
    * -------------
-   *   &amp;  | &amp;amp;
-   *   &apos;  | &amp;apos;
-   *   &quot;  | &amp;quot;
-   *   &gt;  | &amp;gt;
-   *   &lt;  | &amp;lt;
+   *   &  | &amp;
+   *   '  | &apos;
+   *   "  | &quot;
+   *   >  | &gt;
+   *   <  | &lt;}
    * </pre>
    *
    * @param string The string to escape.
@@ -154,13 +154,13 @@ public final class CharacterDatas {
    * Returns the XML-unescaped {@code string}. The unescaped characters are:
    *
    * <pre>
-   * From   | To
+   * {@code From   | To
    * ------------
-   * &amp;amp;  | &amp;
-   * &amp;apos; | &apos;
-   * &amp;quot; | &quot;
-   * &amp;gt;   | &gt;
-   * &amp;lt;   | &lt;
+   * &amp;  | &
+   * &apos; | '
+   * &quot; | "
+   * &gt;   | >
+   * &lt;   | <}
    * </pre>
    *
    * @param string The string to unescape.
