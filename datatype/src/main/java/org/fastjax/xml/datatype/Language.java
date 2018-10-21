@@ -118,9 +118,13 @@ public class Language implements CharSequence, Serializable {
       return encoded = "";
 
     final StringBuilder builder = new StringBuilder();
-    for (final String string : language)
-      builder.append('-').append(string);
+    for (int i = 0; i < language.length; ++i) {
+      if (i > 0)
+        builder.append('-');
 
-    return encoded = builder.substring(1);
+      builder.append(language[i]);
+    }
+
+    return encoded = builder.toString();
   }
 }

@@ -44,7 +44,7 @@ public final class ValidatorMojo extends XmlMojo {
     try {
       for (final URL url : urls) {
         final File recordFile = new File(recordDir, URLs.getName(url));
-        final String filePath = URLs.isFile(url) ? FastFiles.getCwd().toPath().relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
+        final String filePath = URLs.isLocalFile(url) ? FastFiles.getCwd().toPath().relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
         long lastModified = -1;
         if (recordFile.exists() && recordFile.lastModified() >= (lastModified = URLs.getLastModified(url)) && recordFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
           getLog().info("Pre-validated: " + filePath);

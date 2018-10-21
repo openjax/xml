@@ -28,7 +28,6 @@ import java.util.StringTokenizer;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.fastjax.net.URLs;
 import org.fastjax.util.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +39,11 @@ public class SchemaLocationHandler extends DefaultHandler {
   private static final Logger logger = LoggerFactory.getLogger(SchemaLocationHandler.class);
 
   protected static String getPath(final String referrer, final String location) {
-    return URLs.isAbsolute(location) ? location : Paths.newPath(Paths.getCanonicalParent(referrer), location);
+    return Paths.isAbsolute(location) ? location : Paths.newPath(Paths.getCanonicalParent(referrer), location);
   }
 
   protected static String getPath(final URI referrer, final String location) {
-    return getPath(referrer.toASCIIString(), location);
+    return getPath(referrer.toString(), location);
   }
 
   private final Set<String> namespaceURIs = new HashSet<>();
@@ -143,7 +142,7 @@ public class SchemaLocationHandler extends DefaultHandler {
 
         try {
           final String path = getPath(url.toExternalForm(), schemaLocation);
-          referencesOnlyLocal &= Paths.isLocal(path);
+          referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
           namespaceURIs.add(namespace);
           if (!imports.containsKey(namespace))
             imports.put(namespace, XMLDocuments.disableHttp(new URL(path), localOnly));
@@ -158,7 +157,7 @@ public class SchemaLocationHandler extends DefaultHandler {
             final String schemaLocation = attributes.getValue(i);
             try {
               final String path = getPath(url.toExternalForm(), schemaLocation);
-              referencesOnlyLocal &= Paths.isLocal(path);
+              referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
               URL url = absoluteIncludes.get(path);
               if (url == null)
                 absoluteIncludes.put(path, url = XMLDocuments.disableHttp(new URL(path), localOnly));
@@ -188,7 +187,7 @@ public class SchemaLocationHandler extends DefaultHandler {
                 final String location = tokenizer.nextToken();
                 try {
                   final String path = getPath(url.toExternalForm(), location);
-                  referencesOnlyLocal &= Paths.isLocal(path);
+                  referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
                   if (!imports.containsKey(schemaNamespaceURI))
                     imports.put(schemaNamespaceURI, Paths.getProtocol(path) == null ? new URL("file:" + path) : XMLDocuments.disableHttp(new URL(path), localOnly));
                 }

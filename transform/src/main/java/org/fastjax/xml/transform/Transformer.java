@@ -42,9 +42,9 @@ public final class Transformer {
 
   public static void transform(final URL stylesheet, final URL in, final File out) throws IOException, TransformerException {
     try (final InputStream input = in.openStream()) {
-      final StreamSource streamSource = new StreamSource(stylesheet.openStream(), stylesheet.toURI().toASCIIString());
+      final StreamSource streamSource = new StreamSource(stylesheet.openStream(), stylesheet.toURI().toString());
       final javax.xml.transform.Transformer transformer = factory.newTransformer(streamSource);
-      transformer.transform(new StreamSource(input, in.toURI().toASCIIString()), new StreamResult(out));
+      transformer.transform(new StreamSource(input, in.toURI().toString()), new StreamResult(out));
     }
     catch (final URISyntaxException e) {
       throw new TransformerException(e);
