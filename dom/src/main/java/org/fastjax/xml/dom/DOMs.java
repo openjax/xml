@@ -56,7 +56,7 @@ public final class DOMs {
    *
    * @param node Node to convert.
    * @param namespaceToPrefix Map of namespace-to-prefix assignments.
-   * @param namespaceToPrefix Map of namespace-to-schemaLocation assignments.
+   * @param schemaLocations Map of namespace-to-schemaLocation assignments.
    * @param styles An array of {@link DOMStyle} style preferences.
    * @return A string representation of a {@link Node}.
    */
