@@ -140,7 +140,8 @@ public final class XMLDocuments {
             parser.parse(in, handler);
           }
           catch (final SAXInterruptException e) {
-            logger.debug("Caught " + SAXInterruptException.class.getName());
+            if (logger.isDebugEnabled())
+              logger.debug("Caught " + SAXInterruptException.class.getName());
           }
 
           catalog.putSchemaLocation(schemaLocation.getKey(), new SchemaLocation(schemaLocation.getKey(), schemaLocation.getValue()));
@@ -174,7 +175,8 @@ public final class XMLDocuments {
           parser.parse(in, handler);
         }
         catch (final SAXInterruptException e) {
-          logger.debug("Caught " + SAXInterruptException.class.getName());
+          if (logger.isDebugEnabled())
+            logger.debug("Caught " + SAXInterruptException.class.getName());
         }
 
         references.getSchemaLocation(namespaceURI).getDirectory().put(entry.getKey(), include);
