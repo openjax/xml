@@ -32,8 +32,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.fastjax.net.FilterURLConnection;
 import org.fastjax.net.URLs;
-import org.fastjax.net.WrappedURLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -82,7 +82,7 @@ public final class XMLDocuments {
 
       @Override
       protected URLConnection openConnection(final URL u, final Proxy proxy) throws IOException {
-        return new WrappedURLConnection(proxy != null ? url.openConnection(proxy) : url.openConnection()) {
+        return new FilterURLConnection(proxy != null ? url.openConnection(proxy) : url.openConnection()) {
           @Override
           public InputStream getInputStream() throws IOException {
             return new InputStream() {
