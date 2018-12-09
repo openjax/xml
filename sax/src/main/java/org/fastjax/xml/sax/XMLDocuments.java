@@ -16,6 +16,10 @@
 
 package org.fastjax.xml.sax;
 
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,11 +30,6 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.fastjax.net.FilterURLConnection;
 import org.fastjax.net.URLs;
@@ -145,9 +144,7 @@ public final class XMLDocuments {
           }
 
           catalog.putSchemaLocation(schemaLocation.getKey(), new SchemaLocation(schemaLocation.getKey(), schemaLocation.getValue()));
-          for (final String location : handler.getImports().keySet())
-            namespaceURIs.add(location);
-
+          namespaceURIs.addAll(handler.getImports().keySet());
           namespaceURIs.remove(schemaLocation.getKey());
           if (namespaceURIs.isEmpty())
             break;

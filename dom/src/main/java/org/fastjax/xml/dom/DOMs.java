@@ -16,11 +16,10 @@
 
 package org.fastjax.xml.dom;
 
+import javax.xml.XMLConstants;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.XMLConstants;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
@@ -90,7 +89,7 @@ public final class DOMs {
     return builder.toString();
   }
 
-  private static final boolean validNamespaceURI(final String namespaceURI) {
+  private static boolean validNamespaceURI(final String namespaceURI) {
     return namespaceURI != null && !XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI) && !XMLConstants.XML_NS_URI.equals(namespaceURI);
   }
 

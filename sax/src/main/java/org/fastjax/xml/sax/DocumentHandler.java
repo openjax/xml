@@ -19,5 +19,5 @@ package org.fastjax.xml.sax;
 import java.net.URLConnection;
 
 public interface DocumentHandler {
-  public void schemaLocation(final URLConnection connection) throws SAXInterruptException;
+  void schemaLocation(URLConnection connection) throws SAXInterruptException;
 }

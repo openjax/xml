@@ -30,7 +30,7 @@ import org.fastjax.maven.mojo.FileSetMojo;
 public abstract class XmlMojo extends FileSetMojo {
   private static final String delimeter = "://";
 
-  @Parameter(defaultValue="${httpProxy}", required=false, readonly=true)
+  @Parameter(defaultValue="${httpProxy}", readonly=true)
   private String httpProxy;
 
   @Parameter(defaultValue="${project.build.directory}", required=true, readonly=true)
