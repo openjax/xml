@@ -26,7 +26,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.impl.Constants;
 import org.fastjax.io.Streams;
-import org.fastjax.util.MemoryURLStreamHandler;
+import org.fastjax.net.MemoryURLStreamHandler;
 import org.fastjax.xml.OfflineValidationException;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
