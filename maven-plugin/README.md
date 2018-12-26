@@ -134,6 +134,10 @@ Execution with `includes` directive.
 | `/excludes`         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.                                         |
 | `/excludes/exclude` | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`.                                 |
 
+### JavaDocs
+
+JavaDocs are available [here](https://xml.fastjax.org/javadocs/).
+
 ### License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
