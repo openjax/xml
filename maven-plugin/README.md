@@ -1,7 +1,6 @@
-<img src="https://images.cooltext.com/5195723.png" align="right">
+# FastJAX XML Maven Plugin
 
-## xml-maven-plugin<br><img src="https://img.shields.io/badge/FastJAX--blue.svg"></a> ![mvn-plugin][mvn-plugin] <a href="https://www.fastjax.org/">
-> Maven Plugin for XML-related goals
+**Maven Plugin for XML validation and transformation**
 
 ### Introduction
 
