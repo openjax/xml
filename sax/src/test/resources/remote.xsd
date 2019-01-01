@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2008 FastJAX
+  Copyright (c) 2008 OpenJAX
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -16,7 +16,7 @@
 -->
 <xs:schema
   elementFormDefault="qualified"
-  targetNamespace="http://xml.fastjax.org/remote.xsd"
+  targetNamespace="http://classic.openjax.org/xml/remote.xsd"
   xmlns:mvn="http://maven.apache.org/POM/4.0.0"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import namespace="http://maven.apache.org/POM/4.0.0" schemaLocation="http://maven.apache.org/xsd/maven-4.0.0.xsd"/>

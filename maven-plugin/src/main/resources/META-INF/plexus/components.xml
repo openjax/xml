@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2016 FastJAX
+  Copyright (c) 2016 OpenJAX
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@
       <configuration>
         <id>xml</id>
         <default-phases>
-          <compile>org.fastjax.xml:xml-maven-plugin:validate</compile>
-          <genetate-resources>org.fastjax.xml:xml-maven-plugin:transform</genetate-resources>
+          <compile>org.openjax.classic.xml:xml-maven-plugin:validate</compile>
+          <genetate-resources>org.openjax.classic.xml:xml-maven-plugin:transform</genetate-resources>
         </default-phases>
       </configuration>
     </component>
@@ -38,7 +38,7 @@
           <phase>transform</phase>
         </phases>
         <default-phases>
-          <transform>org.fastjax.xml:xml-maven-plugin:transform</transform>
+          <transform>org.openjax.classic.xml:xml-maven-plugin:transform</transform>
         </default-phases>
       </configuration>
     </component>

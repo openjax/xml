@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2008 FastJAX
+  Copyright (c) 2008 OpenJAX
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -14,8 +14,8 @@
   You should have received a copy of The MIT License (MIT) along with this
   program. If not, see <http://opensource.org/licenses/MIT/>.
 -->
-<parent xmlns="http://xml.fastjax.org/test.xsd"
+<parent xmlns="http://classic.openjax.org/xml/test.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://xml.fastjax.org/test.xsd test.xsd">
+  xsi:schemaLocation="http://classic.openjax.org/xml/test.xsd test.xsd">
   <child>a</child>
 </parent>

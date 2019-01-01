@@ -1,4 +1,4 @@
-# FastJAX XML Maven Plugin
+# OpenJAX Classic XML Maven Plugin
 
 **Maven Plugin for XML validation and transformation**
 
@@ -23,7 +23,7 @@ Execution with `includes` directive.
 
 ```xml
 <plugin>
-  <groupId>org.fastjax.xml</groupId>
+  <groupId>org.openjax.classic.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>
@@ -51,7 +51,7 @@ Execution with `includes` and `excludes` directives.
 
 ```xml
 <plugin>
-  <groupId>org.fastjax.xml</groupId>
+  <groupId>org.openjax.classic.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>
@@ -100,7 +100,7 @@ Execution with `includes` directive.
 
 ```xml
 <plugin>
-  <groupId>org.fastjax.xml</groupId>
+  <groupId>org.openjax.classic.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>
@@ -135,7 +135,7 @@ Execution with `includes` directive.
 
 ### JavaDocs
 
-JavaDocs are available [here](https://xml.fastjax.org/javadocs/).
+JavaDocs are available [here](https://classic.openjax.org/xml/apidocs/).
 
 ### License
 
