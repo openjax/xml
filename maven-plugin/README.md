@@ -1,4 +1,4 @@
-# OpenJAX Classic XML Maven Plugin
+# OpenJAX Standard XML Maven Plugin
 
 **Maven Plugin for XML validation and transformation**
 
@@ -23,7 +23,7 @@ Execution with `includes` directive.
 
 ```xml
 <plugin>
-  <groupId>org.openjax.classic.xml</groupId>
+  <groupId>org.openjax.standard.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>
@@ -51,7 +51,7 @@ Execution with `includes` and `excludes` directives.
 
 ```xml
 <plugin>
-  <groupId>org.openjax.classic.xml</groupId>
+  <groupId>org.openjax.standard.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>
@@ -100,7 +100,7 @@ Execution with `includes` directive.
 
 ```xml
 <plugin>
-  <groupId>org.openjax.classic.xml</groupId>
+  <groupId>org.openjax.standard.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>
@@ -135,13 +135,11 @@ Execution with `includes` directive.
 
 ### JavaDocs
 
-JavaDocs are available [here](https://classic.openjax.org/xml/apidocs/).
+JavaDocs are available [here](https://standard.openjax.org/xml/apidocs/).
 
 ### License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
-
-<a href="http://cooltext.com" target="_top"><img src="https://cooltext.com/images/ct_pixel.gif" width="80" height="15" alt="Cool Text: Logo and Graphics Generator" border="0" /></a>
 
 [mvn-plugin]: https://img.shields.io/badge/mvn-plugin-lightgrey.svg
 [xml11]: https://www.w3.org/TR/xmlschema11-1/

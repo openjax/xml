@@ -14,7 +14,7 @@
   You should have received a copy of The MIT License (MIT) along with this
   program. If not, see <http://opensource.org/licenses/MIT/>.
 -->
-<model xmlns="http://classic.openjax.org/xml/remote.xsd"
+<model xmlns="http://standard.openjax.org/xml/remote.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://classic.openjax.org/xml/test.xsd remote.xsd">
+  xsi:schemaLocation="http://standard.openjax.org/xml/test.xsd remote.xsd">
 </model>
