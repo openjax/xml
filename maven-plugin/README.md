@@ -1,6 +1,8 @@
 # OpenJAX Standard XML Maven Plugin
 
-**Maven Plugin for XML validation and transformation**
+> Maven Plugin for XML validation and transformation
+
+[![Build Status](https://travis-ci.org/openjax/standard-xml.png)](https://travis-ci.org/openjax/standard-xml)
 
 ### Introduction
 
