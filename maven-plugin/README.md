@@ -3,6 +3,7 @@
 > Maven Plugin for XML validation and transformation
 
 [![Build Status](https://travis-ci.org/openjax/standard-xml.png)](https://travis-ci.org/openjax/standard-xml)
+[![Coverage Status](https://coveralls.io/repos/github/openjax/standard-xml/badge.svg)](https://coveralls.io/github/openjax/standard-xml)
 
 ### Introduction
 
