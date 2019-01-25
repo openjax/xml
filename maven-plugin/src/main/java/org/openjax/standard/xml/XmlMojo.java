@@ -40,10 +40,7 @@ public abstract class XmlMojo extends FileSetMojo {
   protected boolean offline;
 
   protected final void setHttpProxy() throws MojoFailureException {
-    if (offline)
-      return;
-
-    if (httpProxy == null)
+    if (offline || httpProxy == null)
       return;
 
     final String scheme;
@@ -67,5 +64,5 @@ public abstract class XmlMojo extends FileSetMojo {
     executeMojo(urls);
   }
 
-  public abstract void executeMojo(final LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException;
+  public abstract void executeMojo(LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException;
 }

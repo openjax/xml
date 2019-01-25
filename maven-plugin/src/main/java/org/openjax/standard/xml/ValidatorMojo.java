@@ -30,8 +30,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.openjax.standard.io.FastFiles;
 import org.openjax.standard.net.URLs;
 import org.openjax.standard.util.Dates;
-import org.openjax.standard.xml.sax.Validator;
 import org.openjax.standard.xml.api.OfflineValidationException;
+import org.openjax.standard.xml.sax.Validator;
 import org.xml.sax.SAXException;
 
 @Mojo(name="validate", defaultPhase=LifecyclePhase.COMPILE)
@@ -77,7 +77,7 @@ public final class ValidatorMojo extends XmlMojo {
       }
     }
     catch (final OfflineValidationException e) {
-      throw new MojoFailureException(e.getMessage(), e);
+      throw new MojoFailureException(e.getMessage());
     }
     catch (final IOException e) {
       throw new MojoExecutionException(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
