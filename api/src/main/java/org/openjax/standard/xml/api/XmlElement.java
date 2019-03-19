@@ -16,25 +16,29 @@
 
 package org.openjax.standard.xml.api;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Lightweight encapsulation of an XML element.
  */
-public class Element {
+public class XmlElement implements Cloneable, Serializable {
+  private static final long serialVersionUID = 3766554839993594188L;
   private final String name;
-  private Map<String,String> attributes;
-  private Collection<Element> elements;
+  private Map<String,Object> attributes;
+  private Collection<XmlElement> elements;
 
   /**
-   * Creates a new {@code Element} with the specified parameters.
+   * Creates a new {@code XmlElement} with the specified parameters.
    *
    * @param name The name.
    * @param attributes The attributes.
    * @param elements The child elements.
    */
-  public Element(final String name, final Map<String,String> attributes, final Collection<Element> elements) {
+  public XmlElement(final String name, final Map<String,Object> attributes, final Collection<XmlElement> elements) {
     this.name = name;
     if (name == null || name.length() == 0)
       throw new IllegalArgumentException("name == " + name);
@@ -43,6 +47,9 @@ public class Element {
     this.elements = elements;
   }
 
+  /**
+   * @return The name of this element.
+   */
   public String getName() {
     return this.name;
   }
@@ -52,16 +59,14 @@ public class Element {
    *
    * @param attributes The attributes.
    */
-  public void setAttributes(final Map<String,String> attributes) {
+  public void setAttributes(final Map<String,Object> attributes) {
     this.attributes = attributes;
   }
 
   /**
-   * Returns the attributes of this element.
-   *
    * @return The attributes of this element.
    */
-  public Map<String,String> getAttributes() {
+  public Map<String,Object> getAttributes() {
     return this.attributes;
   }
 
@@ -70,17 +75,32 @@ public class Element {
    *
    * @param elements The child elements.
    */
-  public void setElements(final Collection<Element> elements) {
+  public void setElements(final Collection<XmlElement> elements) {
     this.elements = elements;
   }
 
   /**
-   * Returns the child elements of this element.
-   *
    * @return The child elements of this element.
    */
-  public Collection<Element> getElements() {
+  public Collection<XmlElement> getElements() {
     return this.elements;
+  }
+
+  @Override
+  public XmlElement clone() {
+    try {
+      final XmlElement clone = (XmlElement)super.clone();
+      if (attributes != null)
+        clone.attributes = new HashMap<>(attributes);
+
+      if (elements != null)
+        clone.elements = new ArrayList<>(elements);
+
+      return clone;
+    }
+    catch (final CloneNotSupportedException e) {
+      throw new UnsupportedOperationException(e);
+    }
   }
 
   @Override
@@ -88,10 +108,10 @@ public class Element {
     if (obj == this)
       return true;
 
-    if (!(obj instanceof Element))
+    if (!(obj instanceof XmlElement))
       return false;
 
-    final Element that = (Element)obj;
+    final XmlElement that = (XmlElement)obj;
     return name.equals(that.name) && (attributes == null ? that.attributes == null : attributes.equals(that.attributes)) && (elements == null ? that.elements == null : that.elements != null && elements.size() == that.elements.size() && elements.containsAll(that.elements));
   }
 
@@ -118,15 +138,23 @@ public class Element {
   public String toString() {
     final StringBuilder builder = new StringBuilder("<");
     builder.append(name);
-    if (attributes != null && attributes.size() > 0)
-      for (final Map.Entry<String,String> entry : attributes.entrySet())
-        builder.append(' ').append(entry.getKey()).append("=\"").append(CharacterDatas.escape(new StringBuilder(entry.getValue()))).append('"');
+    if (attributes != null && attributes.size() > 0) {
+      for (final Map.Entry<String,Object> entry : attributes.entrySet()) {
+        builder.append(' ').append(entry.getKey()).append("=\"");
+        if (entry.getValue() != null)
+          builder.append(CharacterDatas.escape(new StringBuilder(String.valueOf(entry.getValue()))));
+        else
+          builder.append("null");
+
+        builder.append('"');
+      }
+    }
 
     if (elements == null || elements.size() == 0)
       return builder.append("/>").toString();
 
     builder.append('>');
-    for (final Element element : elements)
+    for (final XmlElement element : elements)
       builder.append("\n  ").append(element.toString().replaceAll("\n", "\n  "));
 
     return builder.append("\n</").append(name).append('>').toString();
