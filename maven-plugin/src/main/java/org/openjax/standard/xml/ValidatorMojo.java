@@ -64,7 +64,7 @@ public final class ValidatorMojo extends XmlMojo {
             final StringBuilder builder = new StringBuilder("\nURL: ").append(url.toExternalForm());
             builder.append("\nReason: ").append(message).append('\n');
             for (final Throwable t : e.getSuppressed())
-              builder.append("        ").append(t.getMessage()).append("\n");
+              builder.append("        ").append(t.getMessage()).append('\n');
 
             final MojoFailureException exception = new MojoFailureException("Failed to validate xml.", "", builder.toString());
             exception.initCause(e);
