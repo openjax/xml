@@ -81,7 +81,6 @@ public final class Validator {
       final SchemaFactory factory = SchemaFactory.newInstance(Constants.W3C_XML_SCHEMA11_NS_URI);
       factory.setResourceResolver(schemaLocationResolver);
       factory.setErrorHandler(validatorErrorHandler);
-
       factory.newSchema();
     }
     else {

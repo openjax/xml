@@ -27,10 +27,7 @@ import java.net.URLStreamHandler;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.openjax.standard.net.FilterURLConnection;
 import org.openjax.standard.net.URLs;
@@ -39,35 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 public final class XMLDocuments {
-  private static final Logger logger = LoggerFactory.getLogger(SchemaLocationHandler.class);
-  private static SAXParserFactory factory;
-
-  static {
-    try {
-      factory = SAXParserFactory.newInstance("org.apache.xerces.jaxp.SAXParserFactoryImpl", null);
-    }
-    catch (final FactoryConfigurationError e) {
-      factory = SAXParserFactory.newInstance();
-      logger.warn("Unable to create SAXParserFactory of type org.apache.xerces.jaxp.SAXParserFactoryImpl. Factory of " + factory.getClass().getName() + " created instead.", e);
-    }
-  }
-
-  private static SAXParser newParser() throws SAXException {
-    factory.setNamespaceAware(true);
-    factory.setValidating(true);
-    try {
-      factory.setFeature("http://xml.org/sax/features/validation", true);
-      factory.setFeature("http://apache.org/xml/features/validation/schema", true);
-      factory.setFeature("http://apache.org/xml/features/validation/dynamic", false);
-      factory.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
-      factory.setFeature("http://apache.org/xml/features/honour-all-schemaLocations", true);
-      factory.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
-      return factory.newSAXParser();
-    }
-    catch (final ParserConfigurationException e) {
-      throw new SAXException(e);
-    }
-  }
+  private static final Logger logger = LoggerFactory.getLogger(XMLDocuments.class);
 
   public static XMLDocument parse(final URL url, final boolean localOnly, final boolean validating) throws IOException, SAXException {
     return parse(url, null, localOnly, validating);
@@ -112,7 +81,7 @@ public final class XMLDocuments {
 
     final SchemaLocationHandler handler = new SchemaLocationHandler(url, localOnly, validating);
 
-    final SAXParser parser = newParser();
+    final SAXParser parser = Parsers.newParser(validating);
     parser.parse(url.openStream(), handler);
     parser.reset();
     final XMLCatalog catalog = new XMLCatalog();

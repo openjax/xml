@@ -19,21 +19,26 @@ package org.openjax.standard.xml.api;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.openjax.standard.xml.api.CharacterDatas;
 
 public class CharacterDatasTest {
-  private static final String[] unescaped = {"foo & bar", "< foo bar", "foo bar >", "'foo bar'", "\"foo bar\""};
   private static final String[] escaped = {"foo &amp; bar", "&lt; foo bar", "foo bar &gt;", "&apos;foo bar&apos;", "&quot;foo bar&quot;"};
+  private static final String[] unescaped = {"foo & bar", "< foo bar", "foo bar >", "'foo bar'", "\"foo bar\""};
 
   @Test
   public void testEscape() {
     for (int i = 0; i < escaped.length; ++i)
-      assertEquals(escaped[i], CharacterDatas.escape(unescaped[i]));
+      assertEquals(String.valueOf(i), escaped[i], CharacterDatas.escapeForElem(unescaped[i]));
+
+    assertEquals("&quot;foo &lt; ' &gt; &amp; bar&quot;", CharacterDatas.escapeForAttr("\"foo < ' > & bar\"", '"'));
+    assertEquals("\"foo &lt; &apos; &gt; &amp; bar\"", CharacterDatas.escapeForAttr("\"foo < ' > & bar\"", '\''));
   }
 
   @Test
   public void testUnescape() {
-    for (int i = 0; i < unescaped.length; ++i)
-      assertEquals(unescaped[i], CharacterDatas.unescape(escaped[i]));
+    for (int i = 3; i < unescaped.length; ++i)
+      assertEquals(String.valueOf(i), unescaped[i], CharacterDatas.unescapeFromElem(escaped[i]));
+
+    assertEquals("\"foo < &apos; > & bar\"", CharacterDatas.unescapeFromAttr("&quot;foo &lt; &apos; &gt; &amp; bar&quot;", '"'));
+    assertEquals("&quot;foo < ' > & bar&quot;", CharacterDatas.unescapeFromAttr("&quot;foo &lt; &apos; &gt; &amp; bar&quot;", '\''));
   }
 }

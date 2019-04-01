@@ -142,7 +142,7 @@ public class XmlElement implements Cloneable, Serializable {
       for (final Map.Entry<String,Object> entry : attributes.entrySet()) {
         builder.append(' ').append(entry.getKey()).append("=\"");
         if (entry.getValue() != null)
-          builder.append(CharacterDatas.escape(new StringBuilder(String.valueOf(entry.getValue()))));
+          builder.append(CharacterDatas.escapeForAttr(new StringBuilder(String.valueOf(entry.getValue())), '"'));
         else
           builder.append("null");
 
