@@ -132,14 +132,6 @@ public final class CharacterDatas {
    *   >  | &gt;
    *   <  | &lt;}
    * </pre>
-
-   * &amp;  | &
-   * &gt;   | >
-   * &lt;   | <
-   * ------------
-   * &apos; | '
-   * &quot; | "}
-
    * @param string The string to escape.
    * @return The XML-escaped {@code string}.
    * @throws NullPointerException If {@code string} is null.
@@ -159,14 +151,6 @@ public final class CharacterDatas {
    *   >  | &gt;
    *   <  | &lt;}
    * </pre>
-
-   * &amp;  | &
-   * &gt;   | >
-   * &lt;   | <
-   * ------------
-   * &apos; | '
-   * &quot; | "}
-
    * @param string The string to escape.
    * @param fromIndex Start index from which to escape characters.
    * @param toIndex End index to which to escape characters.
