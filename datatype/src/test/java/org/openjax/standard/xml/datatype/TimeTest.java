@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
 import java.util.TimeZone;
 
 import org.junit.Test;
-import org.openjax.standard.xml.datatype.Time;
 
 public class TimeTest {
   @Test

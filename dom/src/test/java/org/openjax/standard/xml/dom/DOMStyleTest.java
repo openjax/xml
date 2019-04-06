@@ -19,7 +19,6 @@ package org.openjax.standard.xml.dom;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.openjax.standard.xml.dom.DOMStyle;
 
 public class DOMStyleTest {
   @Test

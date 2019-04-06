@@ -18,7 +18,6 @@ package org.openjax.standard.xml.datatype;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openjax.standard.xml.datatype.Base64Binary;
 
 public class Base64BinaryTest {
   private static void assertEquals(final String data, final String base64) {

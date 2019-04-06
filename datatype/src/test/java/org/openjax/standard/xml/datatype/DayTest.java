@@ -19,7 +19,6 @@ package org.openjax.standard.xml.datatype;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.openjax.standard.xml.datatype.Day;
 
 public class DayTest {
   @Test

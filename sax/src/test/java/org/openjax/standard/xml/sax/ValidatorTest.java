@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.openjax.standard.xml.api.OfflineValidationException;
-import org.openjax.standard.xml.sax.Validator;
 import org.xml.sax.SAXException;
 
 public class ValidatorTest {

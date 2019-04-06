@@ -18,7 +18,6 @@ package org.openjax.standard.xml.datatype;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openjax.standard.xml.datatype.HexBinary;
 
 public class HexBinaryTest {
   private static void assertEquals(final String data, final String base64) {

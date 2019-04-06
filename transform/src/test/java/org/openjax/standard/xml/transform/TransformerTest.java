@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import javax.xml.transform.TransformerException;
 
 import org.junit.Test;
-import org.openjax.standard.xml.transform.Transformer;
 
 public class TransformerTest {
   @Test
