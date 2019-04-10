@@ -40,7 +40,7 @@ public final class CharacterDatas {
         string.replace(i, i + 1, "&gt;");
       else if (ch == '<')
         string.replace(i, i + 1, "&lt;");
-      if (quote == '\0' || quote == ch) {
+      if (quote == ch) {
         if (ch == '\'')
           string.replace(i, i + 1, "&apos;");
         else if (ch == '"')
@@ -174,14 +174,20 @@ public final class CharacterDatas {
             start = -1;
           else
             ++pos;
+
+          continue;
         }
-        else if (pos == 1) {
+
+        if (pos == 1) {
           if (ch != 'm' && ch != 'g' && ch != 'l' && (quote != '\0' && quote != '"' && quote != '\'' || ch != 'o'))
             start = -1;
           else
             ++pos;
+
+          continue;
         }
-        else if (pos == 2) {
+
+        if (pos == 2) {
           if (ch == '&') {
             string.replace(i, start + 1, string.charAt(i + 1) == 'g' ? ">" : "<");
             start = -1;
@@ -192,8 +198,11 @@ public final class CharacterDatas {
           else {
             ++pos;
           }
+
+          continue;
         }
-        else if (pos == 3) {
+
+        if (pos == 3) {
           if (ch == '&') {
             string.replace(i, start + 1, "&");
             start = -1;
@@ -204,15 +213,22 @@ public final class CharacterDatas {
           else {
             ++pos;
           }
+
+          continue;
         }
-        else if (pos == 4) {
-          if (ch == '&')
+
+        if (pos == 4) {
+          if (ch == '&') {
             string.replace(i, start + 1, string.charAt(i + 1) == 'a' ? "'" : "\"");
+            start = -1;
+            continue;
+          }
 
           start = -1;
         }
       }
-      else if (ch == ';') {
+
+      if (ch == ';') {
         start = i;
         pos = 0;
       }

@@ -21,8 +21,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class CharacterDatasTest {
-  private static final String[] escaped = {"foo &amp; bar", "&lt; foo bar", "foo bar &gt;", "&apos;foo bar&apos;", "&quot;foo bar&quot;"};
-  private static final String[] unescaped = {"foo & bar", "< foo bar", "foo bar >", "'foo bar'", "\"foo bar\""};
+  private static final String[] escaped = {"foo &amp; bar", "&lt; foo bar", "foo bar &gt;", "&amp;apos;foo\"'bar&amp;apos;", "&amp;quot;foo bar&amp;quot;"};
+  private static final String[] unescaped = {"foo & bar", "< foo bar", "foo bar >", "&apos;foo\"'bar&apos;", "&quot;foo bar&quot;"};
 
   @Test
   public void testEscape() {
@@ -35,7 +35,7 @@ public class CharacterDatasTest {
 
   @Test
   public void testUnescape() {
-    for (int i = 3; i < unescaped.length; ++i)
+    for (int i = 0; i < unescaped.length; ++i)
       assertEquals(String.valueOf(i), unescaped[i], CharacterDatas.unescapeFromElem(escaped[i]));
 
     assertEquals("\"foo < &apos; > & bar\"", CharacterDatas.unescapeFromAttr("&quot;foo &lt; &apos; &gt; &amp; bar&quot;", '"'));
