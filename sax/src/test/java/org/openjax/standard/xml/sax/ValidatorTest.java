@@ -25,17 +25,17 @@ import org.xml.sax.SAXException;
 public class ValidatorTest {
   @Test
   public void testValidate() throws Exception {
-    Validator.validate(Thread.currentThread().getContextClassLoader().getResource("valid.xml"), true);
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("valid.xml"), true);
 
     try {
-      Validator.validate(Thread.currentThread().getContextClassLoader().getResource("remote.xml"), true);
+      Validator.validate(ClassLoader.getSystemClassLoader().getResource("remote.xml"), true);
       fail("Expected OfflineValidationException");
     }
     catch (final OfflineValidationException e) {
     }
 
     try {
-      Validator.validate(Thread.currentThread().getContextClassLoader().getResource("invalid.xml"), true);
+      Validator.validate(ClassLoader.getSystemClassLoader().getResource("invalid.xml"), true);
       fail("Should have failed");
     }
     catch (final SAXException e) {
@@ -44,7 +44,7 @@ public class ValidatorTest {
     }
 
     try {
-      Validator.validate(Thread.currentThread().getContextClassLoader().getResource("test.xsd"), true);
+      Validator.validate(ClassLoader.getSystemClassLoader().getResource("test.xsd"), true);
     }
     catch (final SAXException e) {
       if (e.getMessage() == null || !e.getMessage().startsWith("schema_reference.4: Failed to read schema document 'http://www.w3.org/2001/"))
