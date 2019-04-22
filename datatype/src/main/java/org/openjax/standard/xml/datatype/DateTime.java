@@ -21,6 +21,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.TimeZone;
 
+/**
+ * https://www.w3.org/TR/xmlschema11-2/#dateTime
+ */
 public class DateTime extends TemporalType implements Serializable {
   private static final long serialVersionUID = 7756729079060501414L;
 
@@ -36,7 +39,7 @@ public class DateTime extends TemporalType implements Serializable {
     if (string.length() < Year.YEAR_FRAG_MIN_LENGTH + 1 + Month.MONTH_FRAG_MIN_LENGTH + 1 + Day.DAY_FRAG_MIN_LENGTH + 1 + Time.HOUR_FRAG_MIN_LENGTH + 1 + Time.MINUTE_FRAG_MIN_LENGTH + 1 + Time.SECOND_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException(string);
 
-    final int index = string.indexOf("T", Date.DATE_FRAG_MIN_LENGTH);
+    final int index = string.indexOf('T', Date.DATE_FRAG_MIN_LENGTH);
     if (index == -1)
       throw new IllegalArgumentException("dateTime == " + string);
 
@@ -56,11 +59,11 @@ public class DateTime extends TemporalType implements Serializable {
     this.epochTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDay(), time.getHour(), time.getMinute(), (int)time.getSecond(), (int)((time.getSecond() - (int)time.getSecond()) * 1000000000)).toEpochSecond(ZoneOffset.ofTotalSeconds(getTimeZone().getRawOffset() / 1000));
   }
 
-  public DateTime(final int year, final int month, int day, final int hour, int minute, final float second, final TimeZone timeZone) {
+  public DateTime(final int year, final int month, final int day, final int hour, final int minute, final float second, final TimeZone timeZone) {
     this(new Date(year, month, day, timeZone), new Time(hour, minute, second, timeZone));
   }
 
-  public DateTime(final int year, final int month, int day, final int hour, int minute, final float second) {
+  public DateTime(final int year, final int month, final int day, final int hour, final int minute, final float second) {
     this(year, month, day, hour, minute, second, null);
   }
 

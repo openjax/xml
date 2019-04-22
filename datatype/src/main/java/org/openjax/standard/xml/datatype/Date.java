@@ -40,12 +40,12 @@ public class Date extends TemporalType implements Serializable {
       throw new IllegalArgumentException("date == " + string);
 
     final Date date = parseDateFrag(string);
-    int index = string.indexOf("Z", DATE_FRAG_MIN_LENGTH);
+    int index = string.indexOf('Z', DATE_FRAG_MIN_LENGTH);
     if (index == -1)
-      index = string.indexOf("-", DATE_FRAG_MIN_LENGTH);
+      index = string.indexOf('-', DATE_FRAG_MIN_LENGTH);
 
     if (index == -1)
-      index = string.indexOf("+", DATE_FRAG_MIN_LENGTH);
+      index = string.indexOf('+', DATE_FRAG_MIN_LENGTH);
 
     final TimeZone timeZone = index == -1 ? null : Time.parseTimeZoneFrag(string.substring(index));
     return new Date(date.getYear(), date.getMonth(), date.getDay(), timeZone);
@@ -56,7 +56,7 @@ public class Date extends TemporalType implements Serializable {
       throw new IllegalArgumentException("date == " + string);
 
     final int year = Year.parseYearFrag(string);
-    final int index = string.indexOf("-", Year.YEAR_FRAG_MIN_LENGTH);
+    final int index = string.indexOf('-', Year.YEAR_FRAG_MIN_LENGTH);
     final MonthDay monthDay = MonthDay.parseMonthDayFrag(string = string.substring(index + 1));
     if (year % 4 != 0 && monthDay.getMonth() == 2 && monthDay.getDay() == 29)
       throw new IllegalArgumentException("year == " + year + " month == " + monthDay.getMonth() + " day == " + monthDay.getDay());

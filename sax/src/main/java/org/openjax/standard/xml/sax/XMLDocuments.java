@@ -19,6 +19,7 @@ package org.openjax.standard.xml.sax;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
@@ -31,6 +32,7 @@ import javax.xml.parsers.SAXParser;
 
 import org.openjax.standard.net.FilterURLConnection;
 import org.openjax.standard.net.URLs;
+import org.openjax.standard.util.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -107,6 +109,9 @@ public final class XMLDocuments {
           parser.reset();
           try (final InputStream in = schemaLocation.getValue().openStream()) {
             parser.parse(in, handler);
+          }
+          catch (final ConnectException e) {
+            throw Throwables.copy(e, new ConnectException(e.getMessage() + ":" + schemaLocation.getValue()));
           }
           catch (final SAXInterruptException e) {
             if (logger.isDebugEnabled())

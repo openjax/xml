@@ -39,12 +39,12 @@ public class Year extends TemporalType implements Serializable {
       throw new IllegalArgumentException("year == " + string);
 
     final int year = parseYearFrag(string);
-    int index = string.indexOf("Z", YEAR_FRAG_MIN_LENGTH);
+    int index = string.indexOf('Z', YEAR_FRAG_MIN_LENGTH);
     if (index == -1)
-      index = string.indexOf("-", YEAR_FRAG_MIN_LENGTH);
+      index = string.indexOf('-', YEAR_FRAG_MIN_LENGTH);
 
     if (index == -1)
-      index = string.indexOf("+", YEAR_FRAG_MIN_LENGTH);
+      index = string.indexOf('+', YEAR_FRAG_MIN_LENGTH);
 
     final TimeZone timeZone = index == -1 ? null : Time.parseTimeZoneFrag(string.substring(index));
     return new Year(year, timeZone);
@@ -54,15 +54,15 @@ public class Year extends TemporalType implements Serializable {
     if (string.length() == 0)
       throw new IllegalArgumentException(string);
 
-    int index = string.indexOf("Z", YEAR_FRAG_MIN_LENGTH);
+    int index = string.indexOf('Z', YEAR_FRAG_MIN_LENGTH);
     if (index != -1)
       string = string.substring(0, index);
 
-    index = string.indexOf("-", YEAR_FRAG_MIN_LENGTH);
+    index = string.indexOf('-', YEAR_FRAG_MIN_LENGTH);
     if (index != -1)
       string = string.substring(0, index);
 
-    index = string.indexOf("+", YEAR_FRAG_MIN_LENGTH);
+    index = string.indexOf('+', YEAR_FRAG_MIN_LENGTH);
     if (index != -1)
       string = string.substring(0, index);
 

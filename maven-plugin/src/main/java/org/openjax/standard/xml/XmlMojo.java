@@ -49,9 +49,9 @@ public abstract class XmlMojo extends FileSetMojo {
     else if (httpProxy.startsWith("http" + delimeter))
       scheme = "http";
     else
-      throw new MojoFailureException("Invalid proxy: " + httpProxy + " no http or http scheme.");
+      throw new MojoFailureException("Invalid proxy: " + httpProxy + " no http or http scheme");
 
-    final int portIndex = httpProxy.indexOf(":", scheme.length() + delimeter.length());
+    final int portIndex = httpProxy.indexOf(':', scheme.length() + delimeter.length());
     final String port = portIndex != -1 ? httpProxy.substring(portIndex + 1) : "80";
 
     System.setProperty(scheme + ".proxyHost", httpProxy.substring(scheme.length() + delimeter.length(), portIndex));

@@ -38,14 +38,14 @@ public class YearMonth extends TemporalType implements Serializable {
       throw new IllegalArgumentException("year-month == " + string);
 
     final int year = Year.parseYearFrag(string);
-    int index = string.indexOf("-", Year.YEAR_FRAG_MIN_LENGTH);
+    int index = string.indexOf('-', Year.YEAR_FRAG_MIN_LENGTH);
     final int month = Month.parseMonthFrag(string.substring(index + 1));
-    index = string.indexOf("Z", YEAR_MONTH_FRAG_MIN_LENGTH);
+    index = string.indexOf('Z', YEAR_MONTH_FRAG_MIN_LENGTH);
     if (index == -1)
-      index = string.indexOf("-", YEAR_MONTH_FRAG_MIN_LENGTH);
+      index = string.indexOf('-', YEAR_MONTH_FRAG_MIN_LENGTH);
 
     if (index == -1)
-      index = string.indexOf("+", YEAR_MONTH_FRAG_MIN_LENGTH);
+      index = string.indexOf('+', YEAR_MONTH_FRAG_MIN_LENGTH);
 
     final TimeZone timeZone = index == -1 ? null : Time.parseTimeZoneFrag(string.substring(index));
     return new YearMonth(year, month, timeZone);

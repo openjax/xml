@@ -56,12 +56,12 @@ public class Time extends TemporalType implements Serializable {
     final int hour = parseHourFrag(string);
     final int minute = parseMinuteFrag(string = string.substring(HOUR_FRAG_MIN_LENGTH + 1));
     final float second = parseSecondFrag(string = string.substring(MINUTE_FRAG_MIN_LENGTH + 1));
-    int index = string.indexOf("Z", SECOND_FRAG_MIN_LENGTH);
+    int index = string.indexOf('Z', SECOND_FRAG_MIN_LENGTH);
     if (index == -1)
-      index = string.indexOf("-", SECOND_FRAG_MIN_LENGTH);
+      index = string.indexOf('-', SECOND_FRAG_MIN_LENGTH);
 
     if (index == -1)
-      index = string.indexOf("+", SECOND_FRAG_MIN_LENGTH);
+      index = string.indexOf('+', SECOND_FRAG_MIN_LENGTH);
 
     final TimeZone timeZone = index != -1 ? parseTimeZoneFrag(string.substring(index)) : null;
     return new Time(hour, minute, second, timeZone);
