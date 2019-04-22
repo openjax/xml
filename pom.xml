@@ -33,7 +33,7 @@
     <module>api</module>
     <module>datatype</module>
     <module>dom</module>
-    <module>maven-plugin</module>
+    <module>xml-maven-plugin</module>
     <module>sax</module>
     <module>transform</module>
   </modules>
