@@ -16,6 +16,7 @@
 
 package org.openjax.standard.xml.sax;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -25,7 +26,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.impl.Constants;
-import org.openjax.standard.io.Streams;
 import org.openjax.standard.net.MemoryURLStreamHandler;
 import org.openjax.standard.xml.api.OfflineValidationException;
 import org.xml.sax.ErrorHandler;
@@ -40,7 +40,10 @@ public final class Validator {
   }
 
   public static void validate(final InputStream in, final boolean localOnly) throws IOException, SAXException {
-    validate(MemoryURLStreamHandler.createURL(Streams.readBytes(in)), localOnly, new LoggingErrorHandler());
+    final ByteArrayOutputStream buffer = new ByteArrayOutputStream(1024);
+    final byte[] data = new byte[1024];
+    for (int length; (length = in.read(data)) != -1; buffer.write(data, 0, length));
+    validate(MemoryURLStreamHandler.createURL(buffer.toByteArray()), localOnly, new LoggingErrorHandler());
   }
 
   public static void validate(final URL url, final boolean localOnly) throws IOException, SAXException {
