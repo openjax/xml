@@ -16,7 +16,9 @@
 
 package org.openjax.standard.xml;
 
+import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -28,6 +30,7 @@ import org.openjax.standard.maven.mojo.FileSetMojo;
 
 @Mojo(name="xml", requiresDependencyResolution=ResolutionScope.TEST)
 public abstract class XmlMojo extends FileSetMojo {
+  static final Path CWD = new File("").getAbsoluteFile().toPath();
   private static final String delimeter = "://";
 
   @Parameter(defaultValue="${httpProxy}", readonly=true)

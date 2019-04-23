@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,7 +28,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.openjax.standard.io.FastFiles;
 import org.openjax.standard.net.URLs;
 import org.openjax.standard.util.Dates;
 import org.openjax.standard.xml.api.OfflineValidationException;
@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
 
 @Mojo(name="validate", defaultPhase=LifecyclePhase.COMPILE)
 @Execute(goal="validate")
-public final class ValidatorMojo extends XmlMojo {
+public class ValidatorMojo extends XmlMojo {
   @Override
   public void executeMojo(final LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException {
     final File recordDir = new File(directory, "validator");
@@ -45,7 +45,7 @@ public final class ValidatorMojo extends XmlMojo {
     try {
       for (final URL url : urls) {
         final File recordFile = new File(recordDir, URLs.getName(url));
-        final String filePath = URLs.isLocalFile(url) ? FastFiles.getCwd().toPath().relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
+        final String filePath = URLs.isLocalFile(url) ? CWD.relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
         long lastModified = -1;
         if (recordFile.exists() && recordFile.lastModified() >= (lastModified = URLs.getLastModified(url)) && recordFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
           getLog().info("Pre-validated: " + filePath);

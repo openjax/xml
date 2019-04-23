@@ -29,7 +29,6 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.openjax.standard.io.FastFiles;
 import org.openjax.standard.maven.mojo.MojoUtil;
 import org.openjax.standard.net.URLs;
 import org.openjax.standard.util.Dates;
@@ -37,7 +36,7 @@ import org.openjax.standard.xml.transform.Transformer;
 
 @Mojo(name="transform", defaultPhase=LifecyclePhase.COMPILE)
 @Execute(goal="transform")
-public final class TransformMojo extends XmlMojo {
+public class TransformMojo extends XmlMojo {
   @Parameter(property="destDir", required=true)
   private String destDir;
 
@@ -53,14 +52,14 @@ public final class TransformMojo extends XmlMojo {
       for (final URL url : urls) {
         final String outFileName = MojoUtil.getRenamedFileName(url, rename);
         final File destFile = new File(destDir, outFileName);
-        final String inFilePath = URLs.isLocalFile(url) ? FastFiles.getCwd().toPath().relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
+        final String inFilePath = URLs.isLocalFile(url) ? CWD.relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
 
         long lastModified;
         if (destFile.exists() && destFile.lastModified() >= (lastModified = URLs.getLastModified(url)) && destFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
           getLog().info("Pre-transformed: " + inFilePath);
         }
         else {
-          final String outFilePath = FastFiles.getCwd().toPath().relativize(destFile.getAbsoluteFile().toPath()).toString();
+          final String outFilePath = CWD.relativize(destFile.getAbsoluteFile().toPath()).toString();
           getLog().info("   Transforming: " + inFilePath + " -> " + outFilePath);
 
           Transformer.transform(stylesheet.toURI().toURL(), url, destFile);
