@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/openjax/standard-xml.png)](https://travis-ci.org/openjax/standard-xml)
 [![Coverage Status](https://coveralls.io/repos/github/openjax/standard-xml/badge.svg)](https://coveralls.io/github/openjax/standard-xml)
+[![Javadocs](https://www.javadoc.io/badge/org.openjax.standard.xml/xml-maven-plugin.svg)](https://www.javadoc.io/doc/org.openjax.standard.xml/xml-maven-plugin)
+[![Released Version](https://img.shields.io/maven-central/v/org.openjax.standard.xml/xml-maven-plugin.svg)](https://mvnrepository.com/artifact/org.openjax.standard.xml/xml-maven-plugin)
 
 ### Introduction
 
@@ -135,10 +137,6 @@ Execution with `includes` directive.
 | `/includes/include` | String  | Optional | Fileset pattern of files to include. **Default:** `null`.                                 |
 | `/excludes`         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.                                         |
 | `/excludes/exclude` | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`.                                 |
-
-### JavaDocs
-
-JavaDocs are available [here](https://standard.openjax.org/xml/apidocs/).
 
 ### License
 
