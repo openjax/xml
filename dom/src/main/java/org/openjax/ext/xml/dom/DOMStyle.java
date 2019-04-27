@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.dom;
+package org.openjax.ext.xml.dom;
 
 public final class DOMStyle {
   protected static DOMStyle merge(final DOMStyle ... styles) {

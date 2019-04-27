@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.sax;
+package org.openjax.ext.xml.sax;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.openjax.standard.util.Paths;
+import org.openjax.ext.util.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;

@@ -1,4 +1,4 @@
-package org.openjax.standard.xml.sax;
+package org.openjax.ext.xml.sax;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;

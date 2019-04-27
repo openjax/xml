@@ -20,7 +20,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openjax.standard.xml</groupId>
+    <groupId>org.openjax.ext.xml</groupId>
     <artifactId>xml</artifactId>
     <version>0.9.2-SNAPSHOT</version>
   </parent>
@@ -94,7 +94,7 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.openjax.standard.xml</groupId>
+            <groupId>org.openjax.ext.xml</groupId>
             <artifactId>xml-maven-plugin</artifactId>
             <version>${project.version}</version>
             <executions>
@@ -145,17 +145,17 @@
   </profiles>
   <dependencies>
     <dependency>
-      <groupId>org.openjax.standard.xml</groupId>
+      <groupId>org.openjax.ext.xml</groupId>
       <artifactId>sax</artifactId>
       <version>0.9.2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.openjax.standard.xml</groupId>
+      <groupId>org.openjax.ext.xml</groupId>
       <artifactId>transform</artifactId>
       <version>0.9.2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.openjax.standard.maven</groupId>
+      <groupId>org.openjax.ext.maven</groupId>
       <artifactId>mojo</artifactId>
       <version>0.3.5-SNAPSHOT</version>
     </dependency>

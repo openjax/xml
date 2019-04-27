@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.api;
+package org.openjax.ext.xml.api;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -14,13 +14,12 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml;
+package org.openjax.ext.xml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.LinkedHashSet;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -28,10 +27,10 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.openjax.standard.net.URLs;
-import org.openjax.standard.util.Dates;
-import org.openjax.standard.xml.api.OfflineValidationException;
-import org.openjax.standard.xml.sax.Validator;
+import org.openjax.ext.net.URLs;
+import org.openjax.ext.util.Dates;
+import org.openjax.ext.xml.api.OfflineValidationException;
+import org.openjax.ext.xml.sax.Validator;
 import org.xml.sax.SAXException;
 
 @Mojo(name="validate", defaultPhase=LifecyclePhase.COMPILE)

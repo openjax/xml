@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.sax;
+package org.openjax.ext.xml.sax;
 
 import java.net.URL;
 import java.util.Iterator;

@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.datatype;
+package org.openjax.ext.xml.datatype;
 
 import java.io.Serializable;
 

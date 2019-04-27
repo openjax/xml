@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.sax;
+package org.openjax.ext.xml.sax;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +30,9 @@ import java.util.Set;
 
 import javax.xml.parsers.SAXParser;
 
-import org.openjax.standard.net.FilterURLConnection;
-import org.openjax.standard.net.URLs;
-import org.openjax.standard.util.Throwables;
+import org.openjax.ext.net.FilterURLConnection;
+import org.openjax.ext.net.URLs;
+import org.openjax.ext.util.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;

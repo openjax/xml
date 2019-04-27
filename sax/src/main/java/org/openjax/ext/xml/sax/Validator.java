@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.sax;
+package org.openjax.ext.xml.sax;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,8 +26,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.impl.Constants;
-import org.openjax.standard.net.MemoryURLStreamHandler;
-import org.openjax.standard.xml.api.OfflineValidationException;
+import org.openjax.ext.net.MemoryURLStreamHandler;
+import org.openjax.ext.xml.api.OfflineValidationException;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

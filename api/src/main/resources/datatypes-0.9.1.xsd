@@ -16,8 +16,8 @@
 -->
 <xs:schema
   elementFormDefault="qualified"
-  targetNamespace="http://standard.openjax.org/xml/datatypes-0.9.1.xsd"
-  xmlns:dt="http://standard.openjax.org/xml/datatypes-0.9.1.xsd"
+  targetNamespace="http://ext.openjax.org/xml/datatypes-0.9.1.xsd"
+  xmlns:dt="http://ext.openjax.org/xml/datatypes-0.9.1.xsd"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:simpleType name="anyURINonEmpty">

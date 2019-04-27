@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.transform;
+package org.openjax.ext.xml.transform;
 
 import static org.junit.Assert.*;
 

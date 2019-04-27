@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.dom;
+package org.openjax.ext.xml.dom;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,7 +22,7 @@ import java.net.URL;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.openjax.standard.xml.api.ValidationException;
+import org.openjax.ext.xml.api.ValidationException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

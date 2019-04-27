@@ -1,11 +1,11 @@
-# OpenJAX Standard XML Maven Plugin
+# OpenJAX Extensions XML Maven Plugin
 
 > Maven Plugin for XML validation and transformation
 
-[![Build Status](https://travis-ci.org/openjax/standard-xml.png)](https://travis-ci.org/openjax/standard-xml)
-[![Coverage Status](https://coveralls.io/repos/github/openjax/standard-xml/badge.svg)](https://coveralls.io/github/openjax/standard-xml)
-[![Javadocs](https://www.javadoc.io/badge/org.openjax.standard.xml/xml-maven-plugin.svg)](https://www.javadoc.io/doc/org.openjax.standard.xml/xml-maven-plugin)
-[![Released Version](https://img.shields.io/maven-central/v/org.openjax.standard.xml/xml-maven-plugin.svg)](https://mvnrepository.com/artifact/org.openjax.standard.xml/xml-maven-plugin)
+[![Build Status](https://travis-ci.org/openjax/ext-xml.png)](https://travis-ci.org/openjax/ext-xml)
+[![Coverage Status](https://coveralls.io/repos/github/openjax/ext-xml/badge.svg)](https://coveralls.io/github/openjax/ext-xml)
+[![Javadocs](https://www.javadoc.io/badge/org.openjax.ext.xml/xml-maven-plugin.svg)](https://www.javadoc.io/doc/org.openjax.ext.xml/xml-maven-plugin)
+[![Released Version](https://img.shields.io/maven-central/v/org.openjax.ext.xml/xml-maven-plugin.svg)](https://mvnrepository.com/artifact/org.openjax.ext.xml/xml-maven-plugin)
 
 ### Introduction
 
@@ -28,7 +28,7 @@ Execution with `includes` directive.
 
 ```xml
 <plugin>
-  <groupId>org.openjax.standard.xml</groupId>
+  <groupId>org.openjax.ext.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>
@@ -56,7 +56,7 @@ Execution with `includes` and `excludes` directives.
 
 ```xml
 <plugin>
-  <groupId>org.openjax.standard.xml</groupId>
+  <groupId>org.openjax.ext.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>
@@ -105,7 +105,7 @@ Execution with `includes` directive.
 
 ```xml
 <plugin>
-  <groupId>org.openjax.standard.xml</groupId>
+  <groupId>org.openjax.ext.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <executions>

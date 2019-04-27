@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml;
+package org.openjax.ext.xml;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +29,10 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.openjax.standard.maven.mojo.MojoUtil;
-import org.openjax.standard.net.URLs;
-import org.openjax.standard.util.Dates;
-import org.openjax.standard.xml.transform.Transformer;
+import org.openjax.ext.maven.mojo.MojoUtil;
+import org.openjax.ext.net.URLs;
+import org.openjax.ext.util.Dates;
+import org.openjax.ext.xml.transform.Transformer;
 
 @Mojo(name="transform", defaultPhase=LifecyclePhase.COMPILE)
 @Execute(goal="transform")

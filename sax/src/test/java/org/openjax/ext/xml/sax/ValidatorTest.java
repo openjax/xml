@@ -14,12 +14,12 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml.sax;
+package org.openjax.ext.xml.sax;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.openjax.standard.xml.api.OfflineValidationException;
+import org.openjax.ext.xml.api.OfflineValidationException;
 import org.xml.sax.SAXException;
 
 public class ValidatorTest {

@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.standard.xml;
+package org.openjax.ext.xml;
 
 import java.io.File;
 import java.net.URL;
@@ -26,7 +26,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.openjax.standard.maven.mojo.FileSetMojo;
+import org.openjax.ext.maven.mojo.FileSetMojo;
 
 @Mojo(name="xml", requiresDependencyResolution=ResolutionScope.TEST)
 public abstract class XmlMojo extends FileSetMojo {
