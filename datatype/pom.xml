@@ -25,5 +25,8 @@
     <version>0.9.2-SNAPSHOT</version>
   </parent>
   <artifactId>datatype</artifactId>
-  <name>${project.groupId}:${project.artifactId}</name>
+  <name>OpenJAX Extensions XML DataType</name>
+  <description>
+    Java bindings to XML data types as specified at http://www.w3.org/TR/xmlschema11-2/.
+  </description>
 </project>

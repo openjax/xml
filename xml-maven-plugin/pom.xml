@@ -26,9 +26,9 @@
   </parent>
   <artifactId>xml-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <name>${project.groupId}:${project.artifactId}</name>
+  <name>OpenJAX Extensions XML Maven Plugin</name>
   <description>
-    Plugin for XML tasks.
+    Maven Plugin for general XML-related tasks, specializing in validation and transformation of XML documents.
   </description>
   <build>
     <plugins>
