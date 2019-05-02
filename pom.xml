@@ -20,15 +20,15 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openjax.ext</groupId>
-    <artifactId>ext</artifactId>
-    <version>1.11.15-SNAPSHOT</version>
+    <groupId>org.openjax</groupId>
+    <artifactId>openjax</artifactId>
+    <version>2.5.3-SNAPSHOT</version>
   </parent>
-  <groupId>org.openjax.ext.xml</groupId>
+  <groupId>org.openjax.xml</groupId>
   <artifactId>xml</artifactId>
   <version>0.9.2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>OpenJAX Extensions XML</name>
+  <name>OpenJAX XML</name>
   <description>
     A collection of modules that specialize in structures and functions related to XML.
   </description>
@@ -43,7 +43,7 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.openjax.ext.xml</groupId>
+        <groupId>org.openjax.xml</groupId>
         <artifactId>api</artifactId>
         <version>0.9.2-SNAPSHOT</version>
       </dependency>

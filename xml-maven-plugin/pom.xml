@@ -20,13 +20,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openjax.ext.xml</groupId>
+    <groupId>org.openjax.xml</groupId>
     <artifactId>xml</artifactId>
     <version>0.9.2-SNAPSHOT</version>
   </parent>
   <artifactId>xml-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <name>OpenJAX Extensions XML Maven Plugin</name>
+  <name>OpenJAX XML Maven Plugin</name>
   <description>
     Maven Plugin for general XML-related tasks, specializing in validation and transformation of XML documents.
   </description>
@@ -94,7 +94,7 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.openjax.ext.xml</groupId>
+            <groupId>org.openjax.xml</groupId>
             <artifactId>xml-maven-plugin</artifactId>
             <version>${project.version}</version>
             <executions>
@@ -145,17 +145,17 @@
   </profiles>
   <dependencies>
     <dependency>
-      <groupId>org.openjax.ext.xml</groupId>
+      <groupId>org.openjax.xml</groupId>
       <artifactId>sax</artifactId>
       <version>0.9.2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.openjax.ext.xml</groupId>
+      <groupId>org.openjax.xml</groupId>
       <artifactId>transform</artifactId>
       <version>0.9.2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.openjax.ext.maven</groupId>
+      <groupId>org.openjax.maven</groupId>
       <artifactId>mojo</artifactId>
       <version>0.3.5-SNAPSHOT</version>
     </dependency>

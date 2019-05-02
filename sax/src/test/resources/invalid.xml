@@ -14,8 +14,8 @@
   You should have received a copy of The MIT License (MIT) along with this
   program. If not, see <http://opensource.org/licenses/MIT/>.
 -->
-<parent xmlns="http://ext.openjax.org/xml/test.xsd"
+<parent xmlns="http://www.openjax.org/xml/test.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://ext.openjax.org/xml/test.xsd test.xsd">
+  xsi:schemaLocation="http://www.openjax.org/xml/test.xsd test.xsd">
   <child>a</child>
 </parent>
