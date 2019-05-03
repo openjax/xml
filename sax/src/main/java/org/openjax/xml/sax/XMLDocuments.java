@@ -36,6 +36,7 @@ import org.openjax.util.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public final class XMLDocuments {
   private static final Logger logger = LoggerFactory.getLogger(XMLDocuments.class);
@@ -113,6 +114,9 @@ public final class XMLDocuments {
           catch (final ConnectException e) {
             throw Throwables.copy(e, new ConnectException(e.getMessage() + ":" + schemaLocation.getValue()));
           }
+          catch (final SAXParseException e) {
+            throw Throwables.copy(e, new SAXParseException(schemaLocation.getValue() + ": " + e.getMessage(), e.getPublicId(), e.getSystemId(), e.getLineNumber(), e.getColumnNumber()));
+          }
           catch (final SAXInterruptException e) {
             if (logger.isDebugEnabled())
               logger.debug("Caught " + SAXInterruptException.class.getName());
@@ -145,6 +149,12 @@ public final class XMLDocuments {
         parser.reset();
         try (final InputStream in = include.openStream()) {
           parser.parse(in, handler);
+        }
+        catch (final ConnectException e) {
+          throw Throwables.copy(e, new ConnectException(e.getMessage() + ":" + include));
+        }
+        catch (final SAXParseException e) {
+          throw Throwables.copy(e, new SAXParseException(include + ": " + e.getMessage(), e.getPublicId(), e.getSystemId(), e.getLineNumber(), e.getColumnNumber()));
         }
         catch (final SAXInterruptException e) {
           if (logger.isDebugEnabled())
