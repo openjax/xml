@@ -29,9 +29,9 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.libj.net.URLs;
+import org.libj.util.Dates;
 import org.openjax.maven.mojo.MojoUtil;
-import org.openjax.net.URLs;
-import org.openjax.util.Dates;
 import org.openjax.xml.transform.Transformer;
 
 @Mojo(name="transform", defaultPhase=LifecyclePhase.COMPILE)

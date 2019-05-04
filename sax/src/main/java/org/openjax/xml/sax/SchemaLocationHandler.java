@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.openjax.util.Paths;
+import org.libj.util.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;

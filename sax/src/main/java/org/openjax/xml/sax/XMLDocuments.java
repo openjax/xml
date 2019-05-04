@@ -30,9 +30,9 @@ import java.util.Set;
 
 import javax.xml.parsers.SAXParser;
 
-import org.openjax.net.FilterURLConnection;
-import org.openjax.net.URLs;
-import org.openjax.util.Throwables;
+import org.libj.net.FilterURLConnection;
+import org.libj.net.URLs;
+import org.libj.util.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
