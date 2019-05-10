@@ -30,7 +30,7 @@
   <packaging>pom</packaging>
   <name>OpenJAX XML</name>
   <description>
-    A collection of modules that specialize in structures and functions related to XML.
+    Modules that provide convenient APIs of structures and functions related to XML.
   </description>
   <modules>
     <module>api</module>
