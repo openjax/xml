@@ -7,22 +7,22 @@
 [![Javadocs](https://www.javadoc.io/badge/org.openjax.xml/xml-maven-plugin.svg)](https://www.javadoc.io/doc/org.openjax.xml/xml-maven-plugin)
 [![Released Version](https://img.shields.io/maven-central/v/org.openjax.xml/xml-maven-plugin.svg)](https://mvnrepository.com/artifact/org.openjax.xml/xml-maven-plugin)
 
-### Introduction
+## Introduction
 
 The `xml-maven-plugin` plugin is used for general XML-related goals.
 
-### Goals Overview
+## Goals Overview
 
 * [`xml:validate`](#xmlvalidate) validates XML files.
 * [`xml:transform`](#xmltransform) transform XML files with XSL stylesheets.
 
-### Usage
+## Usage
 
-#### `xml:validate`
+### `xml:validate`
 
 The `xml:validate` goal is bound to the `compile` phase, and is used to validate XML documents of types specified in the plugin's `configuration`. The validator uses a SAX parser and supports [XML Schema 1.1][xml11].
 
-##### Example 1
+#### Example 1
 
 Execution with `includes` directive.
 
@@ -50,7 +50,7 @@ Execution with `includes` directive.
 </plugin>
 ```
 
-##### Example 2
+#### Example 2
 
 Execution with `includes` and `excludes` directives.
 
@@ -81,7 +81,7 @@ Execution with `includes` and `excludes` directives.
 </plugin>
 ```
 
-#### Configuration Parameters
+### Configuration Parameters
 
 | Name                | Type    | Use      | Description                                               |
 |:--------------------|:--------|:---------|:----------------------------------------------------------|
@@ -91,15 +91,15 @@ Execution with `includes` and `excludes` directives.
 | `/excludes`         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.         |
 | `/excludes/exclude` | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`. |
 
-#### Execution Options
+### Execution Options
 
 1. Executing Maven in offline mode (`mvn -o`) will cause `xml:validate` to silently pass validation of XML files with remote `xsi:schemalocations`, thus avoiding remote calls.
 
-#### `xml:transform`
+### `xml:transform`
 
 The `xml:transform` goal is bound to the `generate-resources` phase, and is used to transform XML documents with a XML Stylesheet (XSL). The XSL Transformer supports [XSLT 2.0][xsl2].
 
-##### Example 1
+#### Example 1
 
 Execution with `includes` directive.
 
@@ -126,7 +126,7 @@ Execution with `includes` directive.
 </plugin>
 ```
 
-#### Configuration Parameters
+### Configuration Parameters
 
 | Name                | Type    | Use      | Description                                                                               |
 |:--------------------|:--------|:---------|:------------------------------------------------------------------------------------------|
@@ -138,7 +138,7 @@ Execution with `includes` directive.
 | `/excludes`         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.                                         |
 | `/excludes/exclude` | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`.                                 |
 
-### License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
 
