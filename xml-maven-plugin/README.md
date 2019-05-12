@@ -30,7 +30,7 @@ Execution with `includes` directive.
 <plugin>
   <groupId>org.openjax.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
-  <version>0.9.2-SNAPSHOT</version>
+  <version>0.9.2</version>
   <executions>
     <execution>
       <goals>
@@ -58,7 +58,7 @@ Execution with `includes` and `excludes` directives.
 <plugin>
   <groupId>org.openjax.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
-  <version>0.9.2-SNAPSHOT</version>
+  <version>0.9.2</version>
   <executions>
     <execution>
       <goals>
@@ -107,7 +107,7 @@ Execution with `includes` directive.
 <plugin>
   <groupId>org.openjax.xml</groupId>
   <artifactId>xml-maven-plugin</artifactId>
-  <version>0.9.2-SNAPSHOT</version>
+  <version>0.9.2</version>
   <executions>
     <execution>
       <goals>
