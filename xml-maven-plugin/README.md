@@ -138,6 +138,12 @@ Execution with `includes` directive.
 | `/excludes`         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.                                         |
 | `/excludes/exclude` | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`.                                 |
 
+## Contributing
+
+Pull requests are welcome. For major changes, please [open an issue](../../issues) first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
