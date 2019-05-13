@@ -1,7 +1,5 @@
 # OpenJAX XML Maven Plugin
 
-> Maven Plugin for XML validation and transformation
-
 [![Build Status](https://travis-ci.org/openjax/xml.png)](https://travis-ci.org/openjax/xml)
 [![Coverage Status](https://coveralls.io/repos/github/openjax/xml/badge.svg)](https://coveralls.io/github/openjax/xml)
 [![Javadocs](https://www.javadoc.io/badge/org.openjax.xml/xml-maven-plugin.svg)](https://www.javadoc.io/doc/org.openjax.xml/xml-maven-plugin)
@@ -83,13 +81,13 @@ Execution with `includes` and `excludes` directives.
 
 ### Configuration Parameters
 
-| Name                | Type    | Use      | Description                                               |
-|:--------------------|:--------|:---------|:----------------------------------------------------------|
-| `/skip`             | Boolean | Optional | Skip executioin. **Default:** `false`.                    |
-| `/includes`         | Set     | Optional | Set of `include` directives. **Default:** `null`.         |
-| `/includes/include` | String  | Optional | Fileset pattern of files to include. **Default:** `null`. |
-| `/excludes`         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.         |
-| `/excludes/exclude` | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`. |
+| Name                            | Type    | Use      | Description                                               |
+|:--------------------------------|:--------|:---------|:----------------------------------------------------------|
+| <samp>/skip¹</samp>             | Boolean | Optional | Skip executioin. **Default:** `false`.                    |
+| <samp>/includes¹</samp>         | Set     | Optional | Set of `include` directives. **Default:** `null`.         |
+| <samp>/includes/includeⁿ</samp> | String  | Optional | Fileset pattern of files to include. **Default:** `null`. |
+| <samp>/excludes¹</samp>         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.         |
+| <samp>/excludes/excludeⁿ</samp> | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`. |
 
 ### Execution Options
 
@@ -128,15 +126,15 @@ Execution with `includes` directive.
 
 ### Configuration Parameters
 
-| Name                | Type    | Use      | Description                                                                               |
-|:--------------------|:--------|:---------|:------------------------------------------------------------------------------------------|
-| `/skip`             | Boolean | Optional | Skip executioin. **Default:** `false`.                                                    |
-| `/destDir`          | String  | Required | Destination directory of transformed files.                                               |
-| `/rename`           | String  | Optional | Regex pattern used to rename output files as: `/<search>/<replace>/` **Default:** `null`. |
-| `/includes`         | Set     | Optional | Set of `include` directives. **Default:** `null`.                                         |
-| `/includes/include` | String  | Optional | Fileset pattern of files to include. **Default:** `null`.                                 |
-| `/excludes`         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.                                         |
-| `/excludes/exclude` | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`.                                 |
+| Name                            | Type    | Use      | Description                                                                               |
+|:--------------------------------|:--------|:---------|:------------------------------------------------------------------------------------------|
+| <samp>/skip¹</samp>             | Boolean | Optional | Skip executioin. **Default:** `false`.                                                    |
+| <samp>/destDir¹</samp>          | String  | Required | Destination directory of transformed files.                                               |
+| <samp>/rename¹</samp>           | String  | Optional | Regex pattern used to rename output files as: `/<search>/<replace>/` **Default:** `null`. |
+| <samp>/includes¹</samp>         | Set     | Optional | Set of `include` directives. **Default:** `null`.                                         |
+| <samp>/includes/includeⁿ</samp> | String  | Optional | Fileset pattern of files to include. **Default:** `null`.                                 |
+| <samp>/excludes¹</samp>         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.                                         |
+| <samp>/excludes/excludeⁿ</samp> | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`.                                 |
 
 ## Contributing
 
@@ -148,6 +146,5 @@ Please make sure to update tests as appropriate.
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
 
-[mvn-plugin]: https://img.shields.io/badge/mvn-plugin-lightgrey.svg
 [xml11]: https://www.w3.org/TR/xmlschema11-1/
 [xsl2]: https://www.w3.org/TR/xslt20/

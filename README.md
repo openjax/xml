@@ -1,7 +1,5 @@
 # OpenJAX XML
 
-> Convenient APIs of structures and functions related to XML.
-
 [![Build Status](https://travis-ci.org/openjax/xml.png)](https://travis-ci.org/openjax/xml)
 [![Coverage Status](https://coveralls.io/repos/github/openjax/xml/badge.svg)](https://coveralls.io/github/openjax/xml)
 [![Javadocs](https://www.javadoc.io/badge/org.openjax.xml/xml-maven-plugin.svg)](https://www.javadoc.io/doc/org.openjax.xml/xml-maven-plugin)
