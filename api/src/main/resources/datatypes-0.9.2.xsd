@@ -34,13 +34,13 @@
   
   <xs:simpleType name="stringWord">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[A-Za-z0-9_]*"/>
+      <xs:pattern value="[A-Za-z\d_]*"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="stringWordNonEmpty">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[A-Za-z0-9_]+"/>
+      <xs:pattern value="[A-Za-z\d_]+"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -251,7 +251,7 @@
   
   <xs:simpleType name="email">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[a-zA-Z]([.]?([a-zA-Z0-9_-]+)*)?@([a-zA-Z0-9\-_]+\.)+[a-zA-Z]{2,4}"/>
+      <xs:pattern value="[a-zA-Z]([.]?([a-zA-Z\d_-]+)*)?@([a-zA-Z\d\-_]+\.)+[a-zA-Z]{2,4}"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -1035,7 +1035,7 @@
 
   <xs:simpleType name="host">
     <xs:restriction base="xs:token">
-      <xs:pattern value="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})|((([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]))"/>
+      <xs:pattern value="((25[0-5]|2[0-4]\d|[01]?\d\d?)(\.(25[0-5]|2[0-4]\d|[01]?\d\d?)){3})|((([a-zA-Z]|[a-zA-Z][a-zA-Z\d\-]*[a-zA-Z\d])\.)*([A-Za-z]|[A-Za-z][A-Za-z\d\-]*[A-Za-z\d]))"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -1048,50 +1048,50 @@
 
   <xs:simpleType name="hostPort">
     <xs:restriction base="xs:token">
-      <xs:pattern value="(((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})|((([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]))):([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])"/>
+      <xs:pattern value="(((25[0-5]|2[0-4]\d|[01]?\d\d?)(\.(25[0-5]|2[0-4]\d|[01]?\d\d?)){3})|((([a-zA-Z]|[a-zA-Z][a-zA-Z\d\-]*[a-zA-Z\d])\.)*([A-Za-z]|[A-Za-z][A-Za-z\d\-]*[A-Za-z\d]))):(\d{1,4}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="mimeType">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[a-zA-Z]*\/(([a-zA-Z][a-zA-Z0-9]*([-\.][a-zA-Z0-9]*)*)+(\+[a-zA-Z0-9]+)?)?"/>
+      <xs:pattern value="[a-zA-Z]*\/(([a-zA-Z][a-zA-Z\d]*([-\.][a-zA-Z\d]*)*)+(\+[a-zA-Z\d]+)?)?"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="hexadecimal">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[0-9a-fA-F]*"/>
+      <xs:pattern value="[\da-fA-F]*"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="localDate">
     <xs:restriction base="xs:string">
-      <xs:pattern value="-?[0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|(02-(0[1-9]|1[0-9]|2[0-9]))|(0[469]|11)-(0[1-9]|[12][0-9]|30)"/>
+      <xs:pattern value="-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30)))"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="localTime">
     <xs:restriction base="xs:string">
-      <xs:pattern value="(([01][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,9})?"/>
+      <xs:pattern value="(([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d{1,9})?"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="localDateTime">
     <xs:restriction base="xs:string">
-      <xs:pattern value="(-?[0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|(02-(0[1-9]|1[0-9]|2[0-9]))|(0[469]|11)-(0[1-9]|[12][0-9]|30)) (([01][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,9})?"/>
+      <xs:pattern value="(-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30)))) (([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d{1,9})?"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="uuid">
     <xs:restriction base="xs:string">
       <xs:length value="36" fixed="true"/>
-      <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"/>
+      <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-4[\da-fA-F]{3}-[8-9a-bA-B][\da-fA-F]{3}-[\da-fA-F]{12}"/>
     </xs:restriction>
   </xs:simpleType>
   
   <xs:simpleType name="url">
     <xs:restriction base="xs:string">
-      <xs:pattern value="([a-z][a-z0-9+\-.]*):(\/\/([a-z0-9\-._~%!$&amp;'()*+,;=]+@)?([a-z0-9\-._~%]+|\[[a-f0-9:.]+\]|\[v[a-f0-9][a-z0-9\-._~%!$&amp;'()*+,;=:]+\])(:[0-9]+)?(\/[a-z0-9\-._~%!$&amp;'()*+,;=:@]+)*\/?|(\/?[a-z0-9\-._~%!$&amp;'()*+,;=:@]+(\/[a-z0-9\-._~%!$&amp;'()*+,;=:@]+)*\/?)?)(\?[a-z0-9\-._~%!$&amp;'()*+,;=:@/?]*)?(#[a-z0-9\-._~%!$&amp;'()*+,;=:@/?]*)?"/>
+      <xs:pattern value="([a-z][a-z\d+\-.]*):(\/\/([a-z\d\-._~%!$&amp;'()*+,;=]+@)?([a-z\d\-._~%]+|\[[a-f\d:.]+\]|\[v[a-f\d][a-z\d\-._~%!$&amp;'()*+,;=:]+\])(:\d+)?(\/[a-z\d\-._~%!$&amp;'()*+,;=:@]+)*\/?|(\/?[a-z\d\-._~%!$&amp;'()*+,;=:@]+(\/[a-z\d\-._~%!$&amp;'()*+,;=:@]+)*\/?)?)(\?[a-z\d\-._~%!$&amp;'()*+,;=:@/?]*)?(#[a-z\d\-._~%!$&amp;'()*+,;=:@/?]*)?"/>
     </xs:restriction>
   </xs:simpleType>
   
