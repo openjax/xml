@@ -20,13 +20,17 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.libj.net.URLs;
 import org.openjax.maven.mojo.FileSetMojo;
+import org.openjax.maven.mojo.FilterParameter;
+import org.openjax.maven.mojo.FilterType;
 
 @Mojo(name="xml", requiresDependencyResolution=ResolutionScope.TEST)
 public abstract class XmlMojo extends FileSetMojo {
@@ -41,6 +45,10 @@ public abstract class XmlMojo extends FileSetMojo {
 
   @Parameter(defaultValue="${settings.offline}", required=true, readonly=true)
   protected boolean offline;
+
+  @FilterParameter(FilterType.RESOURCE)
+  @Parameter(property="resources", required=true)
+  private List<String> resources;
 
   protected final void setHttpProxy() throws MojoFailureException {
     if (offline || httpProxy == null)
@@ -62,10 +70,14 @@ public abstract class XmlMojo extends FileSetMojo {
   }
 
   @Override
-  public final void execute(final LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException {
+  public final void execute(final Configuration configuration) throws MojoExecutionException, MojoFailureException {
     setHttpProxy();
-    executeMojo(urls);
+    final LinkedHashSet<URL> fileSets = new LinkedHashSet<>(configuration.getFileSets());
+    for (final String resource : resources)
+      fileSets.add(URLs.create(resource));
+
+    execute(fileSets);
   }
 
-  public abstract void executeMojo(LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException;
+  public abstract void execute(LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException;
 }

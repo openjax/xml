@@ -36,9 +36,11 @@
         <id>xml</id>
         <phases>
           <phase>transform</phase>
+          <phase>validate</phase>
         </phases>
         <default-phases>
           <transform>org.openjax.xml:xml-maven-plugin:transform</transform>
+          <validate>org.openjax.xml:xml-maven-plugin:validate</validate>
         </default-phases>
       </configuration>
     </component>

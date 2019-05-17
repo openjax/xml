@@ -45,38 +45,46 @@ public final class XMLDocuments {
     return parse(url, null, localOnly, validating);
   }
 
-  protected static URL disableHttp(final URL url, final boolean localOnly) throws MalformedURLException {
-    return localOnly && url.getProtocol().startsWith("http") ? new URL(url, "", new URLStreamHandler() {
-      @Override
-      protected URLConnection openConnection(final URL u) throws IOException {
-        return openConnection(u, null);
-      }
+  protected static URL disableHttp(final URL url, final boolean localOnly) {
+    if (!localOnly || !url.getProtocol().startsWith("http"))
+      return url;
 
-      @Override
-      protected URLConnection openConnection(final URL u, final Proxy proxy) throws IOException {
-        return new FilterURLConnection(proxy != null ? url.openConnection(proxy) : url.openConnection()) {
-          @Override
-          public InputStream getInputStream() throws IOException {
-            return new InputStream() {
-              @Override
-              public int read() throws IOException {
-                throw new IOException();
-              }
-            };
-          }
+    try {
+      return new URL(url, "", new URLStreamHandler() {
+        @Override
+        protected URLConnection openConnection(final URL u) throws IOException {
+          return openConnection(u, null);
+        }
 
-          @Override
-          public OutputStream getOutputStream() throws IOException {
-            return new OutputStream() {
-              @Override
-              public void write(final int b) throws IOException {
-                throw new IOException();
-              }
-            };
-          }
-        };
-      }
-    }) : url;
+        @Override
+        protected URLConnection openConnection(final URL u, final Proxy proxy) throws IOException {
+          return new FilterURLConnection(proxy != null ? url.openConnection(proxy) : url.openConnection()) {
+            @Override
+            public InputStream getInputStream() throws IOException {
+              return new InputStream() {
+                @Override
+                public int read() throws IOException {
+                  throw new IOException();
+                }
+              };
+            }
+
+            @Override
+            public OutputStream getOutputStream() throws IOException {
+              return new OutputStream() {
+                @Override
+                public void write(final int b) throws IOException {
+                  throw new IOException();
+                }
+              };
+            }
+          };
+        }
+      });
+    }
+    catch (final MalformedURLException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
   public static XMLDocument parse(URL url, final DocumentHandler documentHandler, final boolean localOnly, final boolean validating) throws IOException, SAXException {

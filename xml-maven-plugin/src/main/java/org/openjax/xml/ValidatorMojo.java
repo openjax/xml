@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 @Execute(goal="validate")
 public class ValidatorMojo extends XmlMojo {
   @Override
-  public void executeMojo(final LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException {
+  public void execute(final LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException {
     final File recordDir = new File(directory, "validator");
     recordDir.mkdirs();
 

@@ -47,7 +47,7 @@ public class TransformMojo extends XmlMojo {
   private File stylesheet;
 
   @Override
-  public void executeMojo(final LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException {
+  public void execute(final LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException {
     try {
       for (final URL url : urls) {
         final String outFileName = MojoUtil.getRenamedFileName(url, rename);

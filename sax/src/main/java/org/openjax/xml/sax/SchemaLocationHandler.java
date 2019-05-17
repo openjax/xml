@@ -16,7 +16,6 @@
 
 package org.openjax.xml.sax;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
@@ -28,6 +27,7 @@ import java.util.StringTokenizer;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
+import org.libj.net.URLs;
 import org.libj.util.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +115,7 @@ public class SchemaLocationHandler extends DefaultHandler {
 
     if (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(uri)) {
       if ("schema".equals(localName)) {
-        for (int i = 0; i < attributes.getLength(); i++) {
+        for (int i = 0; i < attributes.getLength(); ++i) {
           final String attributeName = attributes.getLocalName(i);
           if ("targetNamespace".equals(attributeName)) {
             targetNamespace = attributes.getValue(i);
@@ -126,7 +126,7 @@ public class SchemaLocationHandler extends DefaultHandler {
       else if ("import".equals(localName)) {
         String namespace = null;
         String schemaLocation = null;
-        for (int i = 0; i < attributes.getLength(); i++) {
+        for (int i = 0; i < attributes.getLength(); ++i) {
           final String attributeName = attributes.getLocalName(i);
           if ("namespace".equals(attributeName)) {
             namespace = attributes.getValue(i);
@@ -140,33 +140,23 @@ public class SchemaLocationHandler extends DefaultHandler {
           }
         }
 
-        try {
           final String path = getPath(url.toExternalForm(), schemaLocation);
           referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
           namespaceURIs.add(namespace);
           if (!imports.containsKey(namespace))
-            imports.put(namespace, XMLDocuments.disableHttp(new URL(path), localOnly));
-        }
-        catch (final MalformedURLException e) {
-          throw new SAXException(e);
-        }
+            imports.put(namespace, XMLDocuments.disableHttp(URLs.create(path), localOnly));
       }
       else if ("include".equals(localName)) {
-        for (int i = 0; i < attributes.getLength(); i++) {
+        for (int i = 0; i < attributes.getLength(); ++i) {
           if ("schemaLocation".equals(attributes.getLocalName(i))) {
             final String schemaLocation = attributes.getValue(i);
-            try {
-              final String path = getPath(url.toExternalForm(), schemaLocation);
-              referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
-              URL url = absoluteIncludes.get(path);
-              if (url == null)
-                absoluteIncludes.put(path, url = XMLDocuments.disableHttp(new URL(path), localOnly));
+            final String path = getPath(url.toExternalForm(), schemaLocation);
+            referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
+            URL url = absoluteIncludes.get(path);
+            if (url == null)
+              absoluteIncludes.put(path, url = XMLDocuments.disableHttp(URLs.create(path), localOnly));
 
-              includes.put(schemaLocation, url);
-            }
-            catch (final MalformedURLException e) {
-              throw new SAXException(e);
-            }
+            includes.put(schemaLocation, url);
           }
         }
       }
@@ -175,7 +165,7 @@ public class SchemaLocationHandler extends DefaultHandler {
       }
     }
     else {
-      for (int i = 0; i < attributes.getLength(); i++) {
+      for (int i = 0; i < attributes.getLength(); ++i) {
         final String namespaceURI = attributes.getURI(i);
         if (XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI.equals(namespaceURI)) {
           if ("schemaLocation".equals(attributes.getLocalName(i))) {
@@ -185,15 +175,10 @@ public class SchemaLocationHandler extends DefaultHandler {
               final String schemaNamespaceURI = tokenizer.nextToken();
               if (tokenizer.hasMoreTokens()) {
                 final String location = tokenizer.nextToken();
-                try {
-                  final String path = getPath(url.toExternalForm(), location);
-                  referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
-                  if (!imports.containsKey(schemaNamespaceURI))
-                    imports.put(schemaNamespaceURI, Paths.getProtocol(path) == null ? new URL("file:" + path) : XMLDocuments.disableHttp(new URL(path), localOnly));
-                }
-                catch (final MalformedURLException e) {
-                  throw new SAXException(e);
-                }
+                final String path = getPath(url.toExternalForm(), location);
+                referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
+                if (!imports.containsKey(schemaNamespaceURI))
+                  imports.put(schemaNamespaceURI, Paths.getProtocol(path) == null ? URLs.create("file:" + path) : XMLDocuments.disableHttp(URLs.create(path), localOnly));
               }
             }
           }
