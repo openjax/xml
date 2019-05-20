@@ -28,12 +28,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.libj.net.URLs;
-import org.openjax.maven.mojo.FileSetMojo;
+import org.openjax.maven.mojo.PatternSetMojo;
 import org.openjax.maven.mojo.FilterParameter;
 import org.openjax.maven.mojo.FilterType;
 
 @Mojo(name="xml", requiresDependencyResolution=ResolutionScope.TEST)
-public abstract class XmlMojo extends FileSetMojo {
+public abstract class XmlMojo extends PatternSetMojo {
   static final Path CWD = new File("").getAbsoluteFile().toPath();
   private static final String delimeter = "://";
 
