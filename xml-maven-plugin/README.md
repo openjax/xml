@@ -7,18 +7,20 @@
 
 ## Introduction
 
-The `xml-maven-plugin` plugin is used for general XML-related goals.
+The `xml-maven-plugin` plugin is for general tasks related to XML, XSD, and XSLT.
+
+This plugin supports [XML Schema 1.1][xml11].
 
 ## Goals Overview
 
-* [`xml:validate`](#xmlvalidate) validates XML files.
-* [`xml:transform`](#xmltransform) transform XML files with XSL stylesheets.
+* [`xml:validate`](#xmlvalidate) validates XML or XSD documents against schema(s) specified in the `xsi:schemaLocation` attribute.
+* [`xml:transform`](#xmltransform) transforms XML documents by applying XSLT stylesheets.
 
 ## Usage
 
 ### `xml:validate`
 
-The `xml:validate` goal is bound to the `compile` phase, and is used to validate XML documents of types specified in the plugin's `configuration`. The validator uses a SAX parser and supports [XML Schema 1.1][xml11].
+The `xml:validate` goal is bound to the `compile` phase, and is used to validate XML documents against schema(s) specified in the `xsi:schemaLocation` attribute. The validator uses a SAX parser and supports [XML Schema 1.1][xml11].
 
 #### Example 1
 
@@ -36,9 +38,6 @@ Execution with `includes` directive.
       </goals>
       <configuration>
         <includes>
-          <include>**/*.ddlx</include>
-          <include>**/*.sqlx</include>
-          <include>**/*.jsonx</include>
           <include>**/*.xsd</include>
           <include>**/*.xml</include>
         </includes>
@@ -64,11 +63,8 @@ Execution with `includes` and `excludes` directives.
       </goals>
       <configuration>
         <includes>
-          <include>**/*.ddlx</include>
-          <include>**/*.sqlx</include>
-          <include>**/*.jsonx</include>
-          <include>**/*.xsd</include>
           <include>**/*.xml</include>
+          <include>**/*.xsd</include>
         </includes>
         <excludes>
           <exclude>**/willfail.xml</exclude>
@@ -79,23 +75,57 @@ Execution with `includes` and `excludes` directives.
 </plugin>
 ```
 
+#### Example 3
+
+Execution with `includes`, `excludes`, and `resources` directives.
+
+```xml
+<plugin>
+  <groupId>org.openjax.xml</groupId>
+  <artifactId>xml-maven-plugin</artifactId>
+  <version>0.9.2</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>validate</goal>
+      </goals>
+      <configuration>
+        <includes>
+          <include>**/*.xml</include>
+          <include>**/*.xsd</include>
+        </includes>
+        <excludes>
+          <exclude>**/willfail.xml</exclude>
+        </excludes>
+        <resources>
+          <resource>i-am-on-the-classpath.xml</resource>
+          <resource>META-INF/maven/plugin.xml</resource>
+        </resources>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
+
 ### Configuration Parameters
 
-| Name                            | Type    | Use      | Description                                               |
-|:--------------------------------|:--------|:---------|:----------------------------------------------------------|
-| <samp>/skip¹</samp>             | Boolean | Optional | Skip executioin. **Default:** `false`.                    |
-| <samp>/includes¹</samp>         | Set     | Optional | Set of `include` directives. **Default:** `null`.         |
-| <samp>/includes/includeⁿ</samp> | String  | Optional | Fileset pattern of files to include. **Default:** `null`. |
-| <samp>/excludes¹</samp>         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.         |
-| <samp>/excludes/excludeⁿ</samp> | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`. |
+| Name                              | Type    | Use      | Description                                                  |
+|:----------------------------------|:--------|:---------|:-------------------------------------------------------------|
+| <samp>/skip¹</samp>               | Boolean | Optional | Skip executioin. **Default:** `false`.                       |
+| <samp>/includes¹</samp>           | List    | Optional | List of `include` patterns. **Default:** `null`.           |
+| <samp>/includes/includeⁿ</samp>   | String  | Optional | [Pattern][pattern] of files to include. **Default:** `null`. |
+| <samp>/excludes¹</samp>           | List    | Optional | List of `exclude` patterns. **Default:** `null`.           |
+| <samp>/excludes/excludeⁿ</samp>   | String  | Optional | [Pattern][pattern] of files to exclude. **Default:** `null`. |
+| <samp>/resources¹</samp>          | List    | Optional | List of `resource` names. **Default:** `null`.          |
+| <samp>/resources/resourceⁿ</samp> | String  | Optional | Resource name on the classpath. **Default:** `null`.         |
 
 ### Execution Options
 
-1. Executing Maven in offline mode (`mvn -o`) will cause `xml:validate` to silently pass validation of XML files with remote `xsi:schemalocations`, thus avoiding remote calls.
+1. Running Maven in offline mode (`mvn -o`) will cause `xml:validate` to silently pass validation of XML files with remote `xsi:schemalocations`. For these files, the validator will only test whether the file is well formed.
 
 ### `xml:transform`
 
-The `xml:transform` goal is bound to the `generate-resources` phase, and is used to transform XML documents with a XML Stylesheet (XSL). The XSL Transformer supports [XSLT 2.0][xsl2].
+The `xml:transform` goal is bound to the `generate-resources` phase, and is used to transform XML documents with a XML Stylesheet Transformer (XSLT). The XSL Transformer supports [XSLT 2.0][xsl2].
 
 #### Example 1
 
@@ -126,15 +156,17 @@ Execution with `includes` directive.
 
 ### Configuration Parameters
 
-| Name                            | Type    | Use      | Description                                                                               |
-|:--------------------------------|:--------|:---------|:------------------------------------------------------------------------------------------|
-| <samp>/skip¹</samp>             | Boolean | Optional | Skip executioin. **Default:** `false`.                                                    |
-| <samp>/destDir¹</samp>          | String  | Required | Destination directory of transformed files.                                               |
-| <samp>/rename¹</samp>           | String  | Optional | Regex pattern used to rename output files as: `/<search>/<replace>/` **Default:** `null`. |
-| <samp>/includes¹</samp>         | Set     | Optional | Set of `include` directives. **Default:** `null`.                                         |
-| <samp>/includes/includeⁿ</samp> | String  | Optional | Fileset pattern of files to include. **Default:** `null`.                                 |
-| <samp>/excludes¹</samp>         | Set     | Optional | Set of `exclude` directives. **Default:** `null`.                                         |
-| <samp>/excludes/excludeⁿ</samp> | String  | Optional | Fileset pattern of files to exclude. **Default:** `null`.                                 |
+| Name                              | Type    | Use      | Description                                                                                  |
+|:----------------------------------|:--------|:---------|:---------------------------------------------------------------------------------------------|
+| <samp>/skip¹</samp>               | Boolean | Optional | Skip executioin. **Default:** `false`.                                                       |
+| <samp>/destDir¹</samp>            | String  | Required | Destination directory of transformed files.                                                  |
+| <samp>/rename¹</samp><br>&nbsp;   | String<br>&nbsp; | Optional<br>&nbsp; | Regex pattern to rename input file to output file:<br>&nbsp;&nbsp;&nbsp;&nbsp;`/<input>/<output>/` **Default:** `null`. |
+| <samp>/includes¹</samp>           | List    | Optional | List of `include` directives. **Default:** `null`.                                           |
+| <samp>/includes/includeⁿ</samp>   | String  | Optional | [Pattern][pattern] of files to include. **Default:** `null`.                                 |
+| <samp>/excludes¹</samp>           | List    | Optional | List of `exclude` directives. **Default:** `null`.                                           |
+| <samp>/excludes/excludeⁿ</samp>   | String  | Optional | [Pattern][pattern] of files to exclude. **Default:** `null`.                                 |
+| <samp>/resources¹</samp>          | List    | Optional | List of `resource` names. **Default:** `null`.                                               |
+| <samp>/resources/resourceⁿ</samp> | String  | Optional | Resource name on the classpath. **Default:** `null`.                                         |
 
 ## Contributing
 
@@ -146,5 +178,6 @@ Please make sure to update tests as appropriate.
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
 
+[pattern]: https://ant.apache.org/manual/dirtasks.html
 [xml11]: https://www.w3.org/TR/xmlschema11-1/
 [xsl2]: https://www.w3.org/TR/xslt20/
