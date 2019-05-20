@@ -7,16 +7,16 @@
 
 ## Introduction
 
-Modules that provide convenient APIs of structures and functions related to XML.
+Modules that provide convenient APIs related to XML.
 
 ## Modules
 
 * **[api][api]**: An API for common functions and abstractions related to XML.
-* **[datatype][datatype]**: Java bindings to XML data types as specified at [http://www.w3.org/TR/xmlschema11-2/](http://www.w3.org/TR/xmlschema11-2/).
+* **[datatype][datatype]**: Java bindings to XML data types as specified in [http://www.w3.org/TR/xmlschema11-2/][xml11-2].
 * **[dom][dom]**: Utility functions and convenience patterns specializing in the XML DOM.
 * **[sax][sax]**: Utility functions and convenience patterns specializing in the Java's SAX libraries.
 * **[transform][transform]**: Utility functions and convenience patterns specializing in XML stylesheet transformations.
-* **[xml-maven-plugin][xml-maven-plugin]**: Maven Plugin for general XML-related tasks, specializing in validation and transformation of XML documents.
+* **[xml-maven-plugin][xml-maven-plugin]**: Maven Plugin for general tasks related to XML, XSD and XSLT, supporting [XML Schema 1.1][xml11-1].
 
 ## Contributing
 
@@ -34,3 +34,5 @@ This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.t
 [sax]: /sax
 [transform]: /transform
 [xml-maven-plugin]: /xml-maven-plugin
+[xml11-1]: https://www.w3.org/TR/xmlschema11-1/
+[xml11-2]: http://www.w3.org/TR/xmlschema11-2/
