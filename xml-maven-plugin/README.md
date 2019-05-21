@@ -1,4 +1,4 @@
-# OpenJAX XML Maven Plugin
+# XML Maven Plugin
 
 [![Build Status](https://travis-ci.org/openjax/xml.png)](https://travis-ci.org/openjax/xml)
 [![Coverage Status](https://coveralls.io/repos/github/openjax/xml/badge.svg)](https://coveralls.io/github/openjax/xml)
@@ -156,17 +156,17 @@ Execution with `includes` directive.
 
 ### Configuration Parameters
 
-| Name                              | Type    | Use      | Description                                                                                  |
-|:----------------------------------|:--------|:---------|:---------------------------------------------------------------------------------------------|
-| <samp>/skip¹</samp>               | Boolean | Optional | Skip executioin. **Default:** `false`.                                                       |
-| <samp>/destDir¹</samp>            | String  | Required | Destination directory of transformed files.                                                  |
+| Name                              | Type             | Use      | Description                                                                                                                       |
+|:----------------------------------|:-----------------|:---------|:----------------------------------------------------------------------------------------------------------------------------------|
+| <samp>/skip¹</samp>               | Boolean          | Optional | Skip executioin. **Default:** `false`.                                                                                            |
+| <samp>/destDir¹</samp>            | String           | Required | Destination directory of transformed files.                                                                                       |
 | <samp>/rename¹</samp><br>&nbsp;   | String<br>&nbsp; | Optional<br>&nbsp; | Regex pattern to rename input file to output file:<br>&nbsp;&nbsp;&nbsp;&nbsp;`/<input>/<output>/` **Default:** `null`. |
-| <samp>/includes¹</samp>           | List    | Optional | List of `include` directives. **Default:** `null`.                                           |
-| <samp>/includes/includeⁿ</samp>   | String  | Optional | [Pattern][pattern] of files to include. **Default:** `null`.                                 |
-| <samp>/excludes¹</samp>           | List    | Optional | List of `exclude` directives. **Default:** `null`.                                           |
-| <samp>/excludes/excludeⁿ</samp>   | String  | Optional | [Pattern][pattern] of files to exclude. **Default:** `null`.                                 |
-| <samp>/resources¹</samp>          | List    | Optional | List of `resource` names. **Default:** `null`.                                               |
-| <samp>/resources/resourceⁿ</samp> | String  | Optional | Resource name on the classpath. **Default:** `null`.                                         |
+| <samp>/includes¹</samp>           | List             | Optional | List of `include` directives. **Default:** `null`.                                                                                |
+| <samp>/includes/includeⁿ</samp>   | String           | Optional | [Pattern][pattern] of files to include. **Default:** `null`.                                                                      |
+| <samp>/excludes¹</samp>           | List             | Optional | List of `exclude` directives. **Default:** `null`.                                                                                |
+| <samp>/excludes/excludeⁿ</samp>   | String           | Optional | [Pattern][pattern] of files to exclude. **Default:** `null`.                                                                      |
+| <samp>/resources¹</samp>          | List             | Optional | List of `resource` names. **Default:** `null`.                                                                                    |
+| <samp>/resources/resourceⁿ</samp> | String           | Optional | Resource name on the classpath. **Default:** `null`.                                                                              |
 
 ## Contributing
 

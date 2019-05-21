@@ -1,4 +1,4 @@
-# OpenJAX XML
+# XML
 
 [![Build Status](https://travis-ci.org/openjax/xml.png)](https://travis-ci.org/openjax/xml)
 [![Coverage Status](https://coveralls.io/repos/github/openjax/xml/badge.svg)](https://coveralls.io/github/openjax/xml)
