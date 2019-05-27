@@ -40,6 +40,19 @@
     <module>sax</module>
     <module>transform</module>
   </modules>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.safris.maven</groupId>
+          <artifactId>coverallsio-maven-plugin</artifactId>
+          <configuration>
+            <aggregateOnly>true</aggregateOnly>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
   <dependencyManagement>
     <dependencies>
       <dependency>
