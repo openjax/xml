@@ -36,12 +36,6 @@ import java.util.regex.Pattern;
  * <p>
  * Child elements are represented with a raw-type {@code Collection}, and
  * {@code element.toString()} is used to marshal to string.
- * <p>
- * The {@code XmlElement} declares a {@link #toString(int)} method that accepts
- * an {@code int} specifying the number of spaces to indent child elements. If
- * the specified indent value is greater than {@code 0}, child elements are
- * indented and placed on a new line. If the indent value is {@code 0}, child
- * elements are not indented, nor placed on a new line.
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class XmlElement implements Cloneable, Serializable {
@@ -214,7 +208,11 @@ public class XmlElement implements Cloneable, Serializable {
    * Returns an XML string representation of this element with the specified
    * number of spaces to indent child elements.
    *
-   * @param indent Number of spaces to indent child elements.
+   * @param indent Number of spaces to indent child elements. If the specified
+   *          indent value is greater than {@code 0}, child elements are
+   *          indented and placed on a new line. If the indent value is
+   *          {@code 0}, child elements are not indented, nor placed on a new
+   *          line.
    * @return An XML string representation of this element.
    * @throws NullPointerException If a child element is null, or the name or
    *           value of an attribute is null.
