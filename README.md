@@ -1,9 +1,9 @@
 # XML
 
-[![Build Status](https://travis-ci.org/openjax/xml.png)](https://travis-ci.org/openjax/xml)
-[![Coverage Status](https://coveralls.io/repos/github/openjax/xml/badge.svg)](https://coveralls.io/github/openjax/xml)
-[![Javadocs](https://www.javadoc.io/badge/org.openjax.xml/xml-maven-plugin.svg)](https://www.javadoc.io/doc/org.openjax.xml/xml-maven-plugin)
-[![Released Version](https://img.shields.io/maven-central/v/org.openjax.xml/xml-maven-plugin.svg)](https://mvnrepository.com/artifact/org.openjax.xml/xml-maven-plugin)
+[![Build Status](https://travis-ci.org/openjax/xml.svg?1)](https://travis-ci.org/openjax/xml)
+[![Coverage Status](https://coveralls.io/repos/github/openjax/xml/badge.svg?1)](https://coveralls.io/github/openjax/xml)
+[![Javadocs](https://www.javadoc.io/badge/org.openjax.xml/xml-maven-plugin.svg?1)](https://www.javadoc.io/doc/org.openjax.xml/xml-maven-plugin)
+[![Released Version](https://img.shields.io/maven-central/v/org.openjax.xml/xml-maven-plugin.svg?1)](https://mvnrepository.com/artifact/org.openjax.xml/xml-maven-plugin)
 
 ## Introduction
 
