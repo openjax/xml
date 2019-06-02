@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+/**
+ * Utility class providing functions related to SAX parsers.
+ */
 public final class Parsers {
   private static final Logger logger = LoggerFactory.getLogger(Parsers.class);
   private static SAXParserFactory factory;
@@ -23,6 +26,22 @@ public final class Parsers {
     }
   }
 
+  /**
+   * Creates a new {@link SAXParser} instance that supports:
+   * <ol>
+   * <li>Validation, if the specified {@code validating} argument is
+   * {@code true}.</li>
+   * <li>Namespace prefixes.</li>
+   * <li>Schema full checking, if the specified {@code validating} argument is
+   * {@code true}.</li>
+   * <li>Honor all schemaLocation(s).</li>
+   * <li>Continue after fatal error.</li>
+   * </ol>
+   *
+   * @param validating If the new {@link SAXParser} should support validation.
+   * @return A new {@link SAXParser}.
+   * @throws SAXException If a SAX exception has occurred.
+   */
   public static SAXParser newParser(final boolean validating) throws SAXException {
     factory.setNamespaceAware(true);
     factory.setValidating(true);
