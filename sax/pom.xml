@@ -44,10 +44,5 @@
       <artifactId>xercesImpl-xsd11</artifactId>
       <version>2.12-beta-r1667115</version>
     </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
-    </dependency>
   </dependencies>
 </project>
