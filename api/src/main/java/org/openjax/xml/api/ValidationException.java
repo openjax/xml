@@ -32,7 +32,8 @@ public class ValidationException extends SAXException {
   }
 
   /**
-   * Creates a new {@code ValidationException}.
+   * Creates a new {@code ValidationException} with the specified detail
+   * message.
    *
    * @param message The detail message.
    */
@@ -41,7 +42,7 @@ public class ValidationException extends SAXException {
   }
 
   /**
-   * Creates a new {@code ValidationException}.
+   * Creates a new {@code ValidationException} with the specified cause.
    *
    * @param cause The cause.
    */
@@ -50,7 +51,8 @@ public class ValidationException extends SAXException {
   }
 
   /**
-   * Creates a new {@code ValidationException}.
+   * Creates a new {@code ValidationException} with the specified detail message
+   * and cause.
    *
    * @param message The detail message.
    * @param cause The cause.
