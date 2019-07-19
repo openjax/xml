@@ -1064,54 +1064,187 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="iso8601Date">
+  <xs:simpleType name="iso8601bDate">
+    <xs:annotation>
+      <xs:documentation>
+        yyyymmdd±hhmm yyyymmddZ
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="-?\d{4}((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(02(0[1-9]|1\d|2\d))|((0[469]|11)(0[1-9]|[12]\d|30)))([+-](([01]\d)|(2[0-3]))[0-5]\d|Z)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="iso8601bLocalDate">
+    <xs:annotation>
+      <xs:documentation>
+        yyyymmdd
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="dt:iso8601bDate">
+      <xs:pattern value="-?\d{4}((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(02(0[1-9]|1\d|2\d))|((0[469]|11)(0[1-9]|[12]\d|30)))"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="iso8601bTime">
+    <xs:annotation>
+      <xs:documentation>
+        hhmmss±hhmm hhmmssZ
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(([01]\d)|(2[0-3]))[0-5]\d[0-5]\d([+-](([01]\d)|(2[0-3]))[0-5]\d|Z)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="iso8601bLocalTime">
+    <xs:annotation>
+      <xs:documentation>
+        hhmmssffffff
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="dt:iso8601bTime">
+      <xs:pattern value="(([01]\d)|(2[0-3]))[0-5]\d[0-5]\d(\.\d+)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="iso8601bDateTime">
+    <xs:annotation>
+      <xs:documentation>
+        yyyymmddThhmmss±hhmm yyyymmddThhmmssZ
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(-?\d{4}((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(02(0[1-9]|1\d|2\d))|((0[469]|11)(0[1-9]|[12]\d|30))))T(([01]\d)|(2[0-3]))[0-5]\d[0-5]\d([+-](([01]\d)|(2[0-3]))[0-5]\d|Z)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="iso8601bLocalDateTime">
+    <xs:annotation>
+      <xs:documentation>
+        yyyymmddThhmmssffffff
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="dt:iso8601bDateTime">
+      <xs:pattern value="(-?\d{4}((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(02(0[1-9]|1\d|2\d))|((0[469]|11)(0[1-9]|[12]\d|30))))T(([01]\d)|(2[0-3]))[0-5]\d[0-5]\d(\.\d+)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="rfc3339bDateTime">
+    <xs:annotation>
+      <xs:documentation>
+        yyyymmdd hhmmss±hhmm
+        yyyymmdd hhmmssZ
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(-?\d{4}((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(02(0[1-9]|1\d|2\d))|((0[469]|11)(0[1-9]|[12]\d|30)))) (([01]\d)|(2[0-3]))[0-5]\d[0-5]\d([+-](([01]\d)|(2[0-3]))[0-5]\d|Z)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="rfc3339bLocalDateTime">
+    <xs:annotation>
+      <xs:documentation>
+        yyyymmdd hhmmssffffff
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="dt:rfc3339bDateTime">
+      <xs:pattern value="(-?\d{4}((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(02(0[1-9]|1\d|2\d))|((0[469]|11)(0[1-9]|[12]\d|30)))) (([01]\d)|(2[0-3]))[0-5]\d[0-5]\d(\.\d+)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="iso8601eDate">
+    <xs:annotation>
+      <xs:documentation>
+        yyyy-mm-dd±hh:mm
+        yyyy-mm-ddZ
+      </xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30)))([+-](([01]\d)|(2[0-3])):[0-5]\d|Z)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:simpleType name="iso8601LocalDate">
-    <xs:restriction base="dt:iso8601Date">
+
+  <xs:simpleType name="iso8601eLocalDate">
+    <xs:annotation>
+      <xs:documentation>
+        yyyy-mm-dd
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="dt:iso8601eDate">
       <xs:pattern value="-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30)))"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:simpleType name="iso8601Time">
+
+  <xs:simpleType name="iso8601eTime">
+    <xs:annotation>
+      <xs:documentation>
+        hh:mm:ss.ffffff±hh:mm
+        hh:mm:ss.ffffffZ
+      </xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="(([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d+)?([+-](([01]\d)|(2[0-3])):[0-5]\d|Z)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:simpleType name="iso8601LocalTime">
-    <xs:restriction base="dt:iso8601Time">
+
+  <xs:simpleType name="iso8601eLocalTime">
+    <xs:annotation>
+      <xs:documentation>
+        hh:mm:ss.ffffff
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="dt:iso8601eTime">
       <xs:pattern value="(([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d+)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:simpleType name="iso8601DateTime">
+
+  <xs:simpleType name="iso8601eDateTime">
+    <xs:annotation>
+      <xs:documentation>
+        yyyy-mm-ddThh:mm:ss.ffffff±hh:mm
+        yyyy-mm-ddThh:mm:ss.ffffffZ
+      </xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="(-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30))))T(([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d+)?([+-](([01]\d)|(2[0-3])):[0-5]\d|Z)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:simpleType name="iso8601LocalDateTime">
-    <xs:restriction base="dt:iso8601DateTime">
+
+  <xs:simpleType name="iso8601eLocalDateTime">
+    <xs:annotation>
+      <xs:documentation>
+        yyyy-mm-ddThh:mm:ss.ffffff
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="dt:iso8601eDateTime">
       <xs:pattern value="(-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30))))T(([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d+)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:simpleType name="rfc3339DateTime">
+
+  <xs:simpleType name="rfc3339eDateTime">
+    <xs:annotation>
+      <xs:documentation>
+        yyyy-mm-dd hh:mm:ss.ffffff±hh:mm
+        yyyy-mm-dd hh:mm:ss.ffffffZ
+      </xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="(-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30)))) (([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d+)?([+-](([01]\d)|(2[0-3])):[0-5]\d|Z)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:simpleType name="rfc3339LocalDateTime">
-    <xs:restriction base="dt:rfc3339DateTime">
+
+  <xs:simpleType name="rfc3339eLocalDateTime">
+    <xs:annotation>
+      <xs:documentation>
+        yyyy-mm-dd hh:mm:ss.ffffff
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="dt:rfc3339eDateTime">
       <xs:pattern value="(-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30)))) (([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d+)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="uuid">
     <xs:restriction base="xs:string">
       <xs:length value="36" fixed="true"/>
