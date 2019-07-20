@@ -62,7 +62,7 @@ public class Language implements CharSequence, Serializable {
     if (!firstPattern.matcher(language[0]).matches())
       throw new IllegalArgumentException(language[0]);
 
-    for (int i = 1; i < language.length; i++)
+    for (int i = 1; i < language.length; ++i)
       if (!otherPattern.matcher(language[i]).matches())
         throw new IllegalArgumentException(language[i]);
 

@@ -179,7 +179,7 @@ public class DurationTest {
     catch (final IllegalArgumentException e) {
     }
 
-    final String[] durations = new String[] {"P3Y", "-P1Y", "P10M", "-P8M", "P7D", "-P2D", "PT7H", "-PT9H", "PT8M", "-PT1M", "PT5S", "-PT4S", "PT5.555S", "-PT4.332S", "P3Y4M", "-P13Y34M", "P1Y3M5DT7H10M3.3S", "P1M", "P1D"};
+    final String[] durations = {"P3Y", "-P1Y", "P10M", "-P8M", "P7D", "-P2D", "PT7H", "-PT9H", "PT8M", "-PT1M", "PT5S", "-PT4S", "PT5.555S", "-PT4.332S", "P3Y4M", "-P13Y34M", "P1Y3M5DT7H10M3.3S", "P1M", "P1D"};
     for (final String duration : durations)
       assertEquals(duration, Duration.parse(duration).toString());
   }

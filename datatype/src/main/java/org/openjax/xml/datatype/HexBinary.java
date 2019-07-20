@@ -113,7 +113,7 @@ public class HexBinary implements Serializable {
       return encoded;
 
     final StringBuilder builder = new StringBuilder(bytes.length * 2);
-    for (int i = 0; i < bytes.length; i++) {
+    for (int i = 0; i < bytes.length; ++i) {
       builder.append(convertDigit(bytes[i] >> 4));
       builder.append(convertDigit(bytes[i] & 0x0f));
     }

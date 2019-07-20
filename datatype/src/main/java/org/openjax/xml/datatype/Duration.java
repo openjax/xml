@@ -39,12 +39,8 @@ public class Duration implements Serializable {
     int offset = 0;
     final boolean isNegative;
     final char signChar = string.charAt(0);
-    if (isNegative = signChar == '-') {
+    if ((isNegative = signChar == '-') || signChar == '+')
       ++offset;
-    }
-    else if (signChar == '+') {
-      ++offset;
-    }
 
     if (string.charAt(offset) != P)
       throw new IllegalArgumentException("Invalid duration: " + string + " (must start with P, +P, final or -P)");
@@ -244,7 +240,7 @@ public class Duration implements Serializable {
   @Override
   public String toString() {
     final StringBuilder builder = isNegative ? new StringBuilder("-") : new StringBuilder();
-    builder.append(String.valueOf(P));
+    builder.append(P);
     if (years != -1) {
       if (years != 0) {
         builder.append(years);
