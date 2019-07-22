@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.openjax.xml</groupId>
     <artifactId>xml</artifactId>
-    <version>0.9.3-SNAPSHOT</version>
+    <version>0.9.3</version>
   </parent>
   <artifactId>datatype</artifactId>
   <name>OpenJAX XML DataType</name>
