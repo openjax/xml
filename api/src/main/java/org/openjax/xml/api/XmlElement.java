@@ -175,7 +175,7 @@ public class XmlElement implements Cloneable, Serializable {
       return clone;
     }
     catch (final CloneNotSupportedException e) {
-      throw new UnsupportedOperationException(e);
+      throw new IllegalStateException(e);
     }
   }
 
