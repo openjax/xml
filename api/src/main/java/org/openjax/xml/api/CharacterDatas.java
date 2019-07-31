@@ -24,11 +24,11 @@ public final class CharacterDatas {
     if (fromIndex < 0)
       throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
 
-    if (fromIndex > toIndex)
-      throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ")");
-
     if (toIndex > string.length())
       throw new IndexOutOfBoundsException("toIndex = " + toIndex);
+
+    if (fromIndex > toIndex)
+      throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ")");
   }
 
   private static StringBuilder escape(final StringBuilder string, final char quote, final int fromIndex, final int toIndex) {
