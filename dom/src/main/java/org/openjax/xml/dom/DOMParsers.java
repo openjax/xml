@@ -64,7 +64,7 @@ public final class DOMParsers {
       return documentBuilder;
     }
     catch (final ParserConfigurationException e) {
-      throw new UnsupportedOperationException(e);
+      throw new IllegalStateException(e);
     }
   }
 
