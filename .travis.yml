@@ -19,7 +19,7 @@ jdk:
 - oraclejdk8
 - oraclejdk11
 install:
-- cp settings.xml $HOME/.m2/settings.xml && rm -rf ~/.m2/repository/org/openjax && find ~/.m2/repository -name '*SNAPSHOT*' -type d -exec rm -rf '{}' \; || true
+- cp settings.xml $HOME/.m2/settings.xml && rm -rf ~/.m2/repository/org/openjax
 script:
 - 'if [ "$TRAVIS_JDK_VERSION" = "oraclejdk8" ] &&
       [ "$TRAVIS_BRANCH" = "master" ] &&
