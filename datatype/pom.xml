@@ -29,4 +29,10 @@
   <description>
     Java bindings to XML data types as specified at http://www.w3.org/TR/xmlschema11-2/.
   </description>
+  <dependencies>
+    <dependency>
+      <groupId>org.opengis.cite.xerces</groupId>
+      <artifactId>xercesImpl-xsd11</artifactId>
+    </dependency>
+  </dependencies>
 </project>

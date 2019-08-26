@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.xml.datatype;
+package org.apache.xerces.jaxp.datatype;
 
 import static org.junit.Assert.*;
 
@@ -47,7 +47,7 @@ public class DurationTest {
     }
 
     try {
-      Duration.parse("P16349286492843693864932864932864293864Y3M5DT7H10M3.3S");
+      Duration.parse("P1634928649284X3693864932864932864293864Y3M5DT7H10M3.3S");
       fail("Expected a IllegalArgumentException");
     }
     catch (final IllegalArgumentException e) {
