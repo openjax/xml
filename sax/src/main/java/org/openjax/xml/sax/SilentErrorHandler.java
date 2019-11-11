@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * An {@link ErrorHandler} implementation that produces no output.
+ * An {@link ErrorHandler} that produces no output.
  */
 public class SilentErrorHandler implements ErrorHandler {
   @Override

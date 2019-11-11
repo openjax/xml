@@ -22,88 +22,91 @@ import java.util.Map;
 
 import javax.xml.XMLConstants;
 
+import org.libj.util.Paths;
+import org.libj.util.function.Throwing;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
-public class SchemaLocationResolver implements LSResourceResolver {
+class SchemaLocationResolver implements LSResourceResolver {
+  static String getPath(final String referrer, final String location) {
+    return Paths.isAbsolute(location) ? location : Paths.newPath(Paths.getCanonicalParent(referrer), location);
+  }
+
   private static URL xmlSchemaXsd;
   private static URL xmlXsd;
 
   private final XMLCatalog catalog;
+  private final String rootPath;
 
-  public SchemaLocationResolver(final XMLCatalog catalog) {
+  SchemaLocationResolver(final XMLCatalog catalog, final String rootPath) {
     this.catalog = catalog;
+    this.rootPath = rootPath;
   }
 
   @Override
   public LSInput resolveResource(final String type, final String namespaceURI, final String publicId, String systemId, final String baseURI) {
+//    System.err.println("resolveResource(\"" + type + "\", \"" + namespaceURI + "\", \"" + publicId + "\", \"" + systemId + "\", \"" + baseURI + "\")");
     if (namespaceURI == null && systemId == null)
       return new LSInputImpl(systemId, publicId, baseURI);
 
     if (systemId == null)
       systemId = namespaceURI;
     else if (baseURI != null)
-      systemId = SchemaLocationHandler.getPath(baseURI, systemId);
+      systemId = getPath(baseURI, systemId);
 
     try {
       SchemaLocation schemaLocation = catalog.getSchemaLocation(namespaceURI);
       final Map<String,URL> directory;
       if (schemaLocation == null) {
         if (namespaceURI == null) {
-          SchemaLocation nullLocation = catalog.getSchemaLocation(null);
-          if (nullLocation == null)
-            catalog.putSchemaLocation(null, nullLocation = new SchemaLocation(null));
-
-          directory = nullLocation.getDirectory();
-        }
-        else if (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(namespaceURI)) {
-          if (xmlSchemaXsd == null)
-            xmlSchemaXsd = Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.xsd");
-
-          catalog.putSchemaLocation(XMLConstants.W3C_XML_SCHEMA_NS_URI, schemaLocation = new SchemaLocation(namespaceURI));
-          schemaLocation.getDirectory().put(namespaceURI, xmlSchemaXsd);
-          directory = schemaLocation.getDirectory();
-        }
-        else if (XMLConstants.XML_NS_URI.equals(namespaceURI) && "http://www.w3.org/2001/xml.xsd".equals(systemId)) {
-          if (xmlXsd == null)
-            xmlXsd = Thread.currentThread().getContextClassLoader().getResource("xmlschema/xml.xsd");
-
-          catalog.putSchemaLocation(namespaceURI, schemaLocation = new SchemaLocation(systemId));
-          schemaLocation.getDirectory().put(systemId, xmlXsd);
-          directory = schemaLocation.getDirectory();
+          schemaLocation = catalog.getSchemaLocation(null);
+          if (schemaLocation == null)
+            catalog.putSchemaLocation(null, schemaLocation = new SchemaLocation(null));
         }
         else {
-          return new LSInputImpl(systemId, publicId, baseURI);
+          if (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(namespaceURI)) {
+            if (xmlSchemaXsd == null)
+              xmlSchemaXsd = Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.xsd");
+
+            catalog.putSchemaLocation(XMLConstants.W3C_XML_SCHEMA_NS_URI, schemaLocation = new SchemaLocation(namespaceURI, xmlSchemaXsd));
+          }
+          else if (XMLConstants.XML_NS_URI.equals(namespaceURI)) {
+            if (xmlXsd == null)
+              xmlXsd = Thread.currentThread().getContextClassLoader().getResource("xmlschema/xml.xsd");
+
+            catalog.putSchemaLocation(namespaceURI, schemaLocation = new SchemaLocation(systemId, xmlXsd));
+          }
+          else {
+            final String path = getPath(baseURI != null ? baseURI : rootPath, systemId);
+            schemaLocation = new SchemaLocation(namespaceURI, new URL(path));
+          }
         }
       }
-      else {
-        directory = schemaLocation.getDirectory();
-      }
 
+      directory = schemaLocation.getDirectory();
       URL url = directory.get(systemId);
       if (url == null) {
-        if (namespaceURI != null)
-          return new LSInputImpl(systemId, publicId, baseURI);
-
         if ("http://www.w3.org/2001/XMLSchema.dtd".equals(systemId)) {
-          final URL resource = Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.dtd");
-          directory.put(systemId, url = resource);
+          directory.put(systemId, url = Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.dtd"));
         }
         else if ("http://www.w3.org/2001/datatypes.dtd".equals(systemId)) {
-          final URL resource = Thread.currentThread().getContextClassLoader().getResource("xmlschema/datatypes.dtd");
-          directory.put(systemId, url = resource);
+          directory.put(systemId, url = Thread.currentThread().getContextClassLoader().getResource("xmlschema/datatypes.dtd"));
         }
-        else {
-          return new LSInputImpl(systemId, publicId, baseURI);
+        else if (Paths.isAbsolute(systemId)) {
+          directory.put(systemId, url = new URL(systemId));
         }
       }
 
       final LSInput input = new LSInputImpl(systemId, publicId, baseURI);
-      input.setByteStream(url.openStream());
+      if (url != null)
+        input.setByteStream(url.openStream());
+
+//      System.out.println(url);
       return input;
     }
     catch (final IOException e) {
-      throw new IllegalStateException(e);
+      Throwing.rethrow(e);
+      throw new Error("Should never get here");
     }
   }
 }

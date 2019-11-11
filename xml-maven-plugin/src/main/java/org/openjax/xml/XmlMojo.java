@@ -28,9 +28,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.libj.net.URLs;
-import org.openjax.maven.mojo.PatternSetMojo;
 import org.openjax.maven.mojo.FilterParameter;
 import org.openjax.maven.mojo.FilterType;
+import org.openjax.maven.mojo.PatternSetMojo;
 
 @Mojo(name="xml", requiresDependencyResolution=ResolutionScope.TEST)
 public abstract class XmlMojo extends PatternSetMojo {
@@ -51,7 +51,7 @@ public abstract class XmlMojo extends PatternSetMojo {
   private List<String> resources;
 
   protected final void setHttpProxy() throws MojoFailureException {
-    if (offline || httpProxy == null)
+    if (httpProxy == null)
       return;
 
     final String scheme;

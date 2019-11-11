@@ -36,6 +36,11 @@
       <version>0.5.2-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>org.libj</groupId>
+      <artifactId>io</artifactId>
+      <version>0.7.7-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>org.openjax.xml</groupId>
       <artifactId>api</artifactId>
     </dependency>

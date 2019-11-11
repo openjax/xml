@@ -21,6 +21,10 @@ import java.io.Reader;
 
 import org.w3c.dom.ls.LSInput;
 
+/**
+ * Simple implementation of the the {@link LSInput} interface for the input
+ * source of XML data.
+ */
 public class LSInputImpl implements LSInput {
   private Reader reader;
   private InputStream inputStream;
@@ -31,6 +35,17 @@ public class LSInputImpl implements LSInput {
   private String encoding;
   private boolean certifiedText;
 
+  /**
+   * Creates a new {@link LSInputImpl} with the specified parameters.
+   *
+   * @param systemId The system identifier, a URI reference
+   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
+   *          for this input source.
+   * @param publicId The public identifier for this input source.
+   * @param baseURI The base URI to be used (see section 5.1.4 in
+   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>])
+   *          for resolving a relative <code>systemId</code> to an absolute URI.
+   */
   public LSInputImpl(final String systemId, final String publicId, final String baseURI) {
     this.systemId = systemId;
     this.publicId = publicId;

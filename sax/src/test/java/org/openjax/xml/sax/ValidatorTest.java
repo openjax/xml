@@ -18,37 +18,81 @@ package org.openjax.xml.sax;
 
 import static org.junit.Assert.*;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.junit.Test;
-import org.openjax.xml.api.OfflineValidationException;
+import org.libj.net.URLs;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class ValidatorTest {
+  static {
+    URLs.disableRemote();
+  }
+
   @Test
-  public void testValidate() throws Exception {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("valid.xml"), true);
+  public void testTestXsd() throws Exception {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("test.xsd"));
+  }
 
-    try {
-      Validator.validate(ClassLoader.getSystemClassLoader().getResource("remote.xml"), true);
-      fail("Expected OfflineValidationException");
-    }
-    catch (final OfflineValidationException e) {
-    }
+  @Test
+  public void testValidXml() throws Exception {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("valid.xml"));
+  }
 
+  @Test
+  public void testOffline() throws Exception {
     try {
-      Validator.validate(ClassLoader.getSystemClassLoader().getResource("invalid.xml"), true);
-      fail("Should have failed");
+      Validator.validate(ClassLoader.getSystemClassLoader().getResource("remote.xml"));
+      fail("Expected SAXException");
     }
     catch (final SAXException e) {
+      assertTrue(Validator.isRemoteAccessException(e));
+    }
+  }
+
+  @Test
+  public void testNoDeclaration() throws Exception {
+    final AtomicBoolean sawWarning = new AtomicBoolean();
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("empty.xml"), new ErrorHandler() {
+      @Override
+      public void warning(final SAXParseException exception) throws SAXException {
+        assertEquals("There is no schema or DTD associated with the document", exception.getMessage());
+        sawWarning.set(true);
+      }
+
+      @Override
+      public void fatalError(final SAXParseException exception) throws SAXException {
+      }
+
+      @Override
+      public void error(final SAXParseException exception) throws SAXException {
+      }
+    });
+    assertTrue(sawWarning.get());
+  }
+
+  @Test
+  public void testOverride() throws Exception {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("override.xml"));
+  }
+
+  @Test
+  public void testXInclude() throws Exception {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("xinclude.xml"));
+  }
+
+  @Test
+  public void testInvalid() throws Exception {
+    try {
+      Validator.validate(ClassLoader.getSystemClassLoader().getResource("invalid.xml"));
+      fail("Expected SAXException");
+    }
+    catch (final SAXException e) {
+      assertFalse(Validator.isRemoteAccessException(e));
       if (!e.getMessage().startsWith("cvc-datatype-valid.1.2.1: 'a' is not a valid value for 'integer'."))
         fail(e.getMessage());
-    }
-
-    try {
-      Validator.validate(ClassLoader.getSystemClassLoader().getResource("test.xsd"), true);
-    }
-    catch (final SAXException e) {
-      if (e.getMessage() == null || !e.getMessage().startsWith("schema_reference.4: Failed to read schema document 'http://www.w3.org/2001/"))
-        throw e;
     }
   }
 }

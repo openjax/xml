@@ -16,12 +16,29 @@
 
 package org.openjax.xml.sax;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.xml.transform.stream.StreamSource;
+
+import org.xml.sax.InputSource;
+
 public class XMLCatalog {
+  public static XMLCatalog parse(final URL url) throws IOException {
+    return XMLCatalogParser.parse(SAXUtil.getInputSource(url), url).getCatalog();
+  }
+
+  public static XMLCatalog parse(final StreamSource streamSource) throws IOException {
+    return XMLCatalogParser.parse(SAXUtil.getInputSource(streamSource)).getCatalog();
+  }
+
+  public static XMLCatalog parse(final InputSource inputSource) throws IOException {
+    return XMLCatalogParser.parse(inputSource, new URL(inputSource.getSystemId())).getCatalog();
+  }
+
   private final Map<String,SchemaLocation> schemaLocations = new LinkedHashMap<>();
 
   public void putSchemaLocation(final String key, final SchemaLocation schemaLocation) {
@@ -42,10 +59,12 @@ public class XMLCatalog {
 
   public String toTR9401() {
     final StringBuilder builder = new StringBuilder();
-    for (final Map.Entry<String,SchemaLocation> locationEntry : schemaLocations.entrySet()) {
-      final Iterator<Map.Entry<String,URL>> iterator = locationEntry.getValue().getDirectory().entrySet().iterator();
-      for (int i = 0; iterator.hasNext(); ++i) {
-        final Map.Entry<String,URL> directoryEntry = iterator.next();
+    final Iterator<Map.Entry<String,SchemaLocation>> entryIterator = schemaLocations.entrySet().iterator();
+    for (int i = 0; entryIterator.hasNext();) {
+      final Map.Entry<String,SchemaLocation> locationEntry = entryIterator.next();
+      final Iterator<Map.Entry<String,URL>> locationIterator = locationEntry.getValue().getDirectory().entrySet().iterator();
+      for (; locationIterator.hasNext(); ++i) {
+        final Map.Entry<String,URL> directoryEntry = locationIterator.next();
         if (i > 0)
           builder.append('\n');
 

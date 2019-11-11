@@ -1,0 +1,50 @@
+<!--
+  Copyright (c) 2006 OpenJAX
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  You should have received a copy of The MIT License (MIT) along with this
+  program. If not, see <http://opensource.org/licenses/MIT/>.
+-->
+<xs:schema
+  elementFormDefault="qualified"
+  targetNamespace="http://openuri.org/testNumerals"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="doc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="int" type="xs:int" />
+          <xs:element name="short" type="xs:short" />
+          <xs:element name="byte" type="xs:byte" />
+          <xs:element name="double" type="xs:double" />
+          <xs:element name="float" type="xs:float" />
+          <xs:element name="boolean" type="xs:boolean" />
+          <xs:element name="string" type="xs:string" />
+          <xs:element name="decimal" type="xs:decimal" />
+          <xs:element name="integer" type="xs:integer" />
+          <xs:element name="long" type="xs:long" />
+          <xs:element name="hexBinary" type="xs:hexBinary" />
+          <xs:element name="base64Binary" type="xs:base64Binary" />
+          <xs:element name="date" type="xs:date" />
+          <xs:element name="dateTime" type="xs:dateTime" />
+          <xs:element name="gYearMonth" type="xs:gYearMonth" />
+          <xs:element name="duration" type="xs:duration" />
+          <xs:element name="QName" type="xs:QName" />
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:attribute name="price" type="xs:float" />
+  <xs:attribute name="quant" type="xs:byte" />
+  
+</xs:schema>

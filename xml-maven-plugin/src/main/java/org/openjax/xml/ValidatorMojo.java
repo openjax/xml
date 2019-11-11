@@ -29,7 +29,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.libj.net.URLs;
 import org.libj.util.Dates;
-import org.openjax.xml.api.OfflineValidationException;
 import org.openjax.xml.sax.Validator;
 import org.xml.sax.SAXException;
 
@@ -52,31 +51,26 @@ public class ValidatorMojo extends XmlMojo {
         else {
           try {
             getLog().info("   Validating: " + filePath);
-            Validator.validate(url, offline);
-          }
-          catch (final OfflineValidationException e) {
-            if (!offline)
-              throw e;
+            Validator.validate(url);
           }
           catch (final FileNotFoundException | SAXException e) {
-            final String message = e instanceof FileNotFoundException ? e.getClass().getSimpleName() + e.getMessage() : e.getMessage();
-            final StringBuilder builder = new StringBuilder("\nURL: ").append(url.toExternalForm());
-            builder.append("\nReason: ").append(message).append('\n');
-            for (final Throwable t : e.getSuppressed())
-              builder.append("        ").append(t.getMessage()).append('\n');
+            if (!offline || !(e instanceof SAXException) || !Validator.isRemoteAccessException((SAXException)e)) {
+              final String message = e instanceof FileNotFoundException ? e.getClass().getSimpleName() + e.getMessage() : e.getMessage();
+              final StringBuilder builder = new StringBuilder("\nURL: ").append(url.toExternalForm());
+              builder.append("\nReason: ").append(message).append('\n');
+              for (final Throwable t : e.getSuppressed())
+                builder.append("        ").append(t.getMessage()).append('\n');
 
-            final MojoFailureException exception = new MojoFailureException("Failed to validate xml.", "", builder.toString());
-            exception.initCause(e);
-            throw exception;
+              final MojoFailureException exception = new MojoFailureException("Failed to validate xml.", "", builder.toString());
+              exception.initCause(e);
+              throw exception;
+            }
+
+            if (!recordFile.createNewFile())
+              recordFile.setLastModified(lastModified != -1 ? lastModified : URLs.getLastModified(url));
           }
-
-          if (!recordFile.createNewFile())
-            recordFile.setLastModified(lastModified != -1 ? lastModified : URLs.getLastModified(url));
         }
       }
-    }
-    catch (final OfflineValidationException e) {
-      throw new MojoFailureException(e.getMessage());
     }
     catch (final IOException e) {
       throw new MojoExecutionException(e.getClass().getSimpleName() + ": " + e.getMessage(), e);

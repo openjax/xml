@@ -23,16 +23,22 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public class ValidatorErrorHandler implements ErrorHandler {
+class ValidatorErrorHandler implements ErrorHandler {
   private final ErrorHandler errorHandler;
   private List<SAXParseException> errors;
 
-  public ValidatorErrorHandler(final ErrorHandler handler) {
+  ValidatorErrorHandler(final ErrorHandler handler) {
     this.errorHandler = handler;
   }
 
-  public List<SAXParseException> getErrors() {
+  List<SAXParseException> getErrors() {
     return errors;
+  }
+
+  @Override
+  public void warning(final SAXParseException e) throws SAXException {
+    if (errorHandler != null)
+      errorHandler.warning(e);
   }
 
   @Override
@@ -49,11 +55,5 @@ public class ValidatorErrorHandler implements ErrorHandler {
   public void fatalError(final SAXParseException e) throws SAXException {
     if (errorHandler != null)
       errorHandler.fatalError(e);
-  }
-
-  @Override
-  public void warning(final SAXParseException e) throws SAXException {
-    if (errorHandler != null)
-      errorHandler.warning(e);
   }
 }

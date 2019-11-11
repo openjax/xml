@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2008 OpenJAX
+  Copyright (c) 2019 OpenJAX
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -16,21 +16,7 @@
 -->
 <xs:schema
   elementFormDefault="qualified"
-  targetNamespace="http://www.openjax.org/xml/test.xsd"
+  targetNamespace="http://www.openjax.org/xml/override.xsd"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="parent">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="child">
-          <xs:complexType mixed="true">
-            <xs:simpleContent>
-              <xs:extension base="xs:integer">
-                <xs:anyAttribute processContents="skip"/>
-              </xs:extension>
-            </xs:simpleContent>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+  <xs:import namespace="http://www.openjax.org/xml/original.xsd" schemaLocation="extension.xsd"/>
 </xs:schema>
