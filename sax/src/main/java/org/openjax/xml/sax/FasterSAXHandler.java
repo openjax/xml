@@ -61,13 +61,9 @@ public interface FasterSAXHandler {
    * Callback method for attribute occurrences.
    *
    * @param prefixLen The length of the prefix part of the attribute name, which
-   *          is:
-   *          <ul>
-   *          <li>{@code prefixLen == 0} if the attribute name does not have a
-   *          prefix.</li>
-   *          <li>{@code prefixLen >= 2} if the attribute name does not has a
-   *          prefix (includes the {@code ':'} character).</li>
-   *          <ul>
+   *          is {@code == 0} if the attribute name does not have a prefix, and
+   *          {@code >= 2} if the attribute name does not has a prefix, as this
+   *          includes the {@code ':'} character.
    * @param localPartLen The length of the local part of the attribute name.
    * @param skip The length of the data to skip, which matches the regex:
    *          {@code "[ \n\r\t]*=[ \n\r\t]*\""}.
