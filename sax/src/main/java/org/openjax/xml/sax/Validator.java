@@ -18,14 +18,14 @@ package org.openjax.xml.sax;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.impl.Constants;
@@ -40,6 +40,16 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 
 public final class Validator {
+  static class RewindReader extends ReplayReader {
+    RewindReader(final Reader in) {
+      super(in);
+    }
+
+    void reset(final int p) {
+      buffer.reset(p);
+    }
+  }
+
   private static final ErrorHandler DEFAULT_ERROR_HANDLER = new LoggingErrorHandler();
   private static final String dynamicXmlRoot = "n892fn298n9w8nds9v";
   private static final String dynamicXmlError = "cvc-elt.1.a: Cannot find the declaration of element '" + dynamicXmlRoot + "'.";
@@ -96,53 +106,63 @@ public final class Validator {
   }
 
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
-    try (final InputStream in = url.openStream()) {
-      validate(new StreamSource(in, url.toString()), XMLCatalogParser.parse(url), errorHandler);
+    try (final Reader in = new InputStreamReader(url.openStream())) {
+      validate(null, url.toString(), url, in, null, errorHandler);
     }
   }
 
-  public static void validate(final StreamSource streamSource) throws IOException, SAXException {
-    validate(streamSource, null, DEFAULT_ERROR_HANDLER);
+  public static void validate(final InputSource inputSource) throws IOException, SAXException {
+    validate(inputSource, DEFAULT_ERROR_HANDLER);
   }
 
-  public static void validate(final StreamSource streamSource, final ErrorHandler errorHandler) throws IOException, SAXException {
-    validate(streamSource, XMLCatalogParser.parse(streamSource), errorHandler);
+  public static void validate(final InputSource inputSource, final ErrorHandler errorHandler) throws IOException, SAXException {
+    validate(inputSource.getPublicId(), inputSource.getSystemId(), null, SAXUtil.getReader(inputSource), null, errorHandler);
   }
 
-  public static void validate(final StreamSource streamSource, final XMLCatalogHandler catalogHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
-    final ReplayReader reader = SAXUtil.getReader(streamSource);
+  public static void validate(final InputSource inputSource, final XMLManifest manifest, final ErrorHandler errorHandler) throws IOException, SAXException {
+    validate(inputSource.getPublicId(), inputSource.getSystemId(), null, SAXUtil.getReader(inputSource), manifest, errorHandler);
+  }
+
+  private static void validate(final String publicId, final String systemId, final URL url, Reader reader, XMLManifest manifest, final ErrorHandler errorHandler) throws IOException, SAXException {
+    if (manifest == null) {
+      reader = new RewindReader(reader);
+      manifest = XMLManifestParser.parse(systemId, reader, url != null ? url : new URL(systemId));
+      ((RewindReader)reader).reset(0);
+    }
+
     final SAXParser parser = SAXParsers.newParser(false);
     final SAXSource saxSource;
-    if (catalogHandler.isSchema()) {
+    if (manifest.isSchema()) {
       final StringBuilder xml = new StringBuilder();
       xml.append('<').append(dynamicXmlRoot);
       xml.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-      if (catalogHandler.getTargetNamespace().length() > 0) {
-        xml.append(" xmlns=\"").append(catalogHandler.getTargetNamespace()).append('"');
-        xml.append(" xsi:schemaLocation=\"").append(catalogHandler.getTargetNamespace()).append(' ').append(streamSource.getSystemId()).append('"');
+      if (manifest.getTargetNamespace().length() > 0) {
+        xml.append(" xmlns=\"").append(manifest.getTargetNamespace()).append('"');
+        xml.append(" xsi:schemaLocation=\"").append(manifest.getTargetNamespace()).append(' ').append(systemId).append('"');
       }
       else {
-        xml.append(" xsi:noNamespaceSchemaLocation=\"").append(streamSource.getSystemId()).append('"');
+        xml.append(" xsi:noNamespaceSchemaLocation=\"").append(systemId).append('"');
       }
 
       xml.append("/>");
 //      System.err.println(xml);
       saxSource = new SAXSource(parser.getXMLReader(), new InputSource(new ByteArrayInputStream(xml.toString().getBytes())));
-      saxSource.setSystemId("dynamic:" + streamSource.getSystemId());
+      saxSource.setSystemId("dynamic:" + systemId);
     }
     else {
       saxSource = new SAXSource(parser.getXMLReader(), new InputSource(reader));
-      saxSource.setSystemId(streamSource.getSystemId());
+      saxSource.setSystemId(systemId);
     }
 
+    final XMLManifest finalManifest = manifest;
     final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler) {
-      private boolean x() {
-        return !catalogHandler.isSchema() && catalogHandler.getImports() == null && catalogHandler.getIncludes() == null;
+      private boolean isMissingSchema() {
+        return !finalManifest.isSchema() && finalManifest.getImports() == null && finalManifest.getIncludes() == null;
       }
 
       @Override
       public void warning(final SAXParseException e) throws SAXException {
-        if (!e.getMessage().startsWith("schema_reference.4: Failed to read schema document ''") || !x())
+        if (!e.getMessage().startsWith("schema_reference.4: Failed to read schema document ''") || !isMissingSchema())
           super.warning(e);
       }
 
@@ -151,15 +171,15 @@ public final class Validator {
         if (dynamicXmlError.equals(e.getMessage()))
           return;
 
-        if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && x())
-          warning(new SAXParseException("There is no schema or DTD associated with the document", streamSource.getPublicId(), streamSource.getSystemId(), 0, 0));
+        if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && isMissingSchema())
+          warning(new SAXParseException("There is no schema or DTD associated with the document", publicId, systemId, 0, 0));
         else
           super.error(e);
       }
     };
 
     final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
-    validator.setResourceResolver(new SchemaLocationResolver(catalogHandler.getCatalog(), streamSource.getSystemId()));
+    validator.setResourceResolver(new SchemaLocationResolver(manifest.getCatalog(), systemId));
     validator.setErrorHandler(validatorErrorHandler);
 
     validator.validate(saxSource);

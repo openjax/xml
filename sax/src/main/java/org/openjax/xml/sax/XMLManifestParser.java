@@ -23,76 +23,60 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.transform.stream.StreamSource;
-
 import org.libj.io.ReplayReader;
 import org.libj.net.URLs;
 import org.xml.sax.InputSource;
 
 /**
- * Parser for XML documents that produces {@link XMLCatalog} and
- * {@link XMLCatalogHandler} objects.
+ * Parser for XML documents that produces {@link XMLManifest} objects.
  */
-public class XMLCatalogParser {
+public class XMLManifestParser {
   /**
    * Parses an XML document at the specified {@link URL}.
    *
    * @param url The {@link URL}.
-   * @return A {@link XMLCatalogHandler} containing the {@link XMLCatalog} and
-   *         metadata information for the XML document represented by the
+   * @return A {@link XMLManifest} containing the {@link XMLCatalog} and
+   *         manifest information for the XML document represented by the
    *         specified {@link URL}.
    * @throws IOException If the stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
    */
-  public static XMLCatalogHandler parse(final URL url) throws IOException {
-    return parse(SAXUtil.getInputSource(url), url);
-  }
-
-  /**
-   * Parses an XML document at the specified {@link StreamSource}.
-   *
-   * @param streamSource The {@link StreamSource}.
-   * @return A {@link XMLCatalogHandler} containing the {@link XMLCatalog} and
-   *         metadata information for the XML document represented by the
-   *         specified {@link StreamSource}.
-   * @throws IOException If the stream does not support
-   *           {@link Reader#mark(int)}, or if some other I/O error has
-   *           occurred.
-   */
-  public static XMLCatalogHandler parse(final StreamSource streamSource) throws IOException {
-    return parse(SAXUtil.getInputSource(streamSource));
+  public static XMLManifest parse(final URL url) throws IOException {
+    try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
+      return parse(url.toString(), in, url);
+    }
   }
 
   /**
    * Parses an XML document at the specified {@link InputSource}.
    *
    * @param inputSource The {@link InputSource}.
-   * @return A {@link XMLCatalogHandler} containing the {@link XMLCatalog} and
-   *         metadata information for the XML document represented by the
+   * @return A {@link XMLManifest} containing the {@link XMLCatalog} and
+   *         manifest information for the XML document represented by the
    *         specified {@link InputSource}.
    * @throws IOException If the stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
    */
-  public static XMLCatalogHandler parse(final InputSource inputSource) throws IOException {
-    return parse(inputSource, new URL(inputSource.getSystemId()));
+  public static XMLManifest parse(final InputSource inputSource) throws IOException {
+    return parse(inputSource.getSystemId(), SAXUtil.getReader(inputSource), new URL(inputSource.getSystemId()));
   }
 
-  static XMLCatalogHandler parse(final InputSource inputSource, final URL url) throws IOException {
+  static XMLManifest parse(final String systemId, final Reader in, final URL url) throws IOException {
     final XMLCatalog catalog = new XMLCatalog();
-    final XMLCatalogHandler handler = new XMLCatalogHandler(inputSource.getSystemId(), inputSource.getCharacterStream(), catalog);
-    FastSAXParser.parse(inputSource.getCharacterStream(), handler);
-    if (handler.isSchema())
-      catalog.putSchemaLocation(handler.getTargetNamespace(), new SchemaLocation(handler.getTargetNamespace(), url));
+    final XMLManifest manifest = new XMLManifest(systemId, in, catalog);
+    FastSAXParser.parse(in, manifest);
+    if (manifest.isSchema())
+      catalog.putSchemaLocation(manifest.getTargetNamespace(), new SchemaLocation(manifest.getTargetNamespace(), url));
 
-    if (handler.getImports() != null)
-      imports(catalog, handler.getNamespaceURIs(), handler.getImports());
+    if (manifest.getImports() != null)
+      imports(catalog, manifest.getNamespaceURIs(), manifest.getImports());
 
-    if (handler.getIncludes() != null)
-      includes(catalog, handler.getTargetNamespace(), handler.getIncludes());
+    if (manifest.getIncludes() != null)
+      includes(catalog, manifest.getTargetNamespace(), manifest.getIncludes());
 
-    return handler;
+    return manifest;
   }
 
   private static void imports(final XMLCatalog catalog, final Set<String> namespaceURIs, final Map<String,URL> schemaLocations) throws IOException {
@@ -100,21 +84,21 @@ public class XMLCatalogParser {
       if (!catalog.hasSchemaLocation(schemaLocation.getKey())) {
         final URL url = schemaLocation.getValue();
         try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
-          final XMLCatalogHandler handler = new XMLCatalogHandler(schemaLocation.getValue().toString(), in, catalog);
-          FastSAXParser.parse(in, handler);
+          final XMLManifest manifest = new XMLManifest(schemaLocation.getValue().toString(), in, catalog);
+          FastSAXParser.parse(in, manifest);
           catalog.putSchemaLocation(schemaLocation.getKey(), new SchemaLocation(schemaLocation.getKey(), schemaLocation.getValue()));
-          if (handler.getImports() != null)
-            namespaceURIs.addAll(handler.getImports().keySet());
+          if (manifest.getImports() != null)
+            namespaceURIs.addAll(manifest.getImports().keySet());
 
           namespaceURIs.remove(schemaLocation.getKey());
           if (namespaceURIs.isEmpty())
             break;
 
-          if (handler.getImports() != null)
-            imports(catalog, namespaceURIs, handler.getImports());
+          if (manifest.getImports() != null)
+            imports(catalog, namespaceURIs, manifest.getImports());
 
-          if (handler.getIncludes() != null)
-            includes(catalog, schemaLocation.getKey(), handler.getIncludes());
+          if (manifest.getIncludes() != null)
+            includes(catalog, schemaLocation.getKey(), manifest.getIncludes());
         }
         catch (final IOException e) {
           if (!Validator.isRemoteAccessException(e) || URLs.isLocal(url))
@@ -128,11 +112,11 @@ public class XMLCatalogParser {
     for (final Map.Entry<String,URL> entry : includes.entrySet()) {
       final URL url = entry.getValue();
       try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
-        final XMLCatalogHandler handler = new XMLCatalogHandler(url.toString(), in, catalog);
-        FastSAXParser.parse(in, handler);
+        final XMLManifest manifest = new XMLManifest(url.toString(), in, catalog);
+        FastSAXParser.parse(in, manifest);
         catalog.getSchemaLocation(namespaceURI).getDirectory().put(entry.getKey(), url);
-        if (handler.getIncludes() != null)
-          includes(catalog, namespaceURI, handler.getIncludes());
+        if (manifest.getIncludes() != null)
+          includes(catalog, namespaceURI, manifest.getIncludes());
       }
       catch (final IOException e) {
         if (!Validator.isRemoteAccessException(e) || URLs.isLocal(url))

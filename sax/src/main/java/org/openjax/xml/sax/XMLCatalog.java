@@ -17,26 +17,45 @@
 package org.openjax.xml.sax;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.xml.transform.stream.StreamSource;
-
+import org.libj.io.ReplayReader;
 import org.xml.sax.InputSource;
 
 public class XMLCatalog {
+  /**
+   * Parses an XML document at the specified {@link URL}.
+   *
+   * @param url The {@link URL}.
+   * @return A {@link XMLCatalog} for the XML document represented by the
+   *         specified {@link URL}.
+   * @throws IOException If the stream does not support
+   *           {@link Reader#mark(int)}, or if some other I/O error has
+   *           occurred.
+   */
   public static XMLCatalog parse(final URL url) throws IOException {
-    return XMLCatalogParser.parse(SAXUtil.getInputSource(url), url).getCatalog();
+    try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
+      return XMLManifestParser.parse(url.toString(), in, url).getCatalog();
+    }
   }
 
-  public static XMLCatalog parse(final StreamSource streamSource) throws IOException {
-    return XMLCatalogParser.parse(SAXUtil.getInputSource(streamSource)).getCatalog();
-  }
-
+  /**
+   * Parses an XML document at the specified {@link InputSource}.
+   *
+   * @param inputSource The {@link InputSource}.
+   * @return A {@link XMLCatalog} for the XML document represented by the
+   *         specified {@link InputSource}.
+   * @throws IOException If the stream does not support
+   *           {@link Reader#mark(int)}, or if some other I/O error has
+   *           occurred.
+   */
   public static XMLCatalog parse(final InputSource inputSource) throws IOException {
-    return XMLCatalogParser.parse(inputSource, new URL(inputSource.getSystemId())).getCatalog();
+    return XMLManifestParser.parse(inputSource.getSystemId(), SAXUtil.getReader(inputSource), new URL(inputSource.getSystemId())).getCatalog();
   }
 
   private final Map<String,SchemaLocation> schemaLocations = new LinkedHashMap<>();

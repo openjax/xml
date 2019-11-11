@@ -17,13 +17,12 @@
 package org.openjax.xml.sax;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.stream.StreamSource;
 
 import org.libj.io.ReplayReader;
 import org.xml.sax.InputSource;
@@ -69,26 +68,20 @@ final class SAXUtil {
     return builder.toString();
   }
 
-  static ReplayReader getReader(final StreamSource streamSource) {
-    if (streamSource.getReader() != null)
-      return new ReplayReader(streamSource.getReader());
+  static ReplayReader getReader(final InputSource inputSource) {
+    if (inputSource.getCharacterStream() != null)
+      return new ReplayReader(inputSource.getCharacterStream());
 
-    if (streamSource.getInputStream() != null)
-      // TODO: Determine the encoding from the element declaration
-      return new ReplayReader(new InputStreamReader(streamSource.getInputStream()));
+    if (inputSource.getByteStream() != null)
+      // FIXME: Determine the encoding from the element declaration
+      return new ReplayReader(new InputStreamReader(inputSource.getByteStream()));
 
-    throw new IllegalArgumentException("StreamSource has null Reader and InputStream");
+    throw new IllegalArgumentException("InputSource has null CharacterStream and ByteStream");
   }
 
-  static InputSource getInputSource(final URL url) throws IOException {
-    final InputSource inputSource = new InputSource(url.toString());
-    inputSource.setCharacterStream(new ReplayReader(new InputStreamReader(url.openStream())));
-    return inputSource;
-  }
-
-  static InputSource getInputSource(final StreamSource streamSource) {
-    final InputSource inputSource = new InputSource(streamSource.getSystemId());
-    inputSource.setCharacterStream(SAXUtil.getReader(streamSource));
+  static InputSource toInputSource(final String systemId, final InputStream in) {
+    final InputSource inputSource = new InputSource(systemId);
+    inputSource.setCharacterStream(new ReplayReader(new InputStreamReader(in)));
     return inputSource;
   }
 

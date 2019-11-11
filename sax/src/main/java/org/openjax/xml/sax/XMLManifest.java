@@ -40,13 +40,13 @@ import org.slf4j.LoggerFactory;
  * This handler dereferences external references to imported or included
  * documents and schemas, in order to comprise a complete catalog.
  * <p>
- * One {@link XMLCatalogHandler} instance is created for <b>each</b> XML
+ * One {@link XMLManifest} instance is created for <b>each</b> XML
  * document.
  * <p>
  * One {@link XMLCatalog} instance is created for <b>all</b> XML documents.
  */
-public class XMLCatalogHandler extends FastSAXHandler {
-  private static final Logger logger = LoggerFactory.getLogger(XMLCatalogHandler.class);
+public class XMLManifest extends FastSAXHandler {
+  private static final Logger logger = LoggerFactory.getLogger(XMLManifest.class);
 
   private final String systemId;
   private final XMLCatalog catalog;
@@ -56,7 +56,7 @@ public class XMLCatalogHandler extends FastSAXHandler {
   private String targetNamespace;
 
   /**
-   * Creates a new {@link XMLCatalogHandler} with the specified parameters.
+   * Creates a new {@link XMLManifest} with the specified parameters.
    *
    * @param systemId The system identifier, a URI reference
    *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
@@ -65,7 +65,7 @@ public class XMLCatalogHandler extends FastSAXHandler {
    * @param catalog The {@link XMLCatalog}.
    * @throws IOException If an I/O error has occurred.
    */
-  protected XMLCatalogHandler(final String systemId, final Reader in, final XMLCatalog catalog) throws IOException {
+  protected XMLManifest(final String systemId, final Reader in, final XMLCatalog catalog) throws IOException {
     super(in);
     this.systemId = systemId;
     this.catalog = catalog;
@@ -80,7 +80,7 @@ public class XMLCatalogHandler extends FastSAXHandler {
 
   /**
    * @return A set of the namespace URIs referenced in the XML document
-   *         represented by this {@link XMLCatalogHandler} instance.
+   *         represented by this {@link XMLManifest} instance.
    */
   public Set<String> getNamespaceURIs() {
     return namespaceURIs;
@@ -90,9 +90,9 @@ public class XMLCatalogHandler extends FastSAXHandler {
 
   /**
    * @return Whether the XML document represented by this
-   *         {@link XMLCatalogHandler} instance is an XML Schema Document.
+   *         {@link XMLManifest} instance is an XML Schema Document.
    * @throws IllegalStateException If this method is called before the XML
-   *           document represented by this {@link XMLCatalogHandler} instance
+   *           document represented by this {@link XMLManifest} instance
    *           is parsed.
    */
   public boolean isSchema() {
@@ -106,9 +106,9 @@ public class XMLCatalogHandler extends FastSAXHandler {
 
   /**
    * @return The {@link QName} of the root element of the XML document
-   *         represented by this {@link XMLCatalogHandler} instance.
+   *         represented by this {@link XMLManifest} instance.
    * @throws IllegalStateException If this method is called before the XML
-   *           document represented by this {@link XMLCatalogHandler} instance
+   *           document represented by this {@link XMLManifest} instance
    *           is parsed.
    */
   public QName getRootElement() {
@@ -120,7 +120,7 @@ public class XMLCatalogHandler extends FastSAXHandler {
 
   /**
    * @return The "targetNamespace" attribute of the XML document represented by
-   *         this {@link XMLCatalogHandler} instance. This method is only useful
+   *         this {@link XMLManifest} instance. This method is only useful
    *         for XML Schema Documents (i.e. when {@link #isSchema()} is
    *         {@code true}).
    */
@@ -140,7 +140,7 @@ public class XMLCatalogHandler extends FastSAXHandler {
 
   /**
    * @return The map of namespace-to-URL entries of "import" references for the
-   *         XML document represented by this {@link XMLCatalogHandler}
+   *         XML document represented by this {@link XMLManifest}
    *         instance.
    *         <p>
    *         If {@link #isSchema()} is {@code true}, this method represents the
@@ -169,7 +169,7 @@ public class XMLCatalogHandler extends FastSAXHandler {
   /**
    * @return The map of {@code String}-to-{@code URL} entries of "include"
    *         references for the XML document represented by this
-   *         {@link XMLCatalogHandler} instance. The key and value of each entry
+   *         {@link XMLManifest} instance. The key and value of each entry
    *         in this map represents the same logical string, differing only in
    *         class type.
    *         <p>
