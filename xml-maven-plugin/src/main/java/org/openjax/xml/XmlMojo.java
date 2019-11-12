@@ -73,7 +73,7 @@ public abstract class XmlMojo extends PatternSetMojo {
   public final void execute(final Configuration configuration) throws MojoExecutionException, MojoFailureException {
     setHttpProxy();
     final LinkedHashSet<URL> fileSets = new LinkedHashSet<>(configuration.getFileSets());
-    for (final String resource : resources)
+    for (final String resource : new LinkedHashSet<>(resources))
       fileSets.add(URLs.create(resource));
 
     execute(fileSets);
