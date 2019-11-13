@@ -307,7 +307,7 @@ public class FastSAXParserTest {
     add(events, Type.ATTR, "xml:", "base", "=\"", ".");
     add(events, Type.ELCL);
     add(events, Type.ELOP, "xml:", "local");
-    add(events, Type.ATTR, "", "localAnyURI", "=\"", "http://example.com");
+    add(events, Type.ATTR, "", "localAnyURI", "=\"", "http://example.com?");
     add(events, Type.ATTR, "xml:", "localBase64Binary", " = \"", " aGVsbG8K ");
     add(events, Type.ATTR, "xml:", "localDateTime", "\n    =\n    \"", "2019-08-24T17:58:49Z");
     add(events, Type.ELCL);

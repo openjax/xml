@@ -21,7 +21,7 @@
 ]>
 <attribute xml:base=".">
   <xml:local
-    localAnyURI="http://example.com"
+    localAnyURI="http://example.com?"
     xml:localBase64Binary = " aGVsbG8K "
     xml:localDateTime
     =

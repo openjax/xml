@@ -97,8 +97,25 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
     return null;
   }
 
+  private boolean inDeclaration;
+
+  @Override
+  public final boolean startDeclaration(final int nameLen) throws IOException {
+    inDeclaration = true;
+    return true;
+  }
+
+  @Override
+  public final boolean endDeclaration() throws IOException {
+    inDeclaration = false;
+    return true;
+  }
+
   @Override
   public final boolean attribute(final int prefixLen, final int localPartLen, final int skip, final int valueLen) throws IOException {
+    if (inDeclaration)
+      return true;
+
     final String prefix;
     if (prefixLen > 0) {
       prefix = read(in, prefixLen - 1);

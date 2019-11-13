@@ -54,6 +54,7 @@ public final class FastSAXParser {
     int startValue = -1;
     boolean inComment = false;
     boolean inQuote = false;
+    boolean inDeclaration = false;
     boolean inDoctype = false;
     int prefixLen = 0;
     int attrNameLen = 0;
@@ -101,6 +102,11 @@ public final class FastSAXParser {
           inElement = false;
           inComment = true;
         }
+        else if (ch0 == '?') {
+          inDeclaration = true;
+          startElem = i;
+          in.mark(DEFAULT_READ_LIMIT);
+        }
       }
       else if (inElement) {
         final boolean isWs = !inQuote && Character.isWhitespace(ch0);
@@ -116,7 +122,7 @@ public final class FastSAXParser {
           if (startElem != -1) {
             in.reset();
             final int localName = i - startElem - prefixLen - 1;
-            if (!handler.startElement(prefixLen, localName))
+            if (inDeclaration ? !handler.startDeclaration(localName) : !handler.startElement(prefixLen, localName))
               return;
 
             in.reset();
@@ -124,7 +130,7 @@ public final class FastSAXParser {
             startElem = -1;
             prefixLen = 0;
           }
-          else if (startAttr != -1 && startAttr != i - 1 && ch1 != '/') {
+          else if (startAttr != -1 && startAttr != i - 1 && ch1 != '/' && (!inDeclaration || ch1 != '?')) {
             if (attrNameLen == 0) {
               attrNameLen = i - startAttr - prefixLen - 1;
             }
@@ -153,8 +159,17 @@ public final class FastSAXParser {
 
           if (ch0 == '>') {
             inElement = false;
-            if (!handler.startElement())
+            startAttr = -1;
+            // FIXME: Should we assert that ch1 == '?' here?
+            // FIXME: Or are we guaranteed that inDeclaration is enough knowledge?
+            if (inDeclaration) {
+              inDeclaration = false;
+              if (!handler.endDeclaration())
+                return;
+            }
+            else if (!handler.startElement()) {
               return;
+            }
 
             if (ch1 == '/' && !handler.endElement())
               return;

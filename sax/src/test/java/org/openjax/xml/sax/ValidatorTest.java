@@ -18,6 +18,7 @@ package org.openjax.xml.sax;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
@@ -31,31 +32,9 @@ public class ValidatorTest {
     URLs.disableRemote();
   }
 
-  @Test
-  public void testTestXsd() throws Exception {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("test.xsd"));
-  }
-
-  @Test
-  public void testValidXml() throws Exception {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("valid.xml"));
-  }
-
-  @Test
-  public void testOffline() throws Exception {
-    try {
-      Validator.validate(ClassLoader.getSystemClassLoader().getResource("remote.xml"));
-      fail("Expected SAXException");
-    }
-    catch (final SAXException e) {
-      assertTrue(Validator.isRemoteAccessException(e));
-    }
-  }
-
-  @Test
-  public void testNoDeclaration() throws Exception {
+  private static void testNoDeclaration(final String fileName) throws IOException, SAXException {
     final AtomicBoolean sawWarning = new AtomicBoolean();
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("empty.xml"), new ErrorHandler() {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource(fileName), new ErrorHandler() {
       @Override
       public void warning(final SAXParseException exception) throws SAXException {
         assertEquals("There is no schema or DTD associated with the document", exception.getMessage());
@@ -74,17 +53,48 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testOverride() throws Exception {
+  public void testEmptyXml() throws IOException, SAXException {
+    testNoDeclaration("empty.xml");
+  }
+
+  @Test
+  public void testCurrencyXml() throws IOException, SAXException {
+    testNoDeclaration("currency.xml");
+  }
+
+  @Test
+  public void testTestXsd() throws IOException, SAXException {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("test.xsd"));
+  }
+
+  @Test
+  public void testValidXml() throws IOException, SAXException {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("valid.xml"));
+  }
+
+  @Test
+  public void testOffline() throws IOException, SAXException {
+    try {
+      Validator.validate(ClassLoader.getSystemClassLoader().getResource("remote.xml"));
+      fail("Expected SAXException");
+    }
+    catch (final SAXException e) {
+      assertTrue(Validator.isRemoteAccessException(e));
+    }
+  }
+
+  @Test
+  public void testOverride() throws IOException, SAXException {
     Validator.validate(ClassLoader.getSystemClassLoader().getResource("override.xml"));
   }
 
   @Test
-  public void testXInclude() throws Exception {
+  public void testXInclude() throws IOException, SAXException {
     Validator.validate(ClassLoader.getSystemClassLoader().getResource("xinclude.xml"));
   }
 
   @Test
-  public void testInvalid() throws Exception {
+  public void testInvalid() throws IOException, SAXException {
     try {
       Validator.validate(ClassLoader.getSystemClassLoader().getResource("invalid.xml"));
       fail("Expected SAXException");

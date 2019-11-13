@@ -34,6 +34,28 @@ import java.io.IOException;
  */
 public interface FasterSAXHandler {
   /**
+   * Called when a declaration element is encountered (i.e. {@code '<?xml'}).
+   *
+   * @param nameLen The length of the name of the element, sans {@code <?} and
+   *          {@code ?>} (i.e. {@code 'xml'}).
+   * @return Whether parsing should continue.
+   * @throws IOException If an I/O error has occurred.
+   */
+  default boolean startDeclaration(int nameLen) throws IOException {
+    return true;
+  };
+
+  /**
+   * Called when an declaration end tag is encountered (i.e. {@code '?>'}).
+   *
+   * @return Whether parsing should continue.
+   * @throws IOException If an I/O error has occurred.
+   */
+  default boolean endDeclaration() throws IOException {
+    return true;
+  };
+
+  /**
    * Callback method for DOCTYPE blocks (i.e. {@code <!DOCTYPE [ ]>}).
    *
    * @param doctypeLen The length of the {@code DOCTYPE [ ]} string, sans
