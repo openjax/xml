@@ -97,7 +97,7 @@ class SchemaLocationResolver implements LSResourceResolver {
         }
       }
 
-      final LSInput input = new LSInputImpl(systemId, publicId, baseURI);
+      final LSInput input = new LSInputImpl(publicId, systemId, baseURI);
       if (url != null)
         input.setByteStream(url.openStream());
 

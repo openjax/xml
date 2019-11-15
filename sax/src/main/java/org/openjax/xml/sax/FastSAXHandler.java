@@ -73,6 +73,7 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
   private final double RESIZE_FACTOR = 1.5;
   private char[] buf = new char[DEFAULT_BUFFER_SIZE];
 
+  @SuppressWarnings("unused")
   private String read(final Reader in, final int len) throws IOException {
     if (len >= buf.length) {
       final char[] resized = new char[RESIZE_FACTOR < 0 ? len - (int)RESIZE_FACTOR : (int)((len + 1) * RESIZE_FACTOR)];

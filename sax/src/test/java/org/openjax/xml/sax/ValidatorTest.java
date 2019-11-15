@@ -73,7 +73,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testOffline() throws IOException, SAXException {
+  public void testOffline() throws IOException {
     try {
       Validator.validate(ClassLoader.getSystemClassLoader().getResource("remote.xml"));
       fail("Expected SAXException");
@@ -94,7 +94,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInvalid() throws IOException, SAXException {
+  public void testInvalid() throws IOException {
     try {
       Validator.validate(ClassLoader.getSystemClassLoader().getResource("invalid.xml"));
       fail("Expected SAXException");
