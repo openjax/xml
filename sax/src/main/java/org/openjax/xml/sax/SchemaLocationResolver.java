@@ -106,7 +106,7 @@ class SchemaLocationResolver implements LSResourceResolver {
     }
     catch (final IOException e) {
       Throwing.rethrow(e);
-      throw new Error("Should never get here");
+      throw new Error("Will never get here");
     }
   }
 }

@@ -31,7 +31,7 @@ public abstract class Validator {
   private static final QName XSI = new QName(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI, "xsi", XMLConstants.XMLNS_ATTRIBUTE);
   private static final QName XMLNS = new QName(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, XMLConstants.XMLNS_ATTRIBUTE);
 
-  public final void validate(final Element element) throws ValidationException {
+  public final void validate(final Element element) throws IOException, ValidationException {
     // only do validation on the root element of the document
     if (element != element.getOwnerDocument().getDocumentElement())
       return;
@@ -57,12 +57,7 @@ public abstract class Validator {
 
     System.out.println(DOMs.domToString(element));
 
-    try {
-      parse(element);
-    }
-    catch (final IOException e) {
-      throw new IllegalStateException(e);
-    }
+    parse(element);
   }
 
   protected abstract URL lookupSchemaLocation(String namespaceURI);

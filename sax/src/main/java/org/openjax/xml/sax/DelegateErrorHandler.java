@@ -62,4 +62,26 @@ public abstract class DelegateErrorHandler implements ErrorHandler {
     if (target != null)
       target.fatalError(e);
   }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+
+    if (!(obj instanceof DelegateErrorHandler))
+      return false;
+
+    final DelegateErrorHandler that = (DelegateErrorHandler)obj;
+    return target != null ? target.equals(that.target) : that.target == null;
+  }
+
+  @Override
+  public int hashCode() {
+    return target == null ? 733 : target.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return String.valueOf(target);
+  }
 }
