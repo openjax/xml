@@ -29,8 +29,8 @@ public class LSInputImpl implements LSInput {
   private Reader reader;
   private InputStream inputStream;
   private String stringData;
-  private String systemId;
   private String publicId;
+  private String systemId;
   private String baseURI;
   private String encoding;
   private boolean certifiedText;
@@ -38,17 +38,17 @@ public class LSInputImpl implements LSInput {
   /**
    * Creates a new {@link LSInputImpl} with the specified parameters.
    *
+   * @param publicId The public identifier for this input source.
    * @param systemId The system identifier, a URI reference
    *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
    *          for this input source.
-   * @param publicId The public identifier for this input source.
    * @param baseURI The base URI to be used (see section 5.1.4 in
    *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>])
    *          for resolving a relative <code>systemId</code> to an absolute URI.
    */
-  public LSInputImpl(final String systemId, final String publicId, final String baseURI) {
-    this.systemId = systemId;
+  public LSInputImpl(final String publicId, final String systemId, final String baseURI) {
     this.publicId = publicId;
+    this.systemId = systemId;
     this.baseURI = baseURI;
   }
 

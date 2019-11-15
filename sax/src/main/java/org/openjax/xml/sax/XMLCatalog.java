@@ -19,6 +19,7 @@ package org.openjax.xml.sax;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -27,7 +28,19 @@ import java.util.Map;
 import org.libj.io.ReplayReader;
 import org.xml.sax.InputSource;
 
-public class XMLCatalog {
+/**
+ * The {@link XMLCatalog} class represents an entity catalog as defined by
+ * <a href=
+ * "https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html">
+ * XML Catalogs, OASIS Standard V1.1, 7 October 2005</a>.
+ * <p>
+ * The {@link XMLCatalog} contains namespaceURI-to-schemaLocation mappings, and
+ * can be presented in
+ * <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401 format</a>.
+ */
+public class XMLCatalog implements Serializable {
+  private static final long serialVersionUID = -4854713465553698524L;
+
   /**
    * Parses an XML document at the specified {@link URL}.
    *
@@ -37,10 +50,11 @@ public class XMLCatalog {
    * @throws IOException If the stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
+   * @throws NullPointerException If the specified {@link URL} is null.
    */
   public static XMLCatalog parse(final URL url) throws IOException {
     try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
-      return XMLManifestParser.parse(url.toString(), in, url).getCatalog();
+      return XMLManifestParser.parse(null, url.toString(), in, url).getCatalog();
     }
   }
 
@@ -53,30 +67,62 @@ public class XMLCatalog {
    * @throws IOException If the stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
+   * @throws NullPointerException If the specified {@link InputSource} is null.
    */
   public static XMLCatalog parse(final InputSource inputSource) throws IOException {
-    return XMLManifestParser.parse(inputSource.getSystemId(), SAXUtil.getReader(inputSource), new URL(inputSource.getSystemId())).getCatalog();
+    return XMLManifestParser.parse(inputSource).getCatalog();
   }
 
-  private final Map<String,SchemaLocation> schemaLocations = new LinkedHashMap<>();
+  private Map<String,SchemaLocation> schemaLocations;
 
-  public void putSchemaLocation(final String key, final SchemaLocation schemaLocation) {
-    schemaLocations.put(key, schemaLocation);
+  private Map<String,SchemaLocation> schemaLocations() {
+    return schemaLocations == null ? schemaLocations = new LinkedHashMap<>() : schemaLocations;
   }
 
+  /**
+   * Associates the specified schema location to the namespace URI.
+   *
+   * @param namespaceURI The namespace URI key.
+   * @param schemaLocation The schema location value.
+   */
+  public void putSchemaLocation(final String namespaceURI, final SchemaLocation schemaLocation) {
+    schemaLocations().put(namespaceURI, schemaLocation);
+  }
+
+  /**
+   * @param namespaceURI The namespace URI.
+   * @return The schema location associated with the specified namespace URI.
+   */
   public SchemaLocation getSchemaLocation(final String namespaceURI) {
-    return schemaLocations.get(namespaceURI);
+    return schemaLocations == null ? null : schemaLocations.get(namespaceURI);
   }
 
-  public boolean hasSchemaLocation(final String key) {
-    return schemaLocations.containsKey(key);
+  /**
+   * @param namespaceURI The namespace URI.
+   * @return Whether this {@link XMLCatalog} contains a schema location
+   *         associate to the specified namespace URI.
+   */
+  public boolean hasSchemaLocation(final String namespaceURI) {
+    return schemaLocations != null && schemaLocations.containsKey(namespaceURI);
   }
 
+  /**
+   * @return {@code true} if this map contains no namespaceURI-schemaLocation
+   *         mappings.
+   */
   public boolean isEmpty() {
-    return schemaLocations.isEmpty();
+    return schemaLocations == null || schemaLocations.isEmpty();
   }
 
+  /**
+   * @return A string representation of this {@link XMLCatalog} in
+   *         <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
+   *         format</a>.
+   */
   public String toTR9401() {
+    if (schemaLocations == null)
+      return "";
+
     final StringBuilder builder = new StringBuilder();
     final Iterator<Map.Entry<String,SchemaLocation>> entryIterator = schemaLocations.entrySet().iterator();
     for (int i = 0; entryIterator.hasNext();) {
@@ -105,16 +151,21 @@ public class XMLCatalog {
       return false;
 
     final XMLCatalog that = (XMLCatalog)obj;
-    return schemaLocations.equals(that.schemaLocations);
+    return schemaLocations == null ? that.schemaLocations == null : schemaLocations.equals(that.schemaLocations);
   }
 
   @Override
   public int hashCode() {
-    return schemaLocations.hashCode();
+    return schemaLocations == null ? 733 : schemaLocations.hashCode();
   }
 
+  /**
+   * @return A string representation of this {@link XMLCatalog} in
+   *         <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
+   *         format</a>.
+   */
   @Override
   public String toString() {
-    return schemaLocations.toString() + "\n" + toTR9401();
+    return toTR9401();
   }
 }

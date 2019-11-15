@@ -41,10 +41,11 @@ public class XMLManifestParser {
    * @throws IOException If the stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
+   * @throws NullPointerException If the specified {@link URL} is null.
    */
   public static XMLManifest parse(final URL url) throws IOException {
     try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
-      return parse(url.toString(), in, url);
+      return parse(null, url.toString(), in, url);
     }
   }
 
@@ -58,14 +59,15 @@ public class XMLManifestParser {
    * @throws IOException If the stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
+   * @throws NullPointerException If the specified {@link InputSource} is null.
    */
   public static XMLManifest parse(final InputSource inputSource) throws IOException {
-    return parse(inputSource.getSystemId(), SAXUtil.getReader(inputSource), new URL(inputSource.getSystemId()));
+    return parse(null, inputSource.getSystemId(), SAXUtil.getReader(inputSource), new URL(inputSource.getSystemId()));
   }
 
-  static XMLManifest parse(final String systemId, final Reader in, final URL url) throws IOException {
+  static XMLManifest parse(final String publicId, final String systemId, final Reader in, final URL url) throws IOException {
     final XMLCatalog catalog = new XMLCatalog();
-    final XMLManifest manifest = new XMLManifest(systemId, in, catalog);
+    final XMLManifest manifest = new XMLManifest(publicId, systemId, in, catalog);
     FastSAXParser.parse(in, manifest);
     if (manifest.isSchema())
       catalog.putSchemaLocation(manifest.getTargetNamespace(), new SchemaLocation(manifest.getTargetNamespace(), url));
@@ -84,7 +86,7 @@ public class XMLManifestParser {
       if (!catalog.hasSchemaLocation(schemaLocation.getKey())) {
         final URL url = schemaLocation.getValue();
         try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
-          final XMLManifest manifest = new XMLManifest(schemaLocation.getValue().toString(), in, catalog);
+          final XMLManifest manifest = new XMLManifest(null, schemaLocation.getValue().toString(), in, catalog);
           FastSAXParser.parse(in, manifest);
           catalog.putSchemaLocation(schemaLocation.getKey(), new SchemaLocation(schemaLocation.getKey(), schemaLocation.getValue()));
           if (manifest.getImports() != null)
@@ -112,7 +114,7 @@ public class XMLManifestParser {
     for (final Map.Entry<String,URL> entry : includes.entrySet()) {
       final URL url = entry.getValue();
       try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
-        final XMLManifest manifest = new XMLManifest(url.toString(), in, catalog);
+        final XMLManifest manifest = new XMLManifest(null, url.toString(), in, catalog);
         FastSAXParser.parse(in, manifest);
         catalog.getSchemaLocation(namespaceURI).getDirectory().put(entry.getKey(), url);
         if (manifest.getIncludes() != null)

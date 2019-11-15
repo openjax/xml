@@ -22,7 +22,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.transform.sax.SAXSource;
@@ -39,6 +42,11 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 
+/**
+ * A SAX-based validator for XML documents and XML Schema Definition documents
+ * that conform to the <a href="https://www.w3.org/TR/xmlschema11-1/">XML Schema
+ * v1.1</a> standard.
+ */
 public final class Validator {
   static class RewindReader extends ReplayReader {
     RewindReader(final Reader in) {
@@ -97,36 +105,196 @@ public final class Validator {
     return factory;
   }
 
+  /**
+   * Validates the XML document contained in the specified string.
+   *
+   * @param xml The XML document to validate.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified string is null.
+   */
   public static void validate(final String xml) throws IOException, SAXException {
-    validate(MemoryURLStreamHandler.createURL(xml.getBytes()), DEFAULT_ERROR_HANDLER);
+    validate(xml, DEFAULT_ERROR_HANDLER);
   }
 
+  /**
+   * Validates the XML document contained in the specified string.
+   *
+   * @param xml The XML document to validate.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation
+   *          errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified string is null.
+   */
+  public static void validate(final String xml, final ErrorHandler errorHandler) throws IOException, SAXException {
+    validate(MemoryURLStreamHandler.createURL(xml.getBytes()), errorHandler);
+  }
+
+  /**
+   * Validates the XML document provided by the source in the specified
+   * {@link URL}.
+   *
+   * @param url The {@link URL} providing the location for the XML document to
+   *          validate.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified {@link URL} is null.
+   */
   public static void validate(final URL url) throws IOException, SAXException {
     validate(url, DEFAULT_ERROR_HANDLER);
   }
 
+  /**
+   * Validates the XML document provided by the source in the specified
+   * {@link URL}.
+   *
+   * @param url The {@link URL} providing the location for the XML document to
+   *          validate.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation
+   *          errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified {@link URL} is null.
+   */
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
     try (final Reader in = new InputStreamReader(url.openStream())) {
       validate(null, url.toString(), url, in, null, errorHandler);
     }
   }
 
+  /**
+   * Validates the XML document provided by the source in the specified
+   * {@link InputSource}.
+   *
+   * @param inputSource The {@link InputSource} providing the source for the XML
+   *          document to validate.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified {@link InputSource} is null.
+   */
   public static void validate(final InputSource inputSource) throws IOException, SAXException {
     validate(inputSource, DEFAULT_ERROR_HANDLER);
   }
 
+  /**
+   * Validates the XML document provided by the source in the specified
+   * {@link InputSource}.
+   *
+   * @param inputSource The {@link InputSource} providing the source for the XML
+   *          document to validate.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation
+   *          errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified {@link InputSource} is null.
+   */
   public static void validate(final InputSource inputSource, final ErrorHandler errorHandler) throws IOException, SAXException {
     validate(inputSource.getPublicId(), inputSource.getSystemId(), null, SAXUtil.getReader(inputSource), null, errorHandler);
   }
 
+  /**
+   * Validates the XML document provided by the source in the specified
+   * {@link InputSource}.
+   *
+   * @param inputSource The {@link InputSource} providing the source for the XML
+   *          document to validate.
+   * @param manifest The {@link XMLManifest} for the document to validate (can
+   *          be {@code null}).
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation
+   *          errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified {@link InputSource} is null.
+   */
   public static void validate(final InputSource inputSource, final XMLManifest manifest, final ErrorHandler errorHandler) throws IOException, SAXException {
     validate(inputSource.getPublicId(), inputSource.getSystemId(), null, SAXUtil.getReader(inputSource), manifest, errorHandler);
   }
 
+  private static class ValidatorErrorHandler extends DelegateErrorHandler {
+    private final XMLManifest manifest;
+    private List<SAXParseException> errors;
+
+    private ValidatorErrorHandler(final ErrorHandler handler, final XMLManifest manifest) {
+      super(handler);
+      this.manifest = Objects.requireNonNull(manifest);
+    }
+
+    private boolean isMissingSchema() {
+      return !manifest.isSchema() && manifest.getImports() == null && manifest.getIncludes() == null;
+    }
+
+    @Override
+    public void warning(final SAXParseException e) throws SAXException {
+      if (!e.getMessage().startsWith("schema_reference.4: Failed to read schema document ''") || !isMissingSchema())
+        super.warning(e);
+    }
+
+    @Override
+    public void error(final SAXParseException e) throws SAXException {
+      if (dynamicXmlError.equals(e.getMessage()))
+        return;
+
+      if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && isMissingSchema()) {
+        warning(new SAXParseException("There is no schema or DTD associated with the document", manifest.getPublicId(), manifest.getSystemId(), 0, 0));
+      }
+      else {
+        if (errors == null)
+          errors = new ArrayList<>();
+
+        errors.add(e);
+        super.error(e);
+      }
+    }
+  }
+
+  /**
+   * Validates the XML document provided by the stream of data in the specified
+   * {@link Reader}.
+   *
+   * @param publicId The public identifier for this input source.
+   * @param systemId The system identifier, a URI reference
+   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
+   *          for this input source.
+   * @param url The {@link URL} specifying the location of the document to
+   *          validate.
+   * @param reader The {@link Reader} providing the stream of data to validate.
+   * @param manifest The {@link XMLManifest} for the document to validate (can
+   *          be {@code null}).
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation
+   *          errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified {@link Reader} is null.
+   */
   private static void validate(final String publicId, final String systemId, final URL url, Reader reader, XMLManifest manifest, final ErrorHandler errorHandler) throws IOException, SAXException {
     if (manifest == null) {
       reader = new RewindReader(reader);
-      manifest = XMLManifestParser.parse(systemId, reader, url != null ? url : new URL(systemId));
+      manifest = XMLManifestParser.parse(publicId, systemId, reader, url != null ? url : new URL(systemId));
       ((RewindReader)reader).reset(0);
     }
 
@@ -154,39 +322,17 @@ public final class Validator {
       saxSource.setSystemId(systemId);
     }
 
-    final XMLManifest finalManifest = manifest;
-    final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler) {
-      private boolean isMissingSchema() {
-        return !finalManifest.isSchema() && finalManifest.getImports() == null && finalManifest.getIncludes() == null;
-      }
-
-      @Override
-      public void warning(final SAXParseException e) throws SAXException {
-        if (!e.getMessage().startsWith("schema_reference.4: Failed to read schema document ''") || !isMissingSchema())
-          super.warning(e);
-      }
-
-      @Override
-      public void error(final SAXParseException e) throws SAXException {
-        if (dynamicXmlError.equals(e.getMessage()))
-          return;
-
-        if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && isMissingSchema())
-          warning(new SAXParseException("There is no schema or DTD associated with the document", publicId, systemId, 0, 0));
-        else
-          super.error(e);
-      }
-    };
-
     final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
     validator.setResourceResolver(new SchemaLocationResolver(manifest.getCatalog(), systemId));
+
+    final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, manifest);
     validator.setErrorHandler(validatorErrorHandler);
 
     validator.validate(saxSource);
 
     // NOTE: The following code is skipped if the validate() call above throws an exception.
-    if (validatorErrorHandler.getErrors() != null) {
-      final Iterator<SAXParseException> iterator = validatorErrorHandler.getErrors().iterator();
+    if (validatorErrorHandler.errors != null) {
+      final Iterator<SAXParseException> iterator = validatorErrorHandler.errors.iterator();
       final SAXParseException exception = iterator.next();
       while (iterator.hasNext())
         exception.addSuppressed(iterator.next());

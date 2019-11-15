@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 public class XMLManifest extends FastSAXHandler {
   private static final Logger logger = LoggerFactory.getLogger(XMLManifest.class);
 
+  private final String publicId;
   private final String systemId;
   private final XMLCatalog catalog;
   private final Set<String> namespaceURIs = new HashSet<>();
@@ -58,6 +59,7 @@ public class XMLManifest extends FastSAXHandler {
   /**
    * Creates a new {@link XMLManifest} with the specified parameters.
    *
+   * @param publicId The public identifier for this input source.
    * @param systemId The system identifier, a URI reference
    *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
    *          for this input source.
@@ -65,10 +67,19 @@ public class XMLManifest extends FastSAXHandler {
    * @param catalog The {@link XMLCatalog}.
    * @throws IOException If an I/O error has occurred.
    */
-  protected XMLManifest(final String systemId, final Reader in, final XMLCatalog catalog) throws IOException {
+  protected XMLManifest(final String publicId, final String systemId, final Reader in, final XMLCatalog catalog) throws IOException {
     super(in);
+    this.publicId = publicId;
     this.systemId = systemId;
     this.catalog = catalog;
+  }
+
+  public String getPublicId() {
+    return this.publicId;
+  }
+
+  public String getSystemId() {
+    return this.systemId;
   }
 
   /**

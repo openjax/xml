@@ -16,44 +16,50 @@
 
 package org.openjax.xml.sax;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-class ValidatorErrorHandler implements ErrorHandler {
-  private final ErrorHandler errorHandler;
-  private List<SAXParseException> errors;
+/**
+ * A {@link DelegateErrorHandler} contains some other {@link ErrorHandler}, to
+ * which it delegates its method calls, possibly transforming the data along the
+ * way or providing additional functionality. The class
+ * {@link DelegateErrorHandler} itself simply implements all methods of
+ * {@link ErrorHandler} with versions that pass all requests to the target
+ * {@link ErrorHandler}. Subclasses of {@code DelegateErrorHandler} may further
+ * override some of these methods and may also provide additional methods and
+ * fields.
+ * <p>
+ * If the target {@link ErrorHandler} is null, the methods in
+ * {@link DelegateErrorHandler} are no-op.
+ */
+public abstract class DelegateErrorHandler implements ErrorHandler {
+  protected volatile ErrorHandler target;
 
-  ValidatorErrorHandler(final ErrorHandler handler) {
-    this.errorHandler = handler;
-  }
-
-  List<SAXParseException> getErrors() {
-    return errors;
+  /**
+   * Creates a new {@code DelegateErrorHandler} with the specified {@code target}.
+   *
+   * @param target The target {@link ErrorHandler} object.
+   */
+  public DelegateErrorHandler(final ErrorHandler target) {
+    this.target = target;
   }
 
   @Override
   public void warning(final SAXParseException e) throws SAXException {
-    if (errorHandler != null)
-      errorHandler.warning(e);
+    if (target != null)
+      target.warning(e);
   }
 
   @Override
   public void error(final SAXParseException e) throws SAXException {
-    if (errors == null)
-      errors = new ArrayList<>();
-
-    errors.add(e);
-    if (errorHandler != null)
-      errorHandler.error(e);
+    if (target != null)
+      target.error(e);
   }
 
   @Override
   public void fatalError(final SAXParseException e) throws SAXException {
-    if (errorHandler != null)
-      errorHandler.fatalError(e);
+    if (target != null)
+      target.fatalError(e);
   }
 }

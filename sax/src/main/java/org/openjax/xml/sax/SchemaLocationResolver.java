@@ -47,7 +47,7 @@ class SchemaLocationResolver implements LSResourceResolver {
   public LSInput resolveResource(final String type, final String namespaceURI, final String publicId, String systemId, final String baseURI) {
 //    System.err.println("resolveResource(\"" + type + "\", \"" + namespaceURI + "\", \"" + publicId + "\", \"" + systemId + "\", \"" + baseURI + "\")");
     if (namespaceURI == null && systemId == null)
-      return new LSInputImpl(systemId, publicId, baseURI);
+      return new LSInputImpl(publicId, systemId, baseURI);
 
     if (systemId == null)
       systemId = namespaceURI;
