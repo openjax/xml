@@ -35,11 +35,9 @@ final class SAXUtil {
    * Returns a string encoding of the specified {@code attributes}. The encoding
    * is of the form:
    *
-   * <pre>
-   * name = "value"
-   * </pre>
+   * <pre>name = "value"</pre>
    *
-   * @param attributes The {@code Attributes}.
+   * @param attributes The map of attributes.
    * @return A string encoding of the specified {@code attributes}.
    */
   static String toString(final Map<QName,String> attributes) {

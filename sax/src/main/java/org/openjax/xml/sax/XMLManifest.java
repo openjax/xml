@@ -83,6 +83,8 @@ public class XMLManifest extends FastSAXHandler {
   }
 
   /**
+   * Returns the catalog instance.
+   *
    * @return The catalog instance.
    */
   public XMLCatalog getCatalog() {
@@ -90,6 +92,9 @@ public class XMLManifest extends FastSAXHandler {
   }
 
   /**
+   * Returns a set of the namespace URIs referenced in the XML document
+   * represented by this {@link XMLManifest} instance.
+   *
    * @return A set of the namespace URIs referenced in the XML document
    *         represented by this {@link XMLManifest} instance.
    */
@@ -100,11 +105,14 @@ public class XMLManifest extends FastSAXHandler {
   private boolean isSchema;
 
   /**
-   * @return Whether the XML document represented by this
-   *         {@link XMLManifest} instance is an XML Schema Document.
+   * Returns whether the XML document represented by this {@link XMLManifest}
+   * instance is an XML Schema Document.
+   *
+   * @return Whether the XML document represented by this {@link XMLManifest}
+   *         instance is an XML Schema Document.
    * @throws IllegalStateException If this method is called before the XML
-   *           document represented by this {@link XMLManifest} instance
-   *           is parsed.
+   *           document represented by this {@link XMLManifest} instance is
+   *           parsed.
    */
   public boolean isSchema() {
     if (rootElement == null)
@@ -116,11 +124,14 @@ public class XMLManifest extends FastSAXHandler {
   private QName rootElement;
 
   /**
+   * Returns the {@link QName} of the root element of the XML document
+   * represented by this {@link XMLManifest} instance.
+   *
    * @return The {@link QName} of the root element of the XML document
    *         represented by this {@link XMLManifest} instance.
    * @throws IllegalStateException If this method is called before the XML
-   *           document represented by this {@link XMLManifest} instance
-   *           is parsed.
+   *           document represented by this {@link XMLManifest} instance is
+   *           parsed.
    */
   public QName getRootElement() {
     if (rootElement == null)
@@ -130,10 +141,12 @@ public class XMLManifest extends FastSAXHandler {
   }
 
   /**
+   * Returns the "targetNamespace" attribute of the XML document represented by
+   * this {@link XMLManifest} instance. This method is only useful for XML
+   * Schema Documents (i.e. when {@link #isSchema()} is {@code true}).
+   *
    * @return The "targetNamespace" attribute of the XML document represented by
-   *         this {@link XMLManifest} instance. This method is only useful
-   *         for XML Schema Documents (i.e. when {@link #isSchema()} is
-   *         {@code true}).
+   *         this {@link XMLManifest} instance.
    */
   public String getTargetNamespace() {
     return this.targetNamespace;
@@ -150,15 +163,17 @@ public class XMLManifest extends FastSAXHandler {
   }
 
   /**
+   * Returns the map of namespace-to-URL entries of "import" references for the
+   * XML document represented by this {@link XMLManifest} instance.
+   * <ul>
+   * <li>If {@link #isSchema()} is {@code true}, this method represents the
+   * {@code <xs:import/>} elements of an XML Schema Document.</li>
+   * <li>If {@link #isSchema()} is {@code false}, this method represents the
+   * {@code xsi:schemaLocation} attribute of an XML Document.</li>
+   * </ul>
+   *
    * @return The map of namespace-to-URL entries of "import" references for the
-   *         XML document represented by this {@link XMLManifest}
-   *         instance.
-   *         <p>
-   *         If {@link #isSchema()} is {@code true}, this method represents the
-   *         {@code <xs:import/>} elements of an XML Schema Document.
-   *         <p>
-   *         If {@link #isSchema()} is {@code false}, this method represents the
-   *         {@code xsi:schemaLocation} attribute of an XML Document.
+   *         XML document represented by this {@link XMLManifest} instance.
    */
   public Map<String,URL> getImports() {
     return imports;
@@ -178,18 +193,21 @@ public class XMLManifest extends FastSAXHandler {
   }
 
   /**
-   * @return The map of {@code String}-to-{@code URL} entries of "include"
+   * Returns the map of {@link String}-to-{@link URL} entries of "include"
+   * references for the XML document represented by this {@link XMLManifest}
+   * instance. The key and value of each entry in this map represents the same
+   * logical string, differing only in class type.
+   * <ul>
+   * <li>If {@link #isSchema()} is {@code true}, this method represents the
+   * {@code <xs:include/>} elements of an XML Schema Document.</li>
+   * <li>If {@link #isSchema()} is {@code false}, this method represents the
+   * {@code xsi:noNamespaceSchemaLocation} and {@code <xi:include href>}
+   * attributes in an XML Document.</li>
+   * </ul>
+   *
+   * @return The map of {@link String}-to-{@link URL} entries of "include"
    *         references for the XML document represented by this
-   *         {@link XMLManifest} instance. The key and value of each entry
-   *         in this map represents the same logical string, differing only in
-   *         class type.
-   *         <p>
-   *         If {@link #isSchema()} is {@code true}, this method represents the
-   *         {@code <xs:include/>} elements of an XML Schema Document.
-   *         <p>
-   *         If {@link #isSchema()} is {@code false}, this method represents the
-   *         {@code xsi:noNamespaceSchemaLocation} and {@code <xi:include href>}
-   *         attributes in an XML Document.
+   *         {@link XMLManifest} instance.
    */
   public Map<String,URL> getIncludes() {
     return includes;

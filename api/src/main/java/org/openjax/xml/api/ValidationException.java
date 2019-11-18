@@ -25,14 +25,14 @@ public class ValidationException extends SAXException {
   private static final long serialVersionUID = -5730844996681538725L;
 
   /**
-   * Creates a new {@code ValidationException}.
+   * Creates a new {@link ValidationException}.
    */
   public ValidationException() {
     super();
   }
 
   /**
-   * Creates a new {@code ValidationException} with the specified detail
+   * Creates a new {@link ValidationException} with the specified detail
    * message.
    *
    * @param message The detail message.
@@ -42,7 +42,7 @@ public class ValidationException extends SAXException {
   }
 
   /**
-   * Creates a new {@code ValidationException} with the specified cause.
+   * Creates a new {@link ValidationException} with the specified cause.
    *
    * @param cause The cause.
    */
@@ -51,7 +51,7 @@ public class ValidationException extends SAXException {
   }
 
   /**
-   * Creates a new {@code ValidationException} with the specified detail message
+   * Creates a new {@link ValidationException} with the specified detail message
    * and cause.
    *
    * @param message The detail message.

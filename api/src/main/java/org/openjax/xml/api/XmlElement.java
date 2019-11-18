@@ -30,11 +30,11 @@ import java.util.regex.Pattern;
  * Lightweight encapsulation of an XML element, supporting attributes, content,
  * and child elements.
  * <p>
- * Attributes are represented with a raw-type {@code Map}, and
+ * Attributes are represented with a raw-type {@link Map}, and
  * {@code key.toString()} and {@code value.toString()} are used to marshal to
  * string.
  * <p>
- * Child elements are represented with a raw-type {@code Collection}, and
+ * Child elements are represented with a raw-type {@link Collection}, and
  * {@code element.toString()} is used to marshal to string.
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -67,7 +67,7 @@ public class XmlElement implements Cloneable, Serializable {
   private Collection elements;
 
   /**
-   * Creates a new {@code XmlElement} with the specified name, map of
+   * Creates a new {@link XmlElement} with the specified name, map of
    * attributes, and collection of child elements.
    *
    * @param name The name.
@@ -84,7 +84,7 @@ public class XmlElement implements Cloneable, Serializable {
   }
 
   /**
-   * Creates a new {@code XmlElement} with the specified name and map of
+   * Creates a new {@link XmlElement} with the specified name and map of
    * attributes.
    *
    * @param name The name.
@@ -98,7 +98,7 @@ public class XmlElement implements Cloneable, Serializable {
   }
 
   /**
-   * Creates a new {@code XmlElement} with the specified name and collection of
+   * Creates a new {@link XmlElement} with the specified name and collection of
    * child elements.
    *
    * @param name The name.
@@ -112,7 +112,7 @@ public class XmlElement implements Cloneable, Serializable {
   }
 
   /**
-   * Creates a new {@code XmlElement} with the specified name.
+   * Creates a new {@link XmlElement} with the specified name.
    *
    * @param name The name.
    * @throws NullPointerException If {@code name} is null.
@@ -124,6 +124,8 @@ public class XmlElement implements Cloneable, Serializable {
   }
 
   /**
+   * Returns the name of this element.
+   *
    * @return The name of this element.
    */
   public String getName() {
@@ -140,6 +142,8 @@ public class XmlElement implements Cloneable, Serializable {
   }
 
   /**
+   * Returns the attributes of this element.
+   *
    * @return The attributes of this element.
    */
   public Map getAttributes() {
@@ -156,6 +160,8 @@ public class XmlElement implements Cloneable, Serializable {
   }
 
   /**
+   * Returns the child elements of this element.
+   *
    * @return The child elements of this element.
    */
   public Collection getElements() {

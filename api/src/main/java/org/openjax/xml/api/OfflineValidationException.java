@@ -26,14 +26,14 @@ public class OfflineValidationException extends ValidationException {
   private static final long serialVersionUID = -6362835686505809259L;
 
   /**
-   * Creates a new {@code OfflineValidationException}.
+   * Creates a new {@link OfflineValidationException}.
    */
   public OfflineValidationException() {
     super();
   }
 
   /**
-   * Creates a new {@code OfflineValidationException}.
+   * Creates a new {@link OfflineValidationException}.
    *
    * @param message The detail message.
    */
@@ -42,7 +42,7 @@ public class OfflineValidationException extends ValidationException {
   }
 
   /**
-   * Creates a new {@code OfflineValidationException}.
+   * Creates a new {@link OfflineValidationException}.
    *
    * @param cause The cause.
    */
@@ -51,7 +51,7 @@ public class OfflineValidationException extends ValidationException {
   }
 
   /**
-   * Creates a new {@code OfflineValidationException}.
+   * Creates a new {@link OfflineValidationException}.
    *
    * @param message The detail message.
    * @param cause The cause.

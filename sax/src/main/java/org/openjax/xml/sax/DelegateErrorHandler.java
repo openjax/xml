@@ -26,7 +26,7 @@ import org.xml.sax.SAXParseException;
  * way or providing additional functionality. The class
  * {@link DelegateErrorHandler} itself simply implements all methods of
  * {@link ErrorHandler} with versions that pass all requests to the target
- * {@link ErrorHandler}. Subclasses of {@code DelegateErrorHandler} may further
+ * {@link ErrorHandler}. Subclasses of {@link DelegateErrorHandler} may further
  * override some of these methods and may also provide additional methods and
  * fields.
  * <p>
@@ -37,7 +37,7 @@ public abstract class DelegateErrorHandler implements ErrorHandler {
   protected volatile ErrorHandler target;
 
   /**
-   * Creates a new {@code DelegateErrorHandler} with the specified {@code target}.
+   * Creates a new {@link DelegateErrorHandler} with the specified {@code target}.
    *
    * @param target The target {@link ErrorHandler} object.
    */

@@ -105,6 +105,8 @@ public class HexBinary implements Serializable {
   }
 
   /**
+   * Returns the hex string representation of this object's {@code byte[]} data.
+   *
    * @return The hex string representation of this object's {@code byte[]} data.
    */
   @Override

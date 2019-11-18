@@ -90,6 +90,8 @@ public class XMLCatalog implements Serializable {
   }
 
   /**
+   * Returns the schema location associated with the specified namespace URI.
+   *
    * @param namespaceURI The namespace URI.
    * @return The schema location associated with the specified namespace URI.
    */
@@ -98,6 +100,9 @@ public class XMLCatalog implements Serializable {
   }
 
   /**
+   * Returns whether this {@link XMLCatalog} contains a schema location
+   * associate to the specified namespace URI.
+   *
    * @param namespaceURI The namespace URI.
    * @return Whether this {@link XMLCatalog} contains a schema location
    *         associate to the specified namespace URI.
@@ -107,6 +112,9 @@ public class XMLCatalog implements Serializable {
   }
 
   /**
+   * Returns {@code true} if this map contains no namespaceURI-schemaLocation
+   * mappings.
+   *
    * @return {@code true} if this map contains no namespaceURI-schemaLocation
    *         mappings.
    */
@@ -115,6 +123,9 @@ public class XMLCatalog implements Serializable {
   }
 
   /**
+   * Returns a string representation of this {@link XMLCatalog} in
+   * <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401 format</a>.
+   *
    * @return A string representation of this {@link XMLCatalog} in
    *         <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
    *         format</a>.
@@ -160,6 +171,9 @@ public class XMLCatalog implements Serializable {
   }
 
   /**
+   * Returns a string representation of this {@link XMLCatalog} in
+   * <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401 format</a>.
+   *
    * @return A string representation of this {@link XMLCatalog} in
    *         <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
    *         format</a>.
