@@ -48,16 +48,6 @@ import org.xml.sax.SAXParseException;
  * v1.1</a> standard.
  */
 public final class Validator {
-  static class RewindReader extends ReplayReader {
-    RewindReader(final Reader in) {
-      super(in);
-    }
-
-    void reset(final int p) {
-      buffer.reset(p);
-    }
-  }
-
   private static final ErrorHandler DEFAULT_ERROR_HANDLER = new LoggingErrorHandler();
   private static final String dynamicXmlRoot = "n892fn298n9w8nds9v";
   private static final String dynamicXmlError = "cvc-elt.1.a: Cannot find the declaration of element '" + dynamicXmlRoot + "'.";
@@ -171,7 +161,7 @@ public final class Validator {
    */
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
     try (final Reader in = new InputStreamReader(url.openStream())) {
-      validate(null, url.toString(), url, in, null, errorHandler);
+      validate(url, new LSInputImpl(null, url.toString(), null, in), null, errorHandler);
     }
   }
 
@@ -208,7 +198,7 @@ public final class Validator {
    * @throws NullPointerException If the specified {@link InputSource} is null.
    */
   public static void validate(final InputSource inputSource, final ErrorHandler errorHandler) throws IOException, SAXException {
-    validate(inputSource.getPublicId(), inputSource.getSystemId(), null, SAXUtil.getReader(inputSource), null, errorHandler);
+    validate(null, inputSource, null, errorHandler);
   }
 
   /**
@@ -217,8 +207,8 @@ public final class Validator {
    *
    * @param inputSource The {@link InputSource} providing the source for the XML
    *          document to validate.
-   * @param manifest The {@link XMLManifest} for the document to validate (can
-   *          be {@code null}).
+   * @param digest The {@link XmlDigest} for the document to validate (can be
+   *          {@code null}).
    * @param errorHandler The {@link ErrorHandler} for parsing and validation
    *          errors.
    * @throws IOException If an I/O error has occurred.
@@ -228,60 +218,31 @@ public final class Validator {
    *           during processing.
    * @throws NullPointerException If the specified {@link InputSource} is null.
    */
-  public static void validate(final InputSource inputSource, final XMLManifest manifest, final ErrorHandler errorHandler) throws IOException, SAXException {
-    validate(inputSource.getPublicId(), inputSource.getSystemId(), null, SAXUtil.getReader(inputSource), manifest, errorHandler);
+  public static void validate(final InputSource inputSource, final XmlDigest digest, final ErrorHandler errorHandler) throws IOException, SAXException {
+    validate(null, inputSource, digest, errorHandler);
   }
 
-  private static class ValidatorErrorHandler extends DelegateErrorHandler {
-    private final XMLManifest manifest;
-    private List<SAXParseException> errors;
-
-    private ValidatorErrorHandler(final ErrorHandler handler, final XMLManifest manifest) {
-      super(handler);
-      this.manifest = Objects.requireNonNull(manifest);
+  private static XmlDigest initInputSource(final URL url, final InputSource inputSource, XmlDigest digest) throws IOException {
+    final ReplayReader reader = SAXUtil.getReader(inputSource);
+    inputSource.setCharacterStream(reader);
+    if (digest == null) {
+      digest = XmlDigestParser.parse(url != null ? url : new URL(inputSource.getSystemId()), inputSource);
+      reader.close();
     }
 
-    private boolean isMissingSchema() {
-      return !manifest.isSchema() && manifest.getImports() == null && manifest.getIncludes() == null;
-    }
-
-    @Override
-    public void warning(final SAXParseException e) throws SAXException {
-      if (!e.getMessage().startsWith("schema_reference.4: Failed to read schema document ''") || !isMissingSchema())
-        super.warning(e);
-    }
-
-    @Override
-    public void error(final SAXParseException e) throws SAXException {
-      if (dynamicXmlError.equals(e.getMessage()))
-        return;
-
-      if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && isMissingSchema()) {
-        warning(new SAXParseException("There is no schema or DTD associated with the document", manifest.getPublicId(), manifest.getSystemId(), 0, 0));
-      }
-      else {
-        if (errors == null)
-          errors = new ArrayList<>();
-
-        errors.add(e);
-        super.error(e);
-      }
-    }
+    return digest;
   }
 
   /**
    * Validates the XML document provided by the stream of data in the specified
    * {@link Reader}.
    *
-   * @param publicId The public identifier for this input source.
-   * @param systemId The system identifier, a URI reference
-   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
-   *          for this input source.
    * @param url The {@link URL} specifying the location of the document to
    *          validate.
-   * @param reader The {@link Reader} providing the stream of data to validate.
-   * @param manifest The {@link XMLManifest} for the document to validate (can
-   *          be {@code null}).
+   * @param inputSource The {@link InputSource} providing the source for the XML
+   *          document to validate.
+   * @param digest The {@link XmlDigest} for the document to validate (can be
+   *          {@code null}).
    * @param errorHandler The {@link ErrorHandler} for parsing and validation
    *          errors.
    * @throws IOException If an I/O error has occurred.
@@ -291,41 +252,36 @@ public final class Validator {
    *           during processing.
    * @throws NullPointerException If the specified {@link Reader} is null.
    */
-  private static void validate(final String publicId, final String systemId, final URL url, Reader reader, XMLManifest manifest, final ErrorHandler errorHandler) throws IOException, SAXException {
-    if (manifest == null) {
-      reader = new RewindReader(reader);
-      manifest = XMLManifestParser.parse(publicId, systemId, reader, url != null ? url : new URL(systemId));
-      ((RewindReader)reader).reset(0);
-    }
-
+  private static void validate(final URL url, final InputSource inputSource, XmlDigest digest, final ErrorHandler errorHandler) throws IOException, SAXException {
+    digest = initInputSource(url, inputSource, digest);
     final SAXParser parser = SAXParsers.newParser(false);
     final SAXSource saxSource;
-    if (manifest.isSchema()) {
+    if (digest.isSchema()) {
       final StringBuilder xml = new StringBuilder();
       xml.append('<').append(dynamicXmlRoot);
       xml.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-      if (manifest.getTargetNamespace().length() > 0) {
-        xml.append(" xmlns=\"").append(manifest.getTargetNamespace()).append('"');
-        xml.append(" xsi:schemaLocation=\"").append(manifest.getTargetNamespace()).append(' ').append(systemId).append('"');
+      if (digest.getTargetNamespace().length() > 0) {
+        xml.append(" xmlns=\"").append(digest.getTargetNamespace()).append('"');
+        xml.append(" xsi:schemaLocation=\"").append(digest.getTargetNamespace()).append(' ').append(inputSource.getSystemId()).append('"');
       }
       else {
-        xml.append(" xsi:noNamespaceSchemaLocation=\"").append(systemId).append('"');
+        xml.append(" xsi:noNamespaceSchemaLocation=\"").append(inputSource.getSystemId()).append('"');
       }
 
       xml.append("/>");
 //      System.err.println(xml);
       saxSource = new SAXSource(parser.getXMLReader(), new InputSource(new ByteArrayInputStream(xml.toString().getBytes())));
-      saxSource.setSystemId("dynamic:" + systemId);
+      saxSource.setSystemId("dynamic:" + inputSource.getSystemId());
     }
     else {
-      saxSource = new SAXSource(parser.getXMLReader(), new InputSource(reader));
-      saxSource.setSystemId(systemId);
+      saxSource = new SAXSource(parser.getXMLReader(), inputSource);
+      saxSource.setSystemId(inputSource.getSystemId());
     }
 
     final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
-    validator.setResourceResolver(new SchemaLocationResolver(manifest.getCatalog(), systemId));
+    validator.setResourceResolver(new XmlCatalogResolver(digest.getCatalog()));
 
-    final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, manifest);
+    final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, digest);
     validator.setErrorHandler(validatorErrorHandler);
 
     validator.validate(saxSource);
@@ -338,6 +294,43 @@ public final class Validator {
         exception.addSuppressed(iterator.next());
 
       throw exception;
+    }
+  }
+
+  private static class ValidatorErrorHandler extends DelegateErrorHandler {
+    private final XmlDigest digest;
+    private List<SAXParseException> errors;
+
+    private ValidatorErrorHandler(final ErrorHandler handler, final XmlDigest digest) {
+      super(handler);
+      this.digest = Objects.requireNonNull(digest);
+    }
+
+    private boolean isMissingSchema() {
+      return !digest.isSchema() && digest.getImports() == null && digest.getIncludes() == null;
+    }
+
+    @Override
+    public void warning(final SAXParseException e) throws SAXException {
+      if (!e.getMessage().startsWith("schema_reference.4: Failed to read schema document '") || !isMissingSchema())
+        super.warning(e);
+    }
+
+    @Override
+    public void error(final SAXParseException e) throws SAXException {
+      if (dynamicXmlError.equals(e.getMessage()))
+        return;
+
+      if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && isMissingSchema()) {
+        warning(new SAXParseException("There is no schema or DTD associated with the document", digest.getPublicId(), digest.getSystemId(), 0, 0));
+      }
+      else {
+        if (errors == null)
+          errors = new ArrayList<>();
+
+        errors.add(e);
+        super.error(e);
+      }
     }
   }
 

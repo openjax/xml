@@ -32,6 +32,7 @@ import org.libj.net.URLs;
 import org.libj.util.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
 
 /**
  * A {@link FastSAXHandler} that collects catalog information and metadata from
@@ -40,34 +41,45 @@ import org.slf4j.LoggerFactory;
  * This handler dereferences external references to imported or included
  * documents and schemas, in order to comprise a complete catalog.
  * <p>
- * One {@link XMLManifest} instance is created for <b>each</b> XML
+ * One {@link XmlDigest} instance is created for <b>each</b> XML
  * document.
  * <p>
- * One {@link XMLCatalog} instance is created for <b>all</b> XML documents.
+ * One {@link XmlCatalog} instance is created for <b>all</b> XML documents.
  */
-public class XMLManifest extends FastSAXHandler {
-  private static final Logger logger = LoggerFactory.getLogger(XMLManifest.class);
+public class XmlDigest extends FastSAXHandler {
+  private static final Logger logger = LoggerFactory.getLogger(XmlDigest.class);
 
   private final String publicId;
   private final String systemId;
-  private final XMLCatalog catalog;
+  private final XmlCatalog catalog;
   private final Set<String> namespaceURIs = new HashSet<>();
   private final Map<String,URL> absoluteIncludes = new LinkedHashMap<>();
   private boolean referencesOnlyLocal = true;
   private String targetNamespace;
 
   /**
-   * Creates a new {@link XMLManifest} with the specified parameters.
+   * Creates a new {@link XmlDigest} with the specified parameters.
    *
-   * @param publicId The public identifier for this input source.
+   * @param inputSource The input source.
+   * @param catalog The {@link XmlCatalog}.
+   * @throws IOException If an I/O error has occurred.
+   */
+  protected XmlDigest(final InputSource inputSource, final XmlCatalog catalog) throws IOException {
+    this(inputSource.getPublicId(), inputSource.getSystemId(), SAXUtil.getReader(inputSource), catalog);
+  }
+
+  /**
+   * Creates a new {@link XmlDigest} with the specified parameters.
+   *
+   * @param publicId The public identifier.
    * @param systemId The system identifier, a URI reference
    *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
    *          for this input source.
    * @param in The input stream for XML data.
-   * @param catalog The {@link XMLCatalog}.
+   * @param catalog The {@link XmlCatalog}.
    * @throws IOException If an I/O error has occurred.
    */
-  protected XMLManifest(final String publicId, final String systemId, final Reader in, final XMLCatalog catalog) throws IOException {
+  protected XmlDigest(final String publicId, final String systemId, final Reader in, final XmlCatalog catalog) throws IOException {
     super(in);
     this.publicId = publicId;
     this.systemId = systemId;
@@ -87,16 +99,16 @@ public class XMLManifest extends FastSAXHandler {
    *
    * @return The catalog instance.
    */
-  public XMLCatalog getCatalog() {
+  public XmlCatalog getCatalog() {
     return this.catalog;
   }
 
   /**
    * Returns a set of the namespace URIs referenced in the XML document
-   * represented by this {@link XMLManifest} instance.
+   * represented by this {@link XmlDigest} instance.
    *
    * @return A set of the namespace URIs referenced in the XML document
-   *         represented by this {@link XMLManifest} instance.
+   *         represented by this {@link XmlDigest} instance.
    */
   public Set<String> getNamespaceURIs() {
     return namespaceURIs;
@@ -105,13 +117,13 @@ public class XMLManifest extends FastSAXHandler {
   private boolean isSchema;
 
   /**
-   * Returns whether the XML document represented by this {@link XMLManifest}
+   * Returns whether the XML document represented by this {@link XmlDigest}
    * instance is an XML Schema Document.
    *
-   * @return Whether the XML document represented by this {@link XMLManifest}
+   * @return Whether the XML document represented by this {@link XmlDigest}
    *         instance is an XML Schema Document.
    * @throws IllegalStateException If this method is called before the XML
-   *           document represented by this {@link XMLManifest} instance is
+   *           document represented by this {@link XmlDigest} instance is
    *           parsed.
    */
   public boolean isSchema() {
@@ -125,12 +137,12 @@ public class XMLManifest extends FastSAXHandler {
 
   /**
    * Returns the {@link QName} of the root element of the XML document
-   * represented by this {@link XMLManifest} instance.
+   * represented by this {@link XmlDigest} instance.
    *
    * @return The {@link QName} of the root element of the XML document
-   *         represented by this {@link XMLManifest} instance.
+   *         represented by this {@link XmlDigest} instance.
    * @throws IllegalStateException If this method is called before the XML
-   *           document represented by this {@link XMLManifest} instance is
+   *           document represented by this {@link XmlDigest} instance is
    *           parsed.
    */
   public QName getRootElement() {
@@ -142,11 +154,11 @@ public class XMLManifest extends FastSAXHandler {
 
   /**
    * Returns the "targetNamespace" attribute of the XML document represented by
-   * this {@link XMLManifest} instance. This method is only useful for XML
+   * this {@link XmlDigest} instance. This method is only useful for XML
    * Schema Documents (i.e. when {@link #isSchema()} is {@code true}).
    *
    * @return The "targetNamespace" attribute of the XML document represented by
-   *         this {@link XMLManifest} instance.
+   *         this {@link XmlDigest} instance.
    */
   public String getTargetNamespace() {
     return this.targetNamespace;
@@ -164,7 +176,7 @@ public class XMLManifest extends FastSAXHandler {
 
   /**
    * Returns the map of namespace-to-URL entries of "import" references for the
-   * XML document represented by this {@link XMLManifest} instance.
+   * XML document represented by this {@link XmlDigest} instance.
    * <ul>
    * <li>If {@link #isSchema()} is {@code true}, this method represents the
    * {@code <xs:import/>} elements of an XML Schema Document.</li>
@@ -173,14 +185,14 @@ public class XMLManifest extends FastSAXHandler {
    * </ul>
    *
    * @return The map of namespace-to-URL entries of "import" references for the
-   *         XML document represented by this {@link XMLManifest} instance.
+   *         XML document represented by this {@link XmlDigest} instance.
    */
   public Map<String,URL> getImports() {
     return imports;
   }
 
   private void addImport(final String namespace, final String location) {
-    final String path = SchemaLocationResolver.getPath(systemId, location);
+    final String path = XmlCatalogResolver.getPath(systemId, location);
     referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
     if (!imports().containsKey(namespace))
       imports.put(namespace, Paths.getProtocol(path) == null ? URLs.create("file:" + path) : URLs.create(path));
@@ -194,7 +206,7 @@ public class XMLManifest extends FastSAXHandler {
 
   /**
    * Returns the map of {@link String}-to-{@link URL} entries of "include"
-   * references for the XML document represented by this {@link XMLManifest}
+   * references for the XML document represented by this {@link XmlDigest}
    * instance. The key and value of each entry in this map represents the same
    * logical string, differing only in class type.
    * <ul>
@@ -207,14 +219,14 @@ public class XMLManifest extends FastSAXHandler {
    *
    * @return The map of {@link String}-to-{@link URL} entries of "include"
    *         references for the XML document represented by this
-   *         {@link XMLManifest} instance.
+   *         {@link XmlDigest} instance.
    */
   public Map<String,URL> getIncludes() {
     return includes;
   }
 
   private void addInclude(final String schemaLocation) {
-    final String path = SchemaLocationResolver.getPath(systemId, schemaLocation);
+    final String path = XmlCatalogResolver.getPath(systemId, schemaLocation);
     referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
     URL url = absoluteIncludes.get(path);
     if (url == null)
@@ -262,7 +274,7 @@ public class XMLManifest extends FastSAXHandler {
           }
         }
 
-        final String path = SchemaLocationResolver.getPath(systemId, schemaLocation);
+        final String path = XmlCatalogResolver.getPath(systemId, schemaLocation);
         referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
         namespaceURIs.add(namespace);
         if (!imports().containsKey(namespace))

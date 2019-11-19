@@ -66,6 +66,9 @@ final class SAXUtil {
   }
 
   static ReplayReader getReader(final InputSource inputSource) {
+    if (inputSource.getCharacterStream() instanceof ReplayReader)
+      return (ReplayReader)inputSource.getCharacterStream();
+
     if (inputSource.getCharacterStream() != null)
       return new ReplayReader(inputSource.getCharacterStream());
 

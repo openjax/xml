@@ -25,26 +25,26 @@ import org.junit.Test;
 import org.libj.net.URLs;
 
 public class XMLManifestParserTest {
-  private static XMLManifest test(final String fileName, final boolean expectXsd) throws IOException {
+  private static XmlDigest test(final String fileName, final boolean expectXsd) throws IOException {
     final URL url = ClassLoader.getSystemClassLoader().getResource(fileName);
 //    try {
-      final XMLManifest manifest = XMLManifestParser.parse(url);
-      assertEquals(expectXsd, manifest.isSchema());
+      final XmlDigest digest = XmlDigestParser.parse(url);
+      assertEquals(expectXsd, digest.isSchema());
 //      assertEquals('<', reader.read());
 //      final char[] chars = new char[2048];
 //      reader.read(chars);
 //      System.err.println("<" + new String(chars));
 //      System.err.println("\n\n\n");
 //      assertEquals('!', reader.read());
-      return manifest;
+      return digest;
 //    }
   }
 
-  private static XMLManifest testXsd(final String fileName) throws IOException {
+  private static XmlDigest testXsd(final String fileName) throws IOException {
     return test(fileName, true);
   }
 
-  private static XMLManifest testXml(final String fileName) throws IOException {
+  private static XmlDigest testXml(final String fileName) throws IOException {
     return test(fileName, false);
   }
 
@@ -75,33 +75,33 @@ public class XMLManifestParserTest {
 
   @Test
   public void testNoNamespaceXml() throws IOException {
-    final XMLManifest manifest = testXml("invalid.xml");
-    assertEquals("test.xsd", URLs.getName(manifest.getImports().get(manifest.getRootElement().getNamespaceURI())));
+    final XmlDigest digest = testXml("invalid.xml");
+    assertEquals("test.xsd", URLs.getName(digest.getImports().get(digest.getRootElement().getNamespaceURI())));
   }
 
   @Test
   public void testRemoteXml() throws IOException {
-    final XMLManifest manifest = testXml("remote.xml");
-    assertEquals("remote.xsd", URLs.getName(manifest.getImports().get(manifest.getRootElement().getNamespaceURI())));
+    final XmlDigest digest = testXml("remote.xml");
+    assertEquals("remote.xsd", URLs.getName(digest.getImports().get(digest.getRootElement().getNamespaceURI())));
   }
 
   @Test
   public void testValidXml() throws IOException {
-    final XMLManifest manifest = testXml("valid.xml");
-    assertEquals("test.xsd", URLs.getName(manifest.getImports().get(manifest.getRootElement().getNamespaceURI())));
+    final XmlDigest digest = testXml("valid.xml");
+    assertEquals("test.xsd", URLs.getName(digest.getImports().get(digest.getRootElement().getNamespaceURI())));
   }
 
   @Test
   public void testEmptyXml() throws IOException {
-    final XMLManifest manifest = testXml("empty.xml");
-    assertNull(manifest.getImports());
+    final XmlDigest digest = testXml("empty.xml");
+    assertNull(digest.getImports());
   }
 
   @Test
   public void testDoctypeXml() throws Exception {
     final URL url = ClassLoader.getSystemClassLoader().getResource("doctype.xml");
 //    try (final ReplayReader reader = new ReplayReader(new InputStreamReader(url.openStream()))) {
-      XMLManifestParser.parse(url);
+      XmlDigestParser.parse(url);
 
 //      final char[] chars = new char[19];
 //      assertEquals(chars.length, reader.read(chars));

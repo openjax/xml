@@ -20,20 +20,54 @@ import java.io.InputStream;
 import java.io.Reader;
 
 import org.w3c.dom.ls.LSInput;
+import org.xml.sax.InputSource;
 
 /**
  * Simple implementation of the the {@link LSInput} interface for the input
  * source of XML data.
  */
-public class LSInputImpl implements LSInput {
-  private Reader reader;
-  private InputStream inputStream;
+public class LSInputImpl extends InputSource implements LSInput {
   private String stringData;
-  private String publicId;
-  private String systemId;
   private String baseURI;
-  private String encoding;
   private boolean certifiedText;
+
+  /**
+   * Creates a new {@link LSInputImpl} with the specified parameters.
+   *
+   * @param publicId The public identifier for this input source.
+   * @param systemId The system identifier, a URI reference
+   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
+   *          for this input source.
+   * @param baseURI The base URI to be used (see section 5.1.4 in
+   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>])
+   *          for resolving a relative <code>systemId</code> to an absolute URI.
+   * @param in The the byte stream for this input source.
+   */
+  public LSInputImpl(final String publicId, final String systemId, final String baseURI, final InputStream in) {
+    setPublicId(publicId);
+    setSystemId(systemId);
+    setBaseURI(baseURI);
+    setByteStream(in);
+  }
+
+  /**
+   * Creates a new {@link LSInputImpl} with the specified parameters.
+   *
+   * @param publicId The public identifier for this input source.
+   * @param systemId The system identifier, a URI reference
+   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
+   *          for this input source.
+   * @param baseURI The base URI to be used (see section 5.1.4 in
+   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>])
+   *          for resolving a relative <code>systemId</code> to an absolute URI.
+   * @param reader The the character stream for this input source.
+   */
+  public LSInputImpl(final String publicId, final String systemId, final String baseURI, final Reader reader) {
+    setPublicId(publicId);
+    setSystemId(systemId);
+    setBaseURI(baseURI);
+    setCharacterStream(reader);
+  }
 
   /**
    * Creates a new {@link LSInputImpl} with the specified parameters.
@@ -47,34 +81,14 @@ public class LSInputImpl implements LSInput {
    *          for resolving a relative <code>systemId</code> to an absolute URI.
    */
   public LSInputImpl(final String publicId, final String systemId, final String baseURI) {
-    this.publicId = publicId;
-    this.systemId = systemId;
-    this.baseURI = baseURI;
-  }
-
-  @Override
-  public Reader getCharacterStream() {
-    return this.reader;
-  }
-
-  @Override
-  public void setCharacterStream(final Reader characterStream) {
-    this.reader = characterStream;
-  }
-
-  @Override
-  public InputStream getByteStream() {
-    return inputStream;
-  }
-
-  @Override
-  public void setByteStream(final InputStream byteStream) {
-    this.inputStream = byteStream;
+    setPublicId(publicId);
+    setSystemId(systemId);
+    setBaseURI(baseURI);
   }
 
   @Override
   public String getStringData() {
-    return this.stringData;
+    return stringData;
   }
 
   @Override
@@ -83,28 +97,8 @@ public class LSInputImpl implements LSInput {
   }
 
   @Override
-  public String getSystemId() {
-    return this.systemId;
-  }
-
-  @Override
-  public void setSystemId(final String systemId) {
-    this.systemId = systemId;
-  }
-
-  @Override
-  public String getPublicId() {
-    return this.publicId;
-  }
-
-  @Override
-  public void setPublicId(final String publicId) {
-    this.publicId = publicId;
-  }
-
-  @Override
   public String getBaseURI() {
-    return this.baseURI;
+    return baseURI;
   }
 
   @Override
@@ -113,18 +107,8 @@ public class LSInputImpl implements LSInput {
   }
 
   @Override
-  public String getEncoding() {
-    return this.encoding;
-  }
-
-  @Override
-  public void setEncoding(final String encoding) {
-    this.encoding = encoding;
-  }
-
-  @Override
   public boolean getCertifiedText() {
-    return this.certifiedText;
+    return certifiedText;
   }
 
   @Override
