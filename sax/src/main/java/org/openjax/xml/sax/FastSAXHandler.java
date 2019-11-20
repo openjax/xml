@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.xml.namespace.QName;
 
@@ -57,16 +58,23 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
     }
   }
 
-  private final Reader in;
+  protected Reader reader;
   private ArrayList<Element> stack;
 
   /**
    * Creates a new {@link FastSAXHandler} with the specified input stream.
    *
-   * @param in The input stream.
+   * @param reader The input stream.
+   * @throws NullPointerException If the specified input stream is null.
    */
-  public FastSAXHandler(final Reader in) {
-    this.in = in;
+  public FastSAXHandler(final Reader reader) {
+    this.reader = Objects.requireNonNull(reader);
+  }
+
+  /**
+   * Creates a new {@link FastSAXHandler} with a null input stream.
+   */
+  protected FastSAXHandler() {
   }
 
   private final int DEFAULT_BUFFER_SIZE = 64;
@@ -119,16 +127,16 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
 
     final String prefix;
     if (prefixLen > 0) {
-      prefix = read(in, prefixLen - 1);
-      in.read();
+      prefix = read(reader, prefixLen - 1);
+      reader.read();
     }
     else {
       prefix = null;
     }
 
-    final String localName = read(in, localPartLen);
-    in.skip(skip);
-    final String value = read(in, valueLen);
+    final String localName = read(reader, localPartLen);
+    reader.skip(skip);
+    final String value = read(reader, valueLen);
     final Element element = stack.get(stack.size() - 1);
     if (prefixLen == 0 && "xmlns".equals(localName)) {
       element.prefixToNamespace().put("", value);
@@ -145,8 +153,8 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
   public final boolean startElement(final int prefixLen, final int localPartLen) throws IOException {
     final String prefix;
     if (prefixLen > 0) {
-      prefix = read(in, prefixLen - 1);
-      in.read();
+      prefix = read(reader, prefixLen - 1);
+      reader.read();
     }
     else {
       prefix = "";
@@ -155,7 +163,7 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
     if (stack == null)
       stack = new ArrayList<>();
 
-    stack.add(new Element(prefix, read(in, localPartLen)));
+    stack.add(new Element(prefix, read(reader, localPartLen)));
     return true;
   }
 
@@ -206,5 +214,16 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
    */
   public boolean endElement(final QName name) throws IOException {
     return true;
+  }
+
+  /**
+   * Resets the local variables in this handler, so it can be used in another
+   * parsing invocation.
+   */
+  public void reset() {
+    if (this.stack != null)
+      this.stack.clear();
+
+    this.inDeclaration = false;
   }
 }

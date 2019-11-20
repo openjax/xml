@@ -38,6 +38,10 @@ public class FastSAXParserTest {
   }
 
   enum Type {
+    DOST,
+    DOEN,
+    DCST,
+    DCEN,
     CMNT,
     DOCT,
     ELOP,
@@ -68,6 +72,30 @@ public class FastSAXParserTest {
     private FasterTestHandler(final Iterator<Event> iterator, final Reader in) {
       this.iterator = iterator;
       this.in = in;
+    }
+
+    @Override
+    public boolean startDocument() throws IOException {
+      assertEvent(iterator, in, Type.DOST);
+      return true;
+    }
+
+    @Override
+    public boolean endDocument() throws IOException {
+      assertEvent(iterator, in, Type.DOEN);
+      return true;
+    }
+
+    @Override
+    public boolean startDeclaration(int nameLen) throws IOException {
+      assertEvent(iterator, in, Type.DCST);
+      return true;
+    }
+
+    @Override
+    public boolean endDeclaration() throws IOException {
+      assertEvent(iterator, in, Type.DCEN);
+      return true;
     }
 
     @Override
@@ -136,6 +164,7 @@ public class FastSAXParserTest {
   @Test
   public void testTestXsd() throws IOException {
     final List<Event> events = new ArrayList<>();
+    add(events, Type.DOST);
     add(events, Type.CMNT, "\n  Copyright (c) 2006 OpenJAX\n\n  Permission is hereby granted, free of charge, to any person obtaining a copy\n  of this software and associated documentation files (the \"Software\"), to deal\n  in the Software without restriction, including without limitation the rights\n  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n  copies of the Software, and to permit persons to whom the Software is\n  furnished to do so, subject to the following conditions:\n\n  The above copyright notice and this permission notice shall be included in\n  all copies or substantial portions of the Software.\n\n  You should have received a copy of The MIT License (MIT) along with this\n  program. If not, see <http://opensource.org/licenses/MIT/>.\n");
     add(events, Type.ELOP, "xs:", "schema");
     add(events, Type.ATTR, "", "elementFormDefault", "=\"", "qualified");
@@ -253,12 +282,14 @@ public class FastSAXParserTest {
     add(events, Type.ELCL);
     add(events, Type.ELEN);
     add(events, Type.ELEN);
+    add(events, Type.DOEN);
     test(events, ClassLoader.getSystemClassLoader().getResource("numerals.xsd"));
   }
 
   @Test
   public void testNumeralsXml() throws IOException {
     final List<Event> events = new ArrayList<>();
+    add(events, Type.DOST);
     add(events, Type.CMNT, "\n  Copyright (c) 2008 OpenJAX\n\n  Permission is hereby granted, free of charge, to any person obtaining a copy\n  of this software and associated documentation files (the \"Software\"), to deal\n  in the Software without restriction, including without limitation the rights\n  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n  copies of the Software, and to permit persons to whom the Software is\n  furnished to do so, subject to the following conditions:\n\n  The above copyright notice and this permission notice shall be included in\n  all copies or substantial portions of the Software.\n\n  You should have received a copy of The MIT License (MIT) along with this\n  program. If not, see <http://opensource.org/licenses/MIT/>.\n");
     add(events, Type.ELOP, "xs:", "schema");
     add(events, Type.ATTR, "", "elementFormDefault", "=\"", "qualified");
@@ -295,12 +326,14 @@ public class FastSAXParserTest {
     add(events, Type.ELEN);
     add(events, Type.ELEN);
     add(events, Type.ELEN);
+    add(events, Type.DOEN);
     test(events, ClassLoader.getSystemClassLoader().getResource("test.xsd"));
   }
 
   @Test
   public void testDoctypeXml() throws IOException {
     final List<Event> events = new ArrayList<>();
+    add(events, Type.DOST);
     add(events, Type.CMNT, "\n  Copyright (c) 2019 OpenJAX\n\n  Permission is hereby granted, free of charge, to any person obtaining a copy\n  of this software and associated documentation files (the \"Software\"), to deal\n  in the Software without restriction, including without limitation the rights\n  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n  copies of the Software, and to permit persons to whom the Software is\n  furnished to do so, subject to the following conditions:\n\n  The above copyright notice and this permission notice shall be included in\n  all copies or substantial portions of the Software.\n\n  You should have received a copy of The MIT License (MIT) along with this\n  program. If not, see <http://opensource.org/licenses/MIT/>.\n");
     add(events, Type.DOCT, "DOCTYPE catalog [\n  <!NOTATION jpeg SYSTEM \"JPG\">\n  <!ENTITY prod557 SYSTEM \"prod557.jpg\" NDATA jpeg>\n  <!ENTITY prod563 SYSTEM \"prod563.jpg\" NDATA jpeg>\n]");
     add(events, Type.ELOP, "", "attribute");
@@ -319,6 +352,7 @@ public class FastSAXParserTest {
     add(events, Type.ELCL);
     add(events, Type.ELEN);
     add(events, Type.ELEN);
+    add(events, Type.DOEN);
     test(events, ClassLoader.getSystemClassLoader().getResource("doctype.xml"));
   }
 }

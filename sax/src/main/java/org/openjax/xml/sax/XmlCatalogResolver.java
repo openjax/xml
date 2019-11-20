@@ -35,14 +35,9 @@ class XmlCatalogResolver implements LSResourceResolver {
     SCHEMA_XSD(XMLConstants.W3C_XML_SCHEMA_NS_URI, "xmlschema/XMLSchema.xsd"),
     XML_XSD(XMLConstants.XML_NS_URI, "xmlschema/xml.xsd");
 
-    private XmlEntity in;
-
-    XmlEntity getEntity() {
-      if (in != null)
-        return in;
-
-      final LSInputImpl inputSource = new LSInputImpl(null, null, namespaceURI);
-      return in = new XmlEntity(Thread.currentThread().getContextClassLoader().getResource(resourceName), inputSource);
+    XmlEntity getEntity() throws IOException {
+      final URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+      return new XmlEntity(url, new CachedInputSource(null, namespaceURI, null, url.openStream()));
     }
 
     private final String namespaceURI;
@@ -64,7 +59,7 @@ class XmlCatalogResolver implements LSResourceResolver {
   public LSInput resolveResource(final String type, final String namespaceURI, final String publicId, String systemId, final String baseURI) {
 //    System.err.println("resolveResource(\"" + type + "\", \"" + namespaceURI + "\", \"" + publicId + "\", \"" + systemId + "\", \"" + baseURI + "\")");
     if (namespaceURI == null && systemId == null)
-      return new LSInputImpl(publicId, systemId, baseURI);
+      return null;
 
     if (systemId == null)
       systemId = namespaceURI;
@@ -72,39 +67,23 @@ class XmlCatalogResolver implements LSResourceResolver {
       systemId = getPath(baseURI, systemId);
 
     try {
-      URL url = catalog.matchURI(systemId);
-      if (url == null) {
+      XmlEntity entity = catalog.getEntity(systemId);
+      if (entity == null) {
         if (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(namespaceURI)) {
-          final XmlEntity entity = W3C.SCHEMA_XSD.getEntity();
-          catalog.putEntity(namespaceURI, entity);
-          return (LSInputImpl)entity.getInputSource();
+          catalog.putEntity(namespaceURI, entity = W3C.SCHEMA_XSD.getEntity());
         }
-
-        if (XMLConstants.XML_NS_URI.equals(namespaceURI)) {
-          final XmlEntity entity = W3C.XML_XSD.getEntity();
-          catalog.putEntity(namespaceURI, entity);
-          return (LSInputImpl)entity.getInputSource();
+        else if (XMLConstants.XML_NS_URI.equals(namespaceURI)) {
+          catalog.putEntity(namespaceURI, entity = W3C.XML_XSD.getEntity());
         }
       }
 
-//      if (url == null) {
-//        if ("http://www.w3.org/2001/XMLSchema.dtd".equals(systemId)) {
-//          directory.put(systemId, url = Thread.currentThread().getContextClassLoader().getResource("xmlschema/XMLSchema.dtd"));
-//        }
-//        else if ("http://www.w3.org/2001/datatypes.dtd".equals(systemId)) {
-//          directory.put(systemId, url = Thread.currentThread().getContextClassLoader().getResource("xmlschema/datatypes.dtd"));
-//        }
-//        else if (Paths.isAbsolute(systemId)) {
-//          directory.put(systemId, url = new URL(systemId));
-//        }
-//      }
+      if (entity == null)
+        return null;
 
-      final LSInputImpl input = new LSInputImpl(publicId, systemId, baseURI);
-      if (url != null)
-        input.setByteStream(url.openStream());
-
-//      System.out.println(url);
-      return input;
+      final CachedInputSource inputSource = entity.getInputSource();
+      inputSource.getCharacterStream().close();
+      inputSource.setBaseURI(baseURI);
+      return inputSource;
     }
     catch (final IOException e) {
       Throwing.rethrow(e);

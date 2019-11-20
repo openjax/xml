@@ -59,6 +59,7 @@ public final class FastSAXParser {
     int prefixLen = 0;
     int attrNameLen = 0;
     in.mark(DEFAULT_READ_LIMIT);
+    handler.startDocument();
     for (int ch0, ch1 = '\0', ch2 = '\0', i = 0; (ch0 = in.read()) != -1; ++i) {
       if (skipToNext != '\0') {
         if (ch0 == skipToNext)
@@ -194,6 +195,8 @@ public final class FastSAXParser {
 
 //      System.err.print((char)ch0);
     }
+
+    handler.endDocument();
   }
 
   private FastSAXParser() {

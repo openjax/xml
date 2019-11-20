@@ -34,6 +34,26 @@ import java.io.IOException;
  */
 public interface FasterSAXHandler {
   /**
+   * Called when the start of the document is encountered.
+   *
+   * @return Whether parsing should continue.
+   * @throws IOException If an I/O error has occurred.
+   */
+  default boolean startDocument() throws IOException {
+    return true;
+  };
+
+  /**
+   * Called when the end of the document is encountered.
+   *
+   * @return Whether parsing should continue.
+   * @throws IOException If an I/O error has occurred.
+   */
+  default boolean endDocument() throws IOException {
+    return true;
+  };
+
+  /**
    * Called when a declaration element is encountered (i.e. {@code '<?xml'}).
    *
    * @param nameLen The length of the name of the element, sans {@code <?} and

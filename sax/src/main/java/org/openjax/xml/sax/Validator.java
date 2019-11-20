@@ -18,7 +18,7 @@ package org.openjax.xml.sax;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -160,8 +160,8 @@ public final class Validator {
    * @throws NullPointerException If the specified {@link URL} is null.
    */
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
-    try (final Reader in = new InputStreamReader(url.openStream())) {
-      validate(url, new LSInputImpl(null, url.toString(), null, in), null, errorHandler);
+    try (final InputStream in = url.openStream()) {
+      validate(url, new CachedInputSource(null, url.toString(), null, in), (XmlAuditHandler)null, errorHandler);
     }
   }
 
@@ -207,8 +207,8 @@ public final class Validator {
    *
    * @param inputSource The {@link InputSource} providing the source for the XML
    *          document to validate.
-   * @param digest The {@link XmlDigest} for the document to validate (can be
-   *          {@code null}).
+   * @param auditHandler The {@link XmlAuditHandler} for the document to
+   *          validate (can be {@code null}).
    * @param errorHandler The {@link ErrorHandler} for parsing and validation
    *          errors.
    * @throws IOException If an I/O error has occurred.
@@ -218,19 +218,42 @@ public final class Validator {
    *           during processing.
    * @throws NullPointerException If the specified {@link InputSource} is null.
    */
-  public static void validate(final InputSource inputSource, final XmlDigest digest, final ErrorHandler errorHandler) throws IOException, SAXException {
-    validate(null, inputSource, digest, errorHandler);
+  public static void validate(final InputSource inputSource, final XmlAuditHandler auditHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
+    validate(null, inputSource, auditHandler, errorHandler);
   }
 
-  private static XmlDigest initInputSource(final URL url, final InputSource inputSource, XmlDigest digest) throws IOException {
-    final ReplayReader reader = SAXUtil.getReader(inputSource);
+  /**
+   * Validates the XML document provided by the source in the specified
+   * {@link InputSource}.
+   *
+   * @param inputSource The {@link InputSource} providing the source for the XML
+   *          document to validate.
+   * @param xmlAudit The {@link XmlAudit} for the document to validate.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation
+   *          errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified {@link InputSource} or
+   *           {@link XmlAudit} is null.
+   */
+  public static void validate(final InputSource inputSource, final XmlAudit xmlAudit, final ErrorHandler errorHandler) throws IOException, SAXException {
+    validate(inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource), xmlAudit, errorHandler);
+  }
+
+  @SuppressWarnings("resource")
+  private static XmlAudit initInputSource(final URL url, final CachedInputSource inputSource, XmlAuditHandler auditHandler) throws IOException {
+    final ReplayReader reader = CachedInputSource.getReader(inputSource);
     inputSource.setCharacterStream(reader);
-    if (digest == null) {
-      digest = XmlDigestParser.parse(url != null ? url : new URL(inputSource.getSystemId()), inputSource);
+    if (auditHandler == null) {
+      final XmlAudit xmlAudit = XmlAuditParser.parse(url != null ? url : new URL(inputSource.getSystemId()), inputSource);
       reader.close();
+      return xmlAudit;
     }
 
-    return digest;
+    return auditHandler.toXmlAudit();
   }
 
   /**
@@ -241,8 +264,8 @@ public final class Validator {
    *          validate.
    * @param inputSource The {@link InputSource} providing the source for the XML
    *          document to validate.
-   * @param digest The {@link XmlDigest} for the document to validate (can be
-   *          {@code null}).
+   * @param auditHandler The {@link XmlAuditHandler} for the document to
+   *          validate (can be {@code null}).
    * @param errorHandler The {@link ErrorHandler} for parsing and validation
    *          errors.
    * @throws IOException If an I/O error has occurred.
@@ -252,67 +275,92 @@ public final class Validator {
    *           during processing.
    * @throws NullPointerException If the specified {@link Reader} is null.
    */
-  private static void validate(final URL url, final InputSource inputSource, XmlDigest digest, final ErrorHandler errorHandler) throws IOException, SAXException {
-    digest = initInputSource(url, inputSource, digest);
-    final SAXParser parser = SAXParsers.newParser(false);
-    final SAXSource saxSource;
-    if (digest.isSchema()) {
-      final StringBuilder xml = new StringBuilder();
-      xml.append('<').append(dynamicXmlRoot);
-      xml.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-      if (digest.getTargetNamespace().length() > 0) {
-        xml.append(" xmlns=\"").append(digest.getTargetNamespace()).append('"');
-        xml.append(" xsi:schemaLocation=\"").append(digest.getTargetNamespace()).append(' ').append(inputSource.getSystemId()).append('"');
+  private static void validate(final URL url, final InputSource inputSource, final XmlAuditHandler auditHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
+    final CachedInputSource cachedInputSource = inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource);
+    final XmlAudit xmlAudit = initInputSource(url, cachedInputSource, auditHandler);
+    validate(cachedInputSource, xmlAudit, errorHandler);
+  }
+
+  /**
+   * Validates the XML document provided by the stream of data in the specified
+   * {@link Reader}.
+   *
+   * @param inputSource The {@link CachedInputSource} providing the source for
+   *          the XML document to validate.
+   * @param xmlAudit The {@link XmlAudit} for the document to validate .
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation
+   *          errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a
+   *           {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
+   *           during processing.
+   * @throws NullPointerException If the specified {@link InputSource} or
+   *           {@link XmlAudit} is null.
+   */
+  private static void validate(final CachedInputSource inputSource, final XmlAudit xmlAudit, final ErrorHandler errorHandler) throws IOException, SAXException {
+    try {
+      final SAXParser parser = SAXParsers.newParser(false);
+      final SAXSource saxSource;
+      if (xmlAudit.isSchema()) {
+        final StringBuilder xml = new StringBuilder();
+        xml.append('<').append(dynamicXmlRoot);
+        xml.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+        if (xmlAudit.getTargetNamespace().length() > 0) {
+          xml.append(" xmlns=\"").append(xmlAudit.getTargetNamespace()).append('"');
+          xml.append(" xsi:schemaLocation=\"").append(xmlAudit.getTargetNamespace()).append(' ').append(inputSource.getSystemId()).append('"');
+        }
+        else {
+          xml.append(" xsi:noNamespaceSchemaLocation=\"").append(inputSource.getSystemId()).append('"');
+        }
+
+        xml.append("/>");
+        saxSource = new SAXSource(parser.getXMLReader(), new InputSource(new ByteArrayInputStream(xml.toString().getBytes())));
+        saxSource.setSystemId("dynamic:" + inputSource.getSystemId());
       }
       else {
-        xml.append(" xsi:noNamespaceSchemaLocation=\"").append(inputSource.getSystemId()).append('"');
+        saxSource = new SAXSource(parser.getXMLReader(), inputSource);
+        saxSource.setSystemId(inputSource.getSystemId());
       }
 
-      xml.append("/>");
-//      System.err.println(xml);
-      saxSource = new SAXSource(parser.getXMLReader(), new InputSource(new ByteArrayInputStream(xml.toString().getBytes())));
-      saxSource.setSystemId("dynamic:" + inputSource.getSystemId());
+      final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
+      validator.setResourceResolver(new XmlCatalogResolver(xmlAudit.getCatalog()));
+
+      final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, inputSource, xmlAudit.isSchema() || xmlAudit.getImports() != null || xmlAudit.getIncludes() != null);
+      validator.setErrorHandler(validatorErrorHandler);
+
+      validator.validate(saxSource);
+
+      // NOTE: The following code is skipped if the validate() call above throws an exception.
+      if (validatorErrorHandler.errors != null) {
+        final Iterator<SAXParseException> iterator = validatorErrorHandler.errors.iterator();
+        final SAXParseException exception = iterator.next();
+        while (iterator.hasNext())
+          exception.addSuppressed(iterator.next());
+
+        throw exception;
+      }
     }
-    else {
-      saxSource = new SAXSource(parser.getXMLReader(), inputSource);
-      saxSource.setSystemId(inputSource.getSystemId());
-    }
-
-    final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
-    validator.setResourceResolver(new XmlCatalogResolver(digest.getCatalog()));
-
-    final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, digest);
-    validator.setErrorHandler(validatorErrorHandler);
-
-    validator.validate(saxSource);
-
-    // NOTE: The following code is skipped if the validate() call above throws an exception.
-    if (validatorErrorHandler.errors != null) {
-      final Iterator<SAXParseException> iterator = validatorErrorHandler.errors.iterator();
-      final SAXParseException exception = iterator.next();
-      while (iterator.hasNext())
-        exception.addSuppressed(iterator.next());
-
-      throw exception;
+    finally {
+      if (xmlAudit != null)
+        xmlAudit.getCatalog().close();
     }
   }
 
   private static class ValidatorErrorHandler extends DelegateErrorHandler {
-    private final XmlDigest digest;
+    private final InputSource inputSource;
+    private final boolean hasSchema;
     private List<SAXParseException> errors;
 
-    private ValidatorErrorHandler(final ErrorHandler handler, final XmlDigest digest) {
+    private ValidatorErrorHandler(final ErrorHandler handler, final InputSource inputSource, final boolean hasSchema) {
       super(handler);
-      this.digest = Objects.requireNonNull(digest);
-    }
-
-    private boolean isMissingSchema() {
-      return !digest.isSchema() && digest.getImports() == null && digest.getIncludes() == null;
+      this.inputSource = Objects.requireNonNull(inputSource);
+      this.hasSchema = hasSchema;
     }
 
     @Override
     public void warning(final SAXParseException e) throws SAXException {
-      if (!e.getMessage().startsWith("schema_reference.4: Failed to read schema document '") || !isMissingSchema())
+      if (!e.getMessage().startsWith("schema_reference.4: Failed to read schema document '") || hasSchema)
         super.warning(e);
     }
 
@@ -321,8 +369,8 @@ public final class Validator {
       if (dynamicXmlError.equals(e.getMessage()))
         return;
 
-      if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && isMissingSchema()) {
-        warning(new SAXParseException("There is no schema or DTD associated with the document", digest.getPublicId(), digest.getSystemId(), 0, 0));
+      if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && !hasSchema) {
+        warning(new SAXParseException("There is no schema or DTD associated with the document", inputSource.getPublicId(), inputSource.getSystemId(), 0, 0));
       }
       else {
         if (errors == null)
@@ -335,13 +383,13 @@ public final class Validator {
   }
 
   /**
-   * Tests whether the specified exception could be the result of the JVM being
-   * offline.
+   * Specifies whether the provided exception could be the result of the JVM
+   * being offline.
    *
    * @param exception The {@link IOException} to test.
-   * @return Whether the specified exception could be the result of the JVM
-   *         being offline.
-   * @throws NullPointerException If the specified {@link IOException} is null.
+   * @return Whether the provided exception could be the result of the JVM being
+   *         offline.
+   * @throws NullPointerException If the provided {@link IOException} is null.
    */
   public static boolean isRemoteAccessException(final IOException exception) {
     final String methodName = exception.getStackTrace()[0].getMethodName();
@@ -349,13 +397,13 @@ public final class Validator {
   }
 
   /**
-   * Tests whether the specified exception could be the result of the JVM being
-   * offline.
+   * Specifies whether the provided exception could be the result of the JVM
+   * being offline.
    *
    * @param exception The {@link SAXException} to test.
-   * @return Whether the specified exception could be the result of the JVM
-   *         being offline.
-   * @throws NullPointerException If the specified {@link SAXException} is null.
+   * @return Whether the provided exception could be the result of the JVM being
+   *         offline.
+   * @throws NullPointerException If the provided {@link SAXException} is null.
    */
   public static boolean isRemoteAccessException(final SAXException exception) {
     final String message = exception.getMessage();

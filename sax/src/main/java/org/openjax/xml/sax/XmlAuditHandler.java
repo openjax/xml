@@ -17,9 +17,10 @@
 package org.openjax.xml.sax;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -41,57 +42,92 @@ import org.xml.sax.InputSource;
  * This handler dereferences external references to imported or included
  * documents and schemas, in order to comprise a complete catalog.
  * <p>
- * One {@link XmlDigest} instance is created for <b>each</b> XML
- * document.
+ * One {@link XmlAuditHandler} instance is created for <b>each</b> XML document.
  * <p>
  * One {@link XmlCatalog} instance is created for <b>all</b> XML documents.
  */
-public class XmlDigest extends FastSAXHandler {
-  private static final Logger logger = LoggerFactory.getLogger(XmlDigest.class);
+class XmlAuditHandler extends FastSAXHandler {
+  private static final Logger logger = LoggerFactory.getLogger(XmlAuditHandler.class);
 
-  private final String publicId;
-  private final String systemId;
-  private final XmlCatalog catalog;
-  private final Set<String> namespaceURIs = new HashSet<>();
+  /**
+   * Returns a string encoding of the specified {@code attributes}. The encoding
+   * is of the form:
+   *
+   * <pre>name = "value"</pre>
+   *
+   * @param attributes The map of attributes.
+   * @return A string encoding of the specified {@code attributes}.
+   */
+  private static String toString(final Map<QName,String> attributes) {
+    if (attributes == null)
+      return null;
+
+    if (attributes.size() == 0)
+      return "";
+
+    final StringBuilder builder = new StringBuilder();
+    final Iterator<Map.Entry<QName,String>> iterator = attributes.entrySet().iterator();
+    for (int i = 0; iterator.hasNext(); ++i) {
+      if (i > 0)
+        builder.append(' ');
+
+      final Map.Entry<QName,String> entry = iterator.next();
+      final QName name = entry.getKey();
+      if (name.getPrefix().length() > 0)
+        builder.append(name.getPrefix()).append(':');
+
+      builder.append(name.getLocalPart());
+      builder.append("=\"").append(entry.getValue()).append('"');
+    }
+
+    return builder.toString();
+  }
+
+  private XmlCatalog catalog;
+  private String systemId;
+  private final Set<String> visitedURIs = new HashSet<>();
+  private final Set<URL> visitedURLs = new HashSet<>();
   private final Map<String,URL> absoluteIncludes = new LinkedHashMap<>();
-  private boolean referencesOnlyLocal = true;
+  private boolean isLocal = true;
   private String targetNamespace;
 
   /**
-   * Creates a new {@link XmlDigest} with the specified parameters.
-   *
-   * @param inputSource The input source.
-   * @param catalog The {@link XmlCatalog}.
-   * @throws IOException If an I/O error has occurred.
+   * Creates a new {@link XmlAuditHandler} to be initialized with the specified {@link XmlCatalog}.
+   * @param catalog
+   * @throws NullPointerException If the specified {@link XmlCatalog} is null.
+   * @throws IllegalArgumentException If the {@link InputSource} in the
+   *           specified {@link XmlCatalog} does not have a byte stream or
+   *           character stream.
    */
-  protected XmlDigest(final InputSource inputSource, final XmlCatalog catalog) throws IOException {
-    this(inputSource.getPublicId(), inputSource.getSystemId(), SAXUtil.getReader(inputSource), catalog);
+  XmlAuditHandler(final XmlCatalog catalog) {
+    init(catalog);
   }
 
   /**
-   * Creates a new {@link XmlDigest} with the specified parameters.
+   * Initializes the specified {@link XmlCatalog} in this
+   * {@link XmlAuditHandler}.
    *
-   * @param publicId The public identifier.
-   * @param systemId The system identifier, a URI reference
-   *          [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>],
-   *          for this input source.
-   * @param in The input stream for XML data.
    * @param catalog The {@link XmlCatalog}.
-   * @throws IOException If an I/O error has occurred.
+   * @throws NullPointerException If the specified {@link XmlCatalog} is null.
+   * @throws IllegalArgumentException If the {@link InputSource} in the
+   *           specified {@link XmlCatalog} does not have a byte stream or
+   *           character stream.
    */
-  protected XmlDigest(final String publicId, final String systemId, final Reader in, final XmlCatalog catalog) throws IOException {
-    super(in);
-    this.publicId = publicId;
-    this.systemId = systemId;
+  private void init(final XmlCatalog catalog) {
+    super.reader = CachedInputSource.getReader(catalog.getInputSource());
     this.catalog = catalog;
+    this.systemId = catalog.getInputSource().getSystemId();
   }
 
-  public String getPublicId() {
-    return this.publicId;
-  }
-
-  public String getSystemId() {
-    return this.systemId;
+  /**
+   * Resets the local variables in this handler and initializes it for the
+   * specified {@link XmlCatalog}.
+   *
+   * @see #reset()
+   */
+  void reset(final XmlCatalog catalog) {
+    reset();
+    init(catalog);
   }
 
   /**
@@ -99,34 +135,54 @@ public class XmlDigest extends FastSAXHandler {
    *
    * @return The catalog instance.
    */
-  public XmlCatalog getCatalog() {
+  XmlCatalog getCatalog() {
     return this.catalog;
   }
 
   /**
-   * Returns a set of the namespace URIs referenced in the XML document
-   * represented by this {@link XmlDigest} instance.
+   * Returns the systemId.
    *
-   * @return A set of the namespace URIs referenced in the XML document
-   *         represented by this {@link XmlDigest} instance.
+   * @return The systemId.
    */
-  public Set<String> getNamespaceURIs() {
-    return namespaceURIs;
+  String getSystemId() {
+    return this.systemId;
+  }
+
+  /**
+   * Returns a set of the URIs visited throughout the lifecycle of this
+   * {@link XmlAuditHandler} instance.
+   *
+   * @return A set of the URIs visited throughout the lifecycle of this
+   *         {@link XmlAuditHandler} instance.
+   */
+  Set<String> getVisitedURIs() {
+    return visitedURIs;
+  }
+
+  /**
+   * Returns a set of the URLs visited throughout the lifecycle of this
+   * {@link XmlAuditHandler} instance.
+   *
+   * @return A set of the URLs visited throughout the lifecycle of this
+   *         {@link XmlAuditHandler} instance.
+   */
+  Set<URL> getVisitedURLs() {
+    return visitedURLs;
   }
 
   private boolean isSchema;
 
   /**
-   * Returns whether the XML document represented by this {@link XmlDigest}
-   * instance is an XML Schema Document.
+   * Specifies whether the XML document represented by the {@link XmlCatalog} in
+   * this {@link XmlAuditHandler} instance is an XML Schema Document.
    *
-   * @return Whether the XML document represented by this {@link XmlDigest}
-   *         instance is an XML Schema Document.
+   * @return Whether the XML document represented by the {@link XmlCatalog} in
+   *         this {@link XmlAuditHandler} instance is an XML Schema Document.
    * @throws IllegalStateException If this method is called before the XML
-   *           document represented by this {@link XmlDigest} instance is
-   *           parsed.
+   *           document represented by the {@link XmlCatalog} in this
+   *           {@link XmlAuditHandler} instance is parsed.
    */
-  public boolean isSchema() {
+  boolean isSchema() {
     if (rootElement == null)
       throw new IllegalStateException("Parsing has not been performed");
 
@@ -137,15 +193,17 @@ public class XmlDigest extends FastSAXHandler {
 
   /**
    * Returns the {@link QName} of the root element of the XML document
-   * represented by this {@link XmlDigest} instance.
+   * represented by the {@link XmlCatalog} in this {@link XmlAuditHandler}
+   * instance.
    *
    * @return The {@link QName} of the root element of the XML document
-   *         represented by this {@link XmlDigest} instance.
+   *         represented by the {@link XmlCatalog} in this
+   *         {@link XmlAuditHandler} instance.
    * @throws IllegalStateException If this method is called before the XML
-   *           document represented by this {@link XmlDigest} instance is
-   *           parsed.
+   *           document represented by the {@link XmlCatalog} in this
+   *           {@link XmlAuditHandler} instance is parsed.
    */
-  public QName getRootElement() {
+  QName getRootElement() {
     if (rootElement == null)
       throw new IllegalStateException("Parsing has not been performed");
 
@@ -154,19 +212,16 @@ public class XmlDigest extends FastSAXHandler {
 
   /**
    * Returns the "targetNamespace" attribute of the XML document represented by
-   * this {@link XmlDigest} instance. This method is only useful for XML
-   * Schema Documents (i.e. when {@link #isSchema()} is {@code true}).
+   * the {@link XmlCatalog} in this {@link XmlAuditHandler} instance. This
+   * method is only useful for XML Schema Documents (i.e. when
+   * {@link #isSchema()} is {@code true}).
    *
    * @return The "targetNamespace" attribute of the XML document represented by
-   *         this {@link XmlDigest} instance.
+   *         the {@link XmlCatalog} in this {@link XmlAuditHandler} instance.
    */
-  public String getTargetNamespace() {
+  String getTargetNamespace() {
     return this.targetNamespace;
   }
-
-//  public boolean referencesOnlyLocal() {
-//    return referencesOnlyLocal;
-//  }
 
   private Map<String,URL> imports;
 
@@ -176,7 +231,8 @@ public class XmlDigest extends FastSAXHandler {
 
   /**
    * Returns the map of namespace-to-URL entries of "import" references for the
-   * XML document represented by this {@link XmlDigest} instance.
+   * XML document represented by the {@link XmlCatalog} in this
+   * {@link XmlAuditHandler} instance.
    * <ul>
    * <li>If {@link #isSchema()} is {@code true}, this method represents the
    * {@code <xs:import/>} elements of an XML Schema Document.</li>
@@ -185,15 +241,16 @@ public class XmlDigest extends FastSAXHandler {
    * </ul>
    *
    * @return The map of namespace-to-URL entries of "import" references for the
-   *         XML document represented by this {@link XmlDigest} instance.
+   *         XML document represented by the {@link XmlCatalog} in this
+   *         {@link XmlAuditHandler} instance.
    */
-  public Map<String,URL> getImports() {
+  Map<String,URL> getImports() {
     return imports;
   }
 
   private void addImport(final String namespace, final String location) {
     final String path = XmlCatalogResolver.getPath(systemId, location);
-    referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
+    isLocal &= Paths.isAbsoluteLocal(path);
     if (!imports().containsKey(namespace))
       imports.put(namespace, Paths.getProtocol(path) == null ? URLs.create("file:" + path) : URLs.create(path));
   }
@@ -206,9 +263,9 @@ public class XmlDigest extends FastSAXHandler {
 
   /**
    * Returns the map of {@link String}-to-{@link URL} entries of "include"
-   * references for the XML document represented by this {@link XmlDigest}
-   * instance. The key and value of each entry in this map represents the same
-   * logical string, differing only in class type.
+   * references for the XML document represented by the {@link XmlCatalog} in
+   * this {@link XmlAuditHandler} instance. The key and value of each entry in
+   * this map represents the same logical string, differing only in class type.
    * <ul>
    * <li>If {@link #isSchema()} is {@code true}, this method represents the
    * {@code <xs:include/>} elements of an XML Schema Document.</li>
@@ -218,16 +275,16 @@ public class XmlDigest extends FastSAXHandler {
    * </ul>
    *
    * @return The map of {@link String}-to-{@link URL} entries of "include"
-   *         references for the XML document represented by this
-   *         {@link XmlDigest} instance.
+   *         references for the XML document represented by the
+   *         {@link XmlCatalog} in this {@link XmlAuditHandler} instance.
    */
-  public Map<String,URL> getIncludes() {
+  Map<String,URL> getIncludes() {
     return includes;
   }
 
   private void addInclude(final String schemaLocation) {
     final String path = XmlCatalogResolver.getPath(systemId, schemaLocation);
-    referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
+    isLocal &= Paths.isAbsoluteLocal(path);
     URL url = absoluteIncludes.get(path);
     if (url == null)
       absoluteIncludes.put(path, url = URLs.create(path));
@@ -238,7 +295,7 @@ public class XmlDigest extends FastSAXHandler {
   @Override
   public boolean startElement(final QName name, final Map<QName,String> attributes) throws IOException {
     if (logger.isDebugEnabled()) {
-      final String attrs = SAXUtil.toString(attributes);
+      final String attrs = toString(attributes);
       logger.debug("<" + name.getLocalPart() + " xmlns=\"" + name.getNamespaceURI() + "\"" + (attrs != null ? " " + attrs + ">" : ">"));
     }
 
@@ -275,8 +332,8 @@ public class XmlDigest extends FastSAXHandler {
         }
 
         final String path = XmlCatalogResolver.getPath(systemId, schemaLocation);
-        referencesOnlyLocal &= Paths.isAbsoluteLocal(path);
-        namespaceURIs.add(namespace);
+        isLocal &= Paths.isAbsoluteLocal(path);
+        visitedURIs.add(namespace);
         if (!imports().containsKey(namespace))
           imports.put(namespace, URLs.create(path));
       }
@@ -323,16 +380,43 @@ public class XmlDigest extends FastSAXHandler {
               }
             }
             else if (namespaceURI.length() != 0) {
-              namespaceURIs.add(namespaceURI);
+              visitedURIs.add(namespaceURI);
             }
           }
         }
       }
 
       if (!XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI.equals(name.getNamespaceURI()) && name.getNamespaceURI().length() != 0)
-        namespaceURIs.add(name.getNamespaceURI());
+        visitedURIs.add(name.getNamespaceURI());
     }
 
     return true;
+  }
+
+  /**
+   * Resets the local variables in this handler, so it can be used in another
+   * parsing invocation.
+   */
+  @Override
+  public void reset() {
+    super.reset();
+    this.isSchema = false;
+    this.rootElement = null;
+    this.targetNamespace = null;
+    this.isLocal = true;
+    if (includes != null)
+      includes.clear();
+
+    if (imports != null)
+      imports.clear();
+  }
+
+  /**
+   * Returns an {@link XmlAudit} representation of this {@link XmlAuditHandler}.
+   *
+   * @return An {@link XmlAudit} representation of this {@link XmlAuditHandler}.
+   */
+  public XmlAudit toXmlAudit() {
+    return new XmlAudit(isLocal, isSchema, catalog, rootElement, targetNamespace, imports == null ? null : new HashMap<>(imports), includes == null ? null : new HashMap<>(includes));
   }
 }

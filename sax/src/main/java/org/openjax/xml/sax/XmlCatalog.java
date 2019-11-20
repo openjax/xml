@@ -16,13 +16,13 @@
 
 package org.openjax.xml.sax;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-
-import org.xml.sax.InputSource;
 
 /**
  * The {@link XmlCatalog} class represents a catalog for XML entities as defined
@@ -34,29 +34,78 @@ import org.xml.sax.InputSource;
  * presented in <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
  * format</a>.
  */
-public abstract class XmlCatalog extends XmlEntity {
+public class XmlCatalog extends XmlEntity {
   private static final long serialVersionUID = -4854713465553698524L;
 
-  public XmlCatalog(final URL location, final InputSource inputSource) {
-    super(location, inputSource);
+  private LinkedHashMap<String,XmlEntity> uriToEntity;
+
+  /**
+   * Creates a new {@link XmlCatalog} with the specified {@link URL} and
+   * {@link CachedInputSource}.
+   *
+   * @param location The {@link URL}.
+   * @param inputSource The {@link CachedInputSource}.
+   * @throws NullPointerException If the specified {@link URL} or
+   *           {@link CachedInputSource} is null.
+   */
+  public XmlCatalog(final URL location, final CachedInputSource inputSource) {
+    super(location, Objects.requireNonNull(inputSource));
+  }
+
+  private Map<String,XmlEntity> uriToSystemId() {
+    return uriToEntity == null ? uriToEntity = new LinkedHashMap<>() : uriToEntity;
   }
 
   /**
-   * Associates the specified schema location to the namespace URI.
+   * Associates the specified {@link XmlEntity} to the namespace URI.
    *
    * @param uri The URI key.
    * @param entity The schema location value.
+   * @return The previous value associated with key, or {@code null} if there
+   *         was no mapping for key.
+   * @throws NullPointerException If the specified {@link XmlEntity} is null.
    */
-  public abstract void putEntity(String uri, XmlEntity entity);
+  public XmlEntity putEntity(final String uri, final XmlEntity entity) {
+    return uriToSystemId().put(uri, Objects.requireNonNull(entity));
+  }
 
-  public abstract URL matchURI(String uri);
+  /**
+   * Returns the schema location associated with the specified namespace URI.
+   *
+   * @param uri The URI.
+   * @return The schema location associated with the specified URI.
+   * @throws IOException If an I/O exception has occurred.
+   */
+  public XmlEntity getEntity(final String uri) throws IOException {
+    if (uri.equals(location.toString()))
+      return this;
+
+    if (uriToEntity == null)
+      return null;
+
+    XmlEntity entity = uriToEntity.get(uri);
+    if (entity != null)
+      return entity;
+
+    for (final XmlEntity catalog : uriToEntity.values()) {
+      if (catalog instanceof XmlCatalog && catalog != this) {
+        entity = ((XmlCatalog)catalog).getEntity(uri);
+        if (entity != null)
+          return entity;
+      }
+    }
+
+    return null;
+  }
 
   /**
    * Returns {@code true} if this map contains no entities.
    *
    * @return {@code true} if this map contains no entities.
    */
-  public abstract boolean isEmpty();
+  public boolean isEmpty() {
+    return uriToEntity == null || uriToEntity.isEmpty();
+  }
 
   /**
    * Returns a string representation of this {@link XmlCatalog} in
@@ -66,106 +115,64 @@ public abstract class XmlCatalog extends XmlEntity {
    *         <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
    *         format</a>.
    */
-  public abstract String toTR9401();
+  public String toTR9401() {
+    final StringBuilder builder = new StringBuilder();
+    toTR9401(new HashSet<>(), builder);
+    return builder.toString();
+  }
 
-  public static class Tree extends XmlCatalog {
-    private static final long serialVersionUID = -4854713465553698524L;
+  private void toTR9401(final Set<String> uris, final StringBuilder builder) {
+    int i = 0;
+    if (uriToEntity == null)
+      return;
 
-    private LinkedHashMap<String,XmlEntity> uriToEntity;
+    for (final Map.Entry<String,XmlEntity> entry : uriToEntity.entrySet()) {
+      if (uris.contains(entry.getKey()))
+        continue;
 
-    public Tree(final URL location, final InputSource inputSource) {
-      super(location, inputSource);
-    }
+      uris.add(entry.getKey());
+      if (i++ > 0)
+        builder.append('\n');
 
-    private Map<String,XmlEntity> uriToSystemId() {
-      return uriToEntity == null ? uriToEntity = new LinkedHashMap<>() : uriToEntity;
-    }
-
-    @Override
-    public void putEntity(final String uri, final XmlEntity entity) {
-      uriToSystemId().put(uri, entity);
-    }
-
-    @Override
-    public URL matchURI(final String uri) {
-      final XmlEntity entity = getEntity(uri);
-      return entity == null ? null : entity.getLocation();
-    }
-
-    /**
-     * Returns the schema location associated with the specified namespace URI.
-     *
-     * @param uri The URI.
-     * @return The schema location associated with the specified URI.
-     */
-    private XmlEntity getEntity(final String uri) {
-      if (uriToEntity == null)
-        return null;
-
-      XmlEntity entity = uriToEntity.get(uri);
-      if (entity != null)
-        return entity;
-
-      for (final XmlEntity catalog : uriToEntity.values()) {
-        if (catalog instanceof Tree) {
-          entity = ((Tree)catalog).getEntity(uri);
-          if (entity != null)
-            return entity;
-        }
-      }
-
-      return null;
-    }
-
-    @Override
-    public boolean isEmpty() {
-      return uriToEntity == null || uriToEntity.isEmpty();
-    }
-
-    @Override
-    public String toTR9401() {
-      final StringBuilder builder = new StringBuilder();
-      toTR9401(new HashSet<>(), builder);
-      return builder.toString();
-    }
-
-    private void toTR9401(final Set<String> uris, final StringBuilder builder) {
-      int i = 0;
-      if (uriToEntity != null) {
-        for (final Map.Entry<String,XmlEntity> entry : uriToEntity.entrySet()) {
-          if (uris.contains(entry.getKey()))
-            continue;
-
-          uris.add(entry.getKey());
-          if (i++ > 0)
-            builder.append('\n');
-
-          final XmlEntity systemId = entry.getValue();
-          final String line = "\"" + entry.getKey() + "\" \"" + systemId.getLocation() + "\"";
-          builder.append(entry.getKey().equals(entry.getKey()) ? "PUBLIC " : "SYSTEM ").append(line);
-          builder.append("\nREWRITE_SYSTEM ").append(line);
-          if (systemId instanceof XmlCatalog) {
-            ((Tree)systemId).toTR9401(uris, builder);
-          }
-        }
+      final XmlEntity entity = entry.getValue();
+      final String line = "\"" + entry.getKey() + "\" \"" + entity.getLocation() + "\"";
+      builder.append(entry.getKey().equals(entry.getKey()) ? "PUBLIC " : "SYSTEM ").append(line);
+      builder.append("\nREWRITE_SYSTEM ").append(line);
+      if (entity instanceof XmlCatalog && entity != this) {
+        ((XmlCatalog)entity).toTR9401(uris, builder);
       }
     }
+  }
 
-    @Override
-    public boolean equals(final Object obj) {
-      if (this == obj)
-        return true;
+  /**
+   * Closes this {@link XmlCatalog}. This method calls {@link XmlEntity#close()}
+   * on each {@link XmlEntity} instance referenced in this {@link XmlCatalog}.
+   *
+   * @throws IOException If an I/O error has occurred.
+   */
+  @Override
+  public void close() throws IOException {
+    super.close();
+    if (uriToEntity != null)
+      for (final XmlEntity entity : uriToEntity.values())
+        if (entity != this)
+          entity.close();
+  }
 
-      if (!(obj instanceof Tree))
-        return false;
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
 
-      final Tree that = (Tree)obj;
-      return uriToEntity == null ? that.uriToEntity == null : uriToEntity.equals(that.uriToEntity);
-    }
+    if (!(obj instanceof XmlCatalog) || !super.equals(obj))
+      return false;
 
-    @Override
-    public int hashCode() {
-      return uriToEntity == null ? 733 : uriToEntity.hashCode();
-    }
+    final XmlCatalog that = (XmlCatalog)obj;
+    return uriToEntity == null ? that.uriToEntity == null : uriToEntity.equals(that.uriToEntity);
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode() ^ (uriToEntity == null ? 733 : uriToEntity.hashCode());
   }
 }

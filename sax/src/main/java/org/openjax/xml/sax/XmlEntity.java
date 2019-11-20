@@ -16,31 +16,61 @@
 
 package org.openjax.xml.sax;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 
-import org.xml.sax.InputSource;
-
 /**
- * The {@link XmlEntity} represents an XML entity
- *
+ * The {@link XmlEntity} represents an XML entity, which associates a
+ * {@link CachedInputSource} to an {@link URL}.
  */
-public class XmlEntity implements Serializable {
+public class XmlEntity implements AutoCloseable, Serializable {
   private static final long serialVersionUID = 259999207686667185L;
 
   protected final URL location;
-  protected final InputSource inputSource;
+  protected final CachedInputSource inputSource;
 
-  public XmlEntity(final URL location, final InputSource inputSource) {
+  /**
+   * Creates a new {@link XmlEntity} with the specified {@link URL} and
+   * {@link CachedInputSource}.
+   *
+   * @param location The {@link URL}.
+   * @param inputSource The {@link CachedInputSource}.
+   * @throws NullPointerException If the specified {@link URL} or
+   *           {@link CachedInputSource} is null.
+   */
+  public XmlEntity(final URL location, final CachedInputSource inputSource) {
     this.location = location;
     this.inputSource = inputSource;
   }
 
+  /**
+   * Returns the {@link URL} for this {@link XmlEntity}.
+   *
+   * @return The {@link URL} for this {@link XmlEntity}.
+   */
   public final URL getLocation() {
     return location;
   }
 
-  public InputSource getInputSource() {
+  /**
+   * Returns the {@link CachedInputSource} for this {@link XmlEntity}.
+   *
+   * @return The {@link CachedInputSource} for this {@link XmlEntity}.
+   */
+  public CachedInputSource getInputSource() {
     return this.inputSource;
+  }
+
+  /**
+   * Closes this {@link XmlEntity}. This method calls
+   * {@link CachedInputSource#close()} on the underlying
+   * {@link CachedInputSource}.
+   *
+   * @throws IOException If an I/O error has occurred.
+   */
+  @Override
+  public void close() throws IOException {
+    this.inputSource.close();
   }
 }
