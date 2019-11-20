@@ -83,8 +83,8 @@ class XmlAuditHandler extends FastSAXHandler {
     return builder.toString();
   }
 
-  private XmlCatalog catalog;
   private String systemId;
+  private XmlCatalog catalog;
   private final Set<String> visitedURIs = new HashSet<>();
   private final Set<URL> visitedURLs = new HashSet<>();
   private final Map<String,URL> absoluteIncludes = new LinkedHashMap<>();
@@ -114,9 +114,9 @@ class XmlAuditHandler extends FastSAXHandler {
    *           character stream.
    */
   private void init(final XmlCatalog catalog) {
-    super.reader = CachedInputSource.getReader(catalog.getInputSource());
-    this.catalog = catalog;
+    super.reader = catalog.getInputSource().getCharacterStream();
     this.systemId = catalog.getInputSource().getSystemId();
+    this.catalog = catalog;
   }
 
   /**
@@ -131,21 +131,22 @@ class XmlAuditHandler extends FastSAXHandler {
   }
 
   /**
+   * Returns the system identifier (URI reference).
+   *
+   * @return The system identifier (URI reference).
+   * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">IETF RFC 2396</a>
+   */
+  String getSystemId() {
+    return this.systemId;
+  }
+
+  /**
    * Returns the catalog instance.
    *
    * @return The catalog instance.
    */
   XmlCatalog getCatalog() {
     return this.catalog;
-  }
-
-  /**
-   * Returns the systemId.
-   *
-   * @return The systemId.
-   */
-  String getSystemId() {
-    return this.systemId;
   }
 
   /**
@@ -417,6 +418,6 @@ class XmlAuditHandler extends FastSAXHandler {
    * @return An {@link XmlAudit} representation of this {@link XmlAuditHandler}.
    */
   public XmlAudit toXmlAudit() {
-    return new XmlAudit(isLocal, isSchema, catalog, rootElement, targetNamespace, imports == null ? null : new HashMap<>(imports), includes == null ? null : new HashMap<>(includes));
+    return new XmlAudit(catalog, isLocal, isSchema, rootElement, targetNamespace, imports == null ? null : new HashMap<>(imports), includes == null ? null : new HashMap<>(includes));
   }
 }
