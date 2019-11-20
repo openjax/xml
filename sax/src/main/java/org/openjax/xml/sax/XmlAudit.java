@@ -42,14 +42,23 @@ public class XmlAudit {
   private final Map<String,URL> imports;
   private final Map<String,URL> includes;
 
-  public XmlAudit(final boolean isLocal, final boolean isSchema, final XmlCatalog catalog, final QName rootElement, final String targetNamespace, final Map<String,URL> imports, final Map<String,URL> includes) {
+  public XmlAudit(final XmlCatalog catalog, final boolean isLocal, final boolean isSchema, final QName rootElement, final String targetNamespace, final Map<String,URL> imports, final Map<String,URL> includes) {
+    this.catalog = catalog;
     this.isLocal = isLocal;
     this.isSchema = isSchema;
     this.rootElement = rootElement;
-    this.catalog = catalog;
     this.targetNamespace = targetNamespace;
     this.imports = imports;
     this.includes = includes;
+  }
+
+  /**
+   * Returns the {@link XmlCatalog} instance.
+   *
+   * @return The {@link XmlCatalog} instance.
+   */
+  public XmlCatalog getCatalog() {
+    return this.catalog;
   }
 
   /**
@@ -74,15 +83,6 @@ public class XmlAudit {
    */
   public boolean isSchema() {
     return isSchema;
-  }
-
-  /**
-   * Returns the catalog instance.
-   *
-   * @return The catalog instance.
-   */
-  public XmlCatalog getCatalog() {
-    return this.catalog;
   }
 
   /**
