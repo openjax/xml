@@ -32,7 +32,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.impl.Constants;
-import org.libj.io.ReplayReader;
 import org.libj.net.MemoryURLStreamHandler;
 import org.libj.net.URLs;
 import org.xml.sax.ErrorHandler;
@@ -243,19 +242,6 @@ public final class Validator {
     validate(inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource), xmlAudit, errorHandler);
   }
 
-  @SuppressWarnings("resource")
-  private static XmlAudit initInputSource(final URL url, final CachedInputSource inputSource, XmlAuditHandler auditHandler) throws IOException {
-    final ReplayReader reader = CachedInputSource.getReader(inputSource);
-    inputSource.setCharacterStream(reader);
-    if (auditHandler == null) {
-      final XmlAudit xmlAudit = XmlAuditParser.parse(url != null ? url : new URL(inputSource.getSystemId()), inputSource);
-      reader.close();
-      return xmlAudit;
-    }
-
-    return auditHandler.toXmlAudit();
-  }
-
   /**
    * Validates the XML document provided by the stream of data in the specified
    * {@link Reader}.
@@ -279,6 +265,18 @@ public final class Validator {
     final CachedInputSource cachedInputSource = inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource);
     final XmlAudit xmlAudit = initInputSource(url, cachedInputSource, auditHandler);
     validate(cachedInputSource, xmlAudit, errorHandler);
+  }
+
+  private static XmlAudit initInputSource(final URL url, final CachedInputSource inputSource, final XmlAuditHandler auditHandler) throws IOException {
+    if (auditHandler == null) {
+      final XmlAudit xmlAudit = XmlAuditParser.parse(url != null ? url : new URL(inputSource.getSystemId()), inputSource);
+      inputSource.getCharacterStream().close();
+      return xmlAudit;
+    }
+
+    final XmlAudit xmlAudit = auditHandler.toXmlAudit();
+    auditHandler.reset();
+    return xmlAudit;
   }
 
   /**

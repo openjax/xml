@@ -25,7 +25,7 @@ import java.io.Reader;
  * This parser performs as few operations as necessary to parse well-formed XML
  * documents.
  * <p>
- * This parser does not perform any validation.
+ * <i><b>Note:</b> This parser does not perform any validation.</i>
  *
  * @see FasterSAXHandler
  */
@@ -33,16 +33,19 @@ public final class FastSAXParser {
   private static final int DEFAULT_READ_LIMIT = 8192;
 
   /**
-   * Parse the data provided by the input stream.
+   * Parse the data provided by the input stream, and handle parse events with
+   * the specified {@link FasterSAXHandler}.
    * <p>
-   * The specified input stream must support {@link Reader#mark(int)}.
+   * <i><b>Note:</b> The provided input stream must support
+   * {@link Reader#mark(int)}.</i>
    *
-   * @param in The input stream.
+   * @param in The {@link Reader} input stream.
    * @param handler The {@link FasterSAXHandler}.
-   * @throws IOException If the stream does not support
+   * @throws IOException If the input stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
-   * @throws NullPointerException If the specified stream or handler is null.
+   * @throws NullPointerException If the specified {@link Reader} or
+   *           {@link FasterSAXHandler} is null.
    * @see java.io.BufferedInputStream
    * @see org.libj.io.ReplayReader
    */

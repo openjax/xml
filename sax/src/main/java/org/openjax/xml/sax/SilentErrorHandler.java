@@ -24,14 +24,23 @@ import org.xml.sax.SAXParseException;
  * An {@link ErrorHandler} that produces no output.
  */
 public class SilentErrorHandler implements ErrorHandler {
+  /**
+   * Silently consumes notification of a warning.
+   */
   @Override
   public void warning(final SAXParseException exception) throws SAXException {
   }
 
+  /**
+   * Silently consumes notification of a recoverable error.
+   */
   @Override
   public void error(final SAXParseException exception) throws SAXException {
   }
 
+  /**
+   * Silently consumes notification of an unrecoverable error.
+   */
   @Override
   public void fatalError(final SAXParseException exception) throws SAXException {
   }

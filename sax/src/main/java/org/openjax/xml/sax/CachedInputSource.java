@@ -31,32 +31,6 @@ import org.xml.sax.InputSource;
  * performance reading external XML entities.
  */
 public class CachedInputSource extends InputSource implements AutoCloseable, LSInput {
-  /**
-   * Returns a {@link ReplayReader} for the byte or character data in the
-   * specified {@link InputSource}.
-   *
-   * @param inputSource The {@link InputSource} containing the byte data as an
-   *          {@link InputStream} or character data as a {@link java.io.Reader}.
-   * @return A {@link ReplayReader} for the byte or character data in the
-   *         specified {@link InputSource}.
-   * @throws NullPointerException If the specified {@link InputSource} is null.
-   * @throws IllegalArgumentException If the specified {@link InputSource} does
-   *           not have a byte stream or character stream.
-   */
-  static ReplayReader getReader(final InputSource inputSource) {
-    if (inputSource.getCharacterStream() instanceof ReplayReader)
-      return (ReplayReader)inputSource.getCharacterStream();
-
-    if (inputSource.getCharacterStream() != null)
-      return new ReplayReader(inputSource.getCharacterStream());
-
-    if (inputSource.getByteStream() != null)
-      // FIXME: Determine the encoding from the element declaration
-      return new ReplayReader(new InputStreamReader(inputSource.getByteStream()));
-
-    throw new IllegalArgumentException("InputSource has null CharacterStream and ByteStream");
-  }
-
   private static class CachedReader extends ReplayReader {
     public CachedReader(final Reader in) {
       super(in);
@@ -73,12 +47,40 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
   }
 
   /**
-   * Creates a new {@link CachedInputSource} with the specified parameters.
+   * Returns a {@link ReplayReader} for the byte or character data in the
+   * specified {@link InputSource}.
+   *
+   * @param inputSource The {@link InputSource} containing the byte data as an
+   *          {@link InputStream} or character data as a {@link java.io.Reader}.
+   * @return A {@link ReplayReader} for the byte or character data in the
+   *         specified {@link InputSource}.
+   * @throws NullPointerException If the specified {@link InputSource} is null.
+   * @throws IllegalArgumentException If the specified {@link InputSource} does
+   *           not have a byte stream or character stream.
+   */
+  private static ReplayReader getReader(final InputSource inputSource) {
+    if (inputSource.getCharacterStream() instanceof ReplayReader)
+      return (ReplayReader)inputSource.getCharacterStream();
+
+    if (inputSource.getCharacterStream() != null)
+      return new ReplayReader(inputSource.getCharacterStream());
+
+    if (inputSource.getByteStream() != null)
+      // FIXME: Determine the encoding from the element declaration
+      return new ReplayReader(new InputStreamReader(inputSource.getByteStream()));
+
+    throw new IllegalArgumentException("InputSource has null CharacterStream and ByteStream");
+  }
+
+  /**
+   * Creates a new {@link CachedInputSource} with the specified
+   * {@code publicId}, {@code systemId}, {@code baseURI}, and
+   * {@link InputStream}.
    *
    * @param publicId The public identifier.
    * @param systemId The system identifier (URI reference).
    * @param baseURI The base URI to be used for resolving a relative
-   *          <code>systemId</code> to an absolute URI.
+   *          {@code systemId} to an absolute URI.
    * @param in A byte stream containing an XML document or other entity.
    * @throws NullPointerException If the specified {@link InputStream} is null.
    * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">IETF RFC 2396</a>
@@ -89,12 +91,13 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
   }
 
   /**
-   * Creates a new {@link CachedInputSource} with the specified parameters.
+   * Creates a new {@link CachedInputSource} with the specified
+   * {@code publicId}, {@code systemId}, {@code baseURI}, and {@link Reader}.
    *
    * @param publicId The public identifier.
    * @param systemId The system identifier (URI reference).
    * @param baseURI The base URI to be used for resolving a relative
-   *          <code>systemId</code> to an absolute URI.
+   *          {@code systemId} to an absolute URI.
    * @param reader The the character stream.
    * @throws NullPointerException If the specified {@link Reader} is null.
    * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">IETF RFC 2396</a>
@@ -105,12 +108,13 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
   }
 
   /**
-   * Creates a new {@link CachedInputSource} with the specified parameters.
+   * Creates a new {@link CachedInputSource} with the specified
+   * {@code publicId}, {@code systemId}, and {@code baseURI}.
    *
    * @param publicId The public identifier.
    * @param systemId The system identifier (URI reference).
    * @param baseURI The base URI to be used for resolving a relative
-   *          <code>systemId</code> to an absolute URI.
+   *          {@code systemId} to an absolute URI.
    * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">IETF RFC 2396</a>
    */
   private CachedInputSource(final String publicId, final String systemId, final String baseURI) {
@@ -120,13 +124,12 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
   }
 
   /**
-   * Creates a new {@link CachedInputSource} with the <code>publicId</code>,
-   * <code>systemId</code>, and character stream from the specified
+   * Creates a new {@link CachedInputSource} with the {@code publicId},
+   * {@code systemId}, and character stream from the specified
    * {@link InputSource}.
    *
-   * @param inputSource The {@link InputSource} from which the
-   *          <code>publicId</code>, <code>systemId</code>, and character
-   *          streams are to be copied.
+   * @param inputSource The {@link InputSource} from which the {@code publicId},
+   *          {@code systemId}, and character streams are to be copied.
    * @throws NullPointerException If the specified {@link InputSource} is null.
    * @throws IllegalArgumentException If the specified {@link InputSource} does
    *           not have a byte stream or character stream.

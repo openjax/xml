@@ -34,12 +34,14 @@ import org.xml.sax.SAXParseException;
  * {@link DelegateErrorHandler} are no-op.
  */
 public abstract class DelegateErrorHandler implements ErrorHandler {
+  /** The target {@link ErrorHandler}. */
   protected volatile ErrorHandler target;
 
   /**
-   * Creates a new {@link DelegateErrorHandler} with the specified {@code target}.
+   * Creates a new {@link DelegateErrorHandler} with the specified target
+   * {@link ErrorHandler}.
    *
-   * @param target The target {@link ErrorHandler} object.
+   * @param target The target {@link ErrorHandler}.
    */
   public DelegateErrorHandler(final ErrorHandler target) {
     this.target = target;
