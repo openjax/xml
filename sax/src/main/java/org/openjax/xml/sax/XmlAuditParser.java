@@ -62,85 +62,68 @@ public final class XmlAuditParser {
    */
   static XmlAudit parse(final URL url, final CachedInputSource inputSource) throws IOException {
     final XmlAuditHandler auditHandler = new XmlAuditHandler(new XmlCatalog(url, inputSource));
-    FastSAXParser.parse(CachedInputSource.getReader(inputSource), auditHandler);
+    FastSAXParser.parse(inputSource.getCharacterStream(), auditHandler);
+
     final XmlAudit xmlAudit = auditHandler.toXmlAudit();
-
-    final HashMap<String,URL> includes = auditHandler.getIncludes() == null ? null : new HashMap<>(auditHandler.getIncludes());
-    final HashMap<String,URL> imports = auditHandler.getImports() == null ? null : new HashMap<>(auditHandler.getImports());
-
-    if (includes != null && includes.size() > 0)
-      includes(auditHandler, includes);
-
-    if (imports != null && imports.size() > 0)
-      imports(auditHandler, imports);
-
+    process(auditHandler, url.toString(), true);
     return xmlAudit;
   }
 
-  private static void includes(final XmlAuditHandler auditHandler, final Map<String,URL> schemaLocations) throws IOException {
-    for (final Map.Entry<String,URL> entry : schemaLocations.entrySet()) {
-      final URL location = entry.getValue();
-      if (!auditHandler.getVisitedURLs().add(location))
-        continue;
+  private static boolean process(final XmlAuditHandler auditHandler, final String uri, final boolean isImport) throws IOException {
+    final HashMap<String,URL> includes = auditHandler.getIncludes() == null ? null : new HashMap<>(auditHandler.getIncludes());
+    final HashMap<String,URL> imports = auditHandler.getImports() == null ? null : new HashMap<>(auditHandler.getImports());
 
-      try {
-        final CachedInputSource inputSource = new CachedInputSource(null, location.toString(), auditHandler.getSystemId(), location.openStream());
+    if (imports != null && imports.size() > 0)
+      auditHandler.getVisitedURIs().addAll(imports.keySet());
 
-        auditHandler.reset();
-        FastSAXParser.parse(inputSource.getCharacterStream(), auditHandler);
-        auditHandler.getCatalog().putEntity(entry.getKey(), new XmlEntity(location, inputSource)); // FIXME: Should this be a XmlEntry, or XmlCatalog?
+    if (includes != null && includes.size() > 0)
+      traverse(auditHandler, includes, false);
 
-        final HashMap<String,URL> includes = auditHandler.getIncludes() == null ? null : new HashMap<>(auditHandler.getIncludes());
-        final HashMap<String,URL> imports = auditHandler.getImports() == null ? null : new HashMap<>(auditHandler.getImports());
-
-        if (includes != null && includes.size() > 0)
-          includes(auditHandler, includes);
-
-        if (imports != null && imports.size() > 0)
-          imports(auditHandler, imports);
-      }
-      catch (final IOException e) {
-        if (!Validator.isRemoteAccessException(e) || URLs.isLocal(location))
-          throw e;
+    if (isImport) {
+      auditHandler.getVisitedURIs().remove(uri);
+      if (auditHandler.getVisitedURIs().isEmpty()) {
+        return false;
       }
     }
+
+    if (imports != null && imports.size() > 0)
+      traverse(auditHandler, imports, true);
+
+    return true;
   }
 
-  private static void imports(final XmlAuditHandler auditHandler, final Map<String,URL> schemaLocations) throws IOException {
+  private static void traverse(final XmlAuditHandler auditHandler, final Map<String,URL> schemaLocations, final boolean isImport) throws IOException {
     for (final Map.Entry<String,URL> entry : schemaLocations.entrySet()) {
       final URL location = entry.getValue();
       if (!auditHandler.getVisitedURLs().add(location))
         continue;
 
+      final String uri = entry.getKey();
       final XmlCatalog catalog = auditHandler.getCatalog();
-      if (catalog.getEntity(entry.getKey()) == null) {
+      if (catalog.getEntity(uri) == null) {
         try {
           final CachedInputSource inputSource = new CachedInputSource(null, location.toString(), auditHandler.getSystemId(), location.openStream());
-          final XmlCatalog nextCatalog = new XmlCatalog(location, inputSource);
-          auditHandler.reset(nextCatalog);
+
+          final XmlEntity entity;
+          if (isImport) {
+            final XmlCatalog nextCatalog = new XmlCatalog(location, inputSource);
+            auditHandler.reset(nextCatalog);
+            entity = nextCatalog;
+          }
+          else {
+            entity = new XmlEntity(location, inputSource);
+          }
+
           FastSAXParser.parse(inputSource.getCharacterStream(), auditHandler);
-          catalog.putEntity(entry.getKey(), nextCatalog);
-
-          final HashMap<String,URL> includes = auditHandler.getIncludes() == null ? null : new HashMap<>(auditHandler.getIncludes());
-          final HashMap<String,URL> imports = auditHandler.getImports() == null ? null : new HashMap<>(auditHandler.getImports());
-
-          if (imports != null && imports.size() > 0)
-            auditHandler.getVisitedURIs().addAll(imports.keySet());
-
-          if (includes != null && includes.size() > 0)
-            includes(auditHandler, includes);
-
-          auditHandler.getVisitedURIs().remove(entry.getKey());
-          if (auditHandler.getVisitedURIs().isEmpty())
-            break;
-
-          if (imports != null && imports.size() > 0)
-            imports(auditHandler, imports);
+          catalog.putEntity(uri, entity);
         }
         catch (final IOException e) {
           if (!Validator.isRemoteAccessException(e) || URLs.isLocal(location))
             throw e;
         }
+
+        if (!process(auditHandler, uri, isImport))
+          break;
       }
     }
   }
