@@ -25,26 +25,26 @@ import org.junit.Test;
 import org.libj.net.URLs;
 
 public class XMLManifestParserTest {
-  private static XmlAudit test(final String fileName, final boolean expectXsd) throws IOException {
+  private static XmlPreview test(final String fileName, final boolean expectXsd) throws IOException {
     final URL url = ClassLoader.getSystemClassLoader().getResource(fileName);
 //    try {
-      final XmlAudit xmlAudit = XmlAuditParser.parse(url);
-      assertEquals(expectXsd, xmlAudit.isSchema());
+      final XmlPreview preview = XmlPreviewParser.parse(url);
+      assertEquals(expectXsd, preview.isSchema());
 //      assertEquals('<', reader.read());
 //      final char[] chars = new char[2048];
 //      reader.read(chars);
 //      System.err.println("<" + new String(chars));
 //      System.err.println("\n\n\n");
 //      assertEquals('!', reader.read());
-      return xmlAudit;
+      return preview;
 //    }
   }
 
-  private static XmlAudit testXsd(final String fileName) throws IOException {
+  private static XmlPreview testXsd(final String fileName) throws IOException {
     return test(fileName, true);
   }
 
-  private static XmlAudit testXml(final String fileName) throws IOException {
+  private static XmlPreview testXml(final String fileName) throws IOException {
     return test(fileName, false);
   }
 
@@ -75,33 +75,33 @@ public class XMLManifestParserTest {
 
   @Test
   public void testNoNamespaceXml() throws IOException {
-    final XmlAudit xmlAudit = testXml("invalid.xml");
-    assertEquals("test.xsd", URLs.getName(xmlAudit.getImports().get(xmlAudit.getRootElement().getNamespaceURI())));
+    final XmlPreview preview = testXml("invalid.xml");
+    assertEquals("test.xsd", URLs.getName(preview.getImports().get(preview.getRootElement().getNamespaceURI())));
   }
 
   @Test
   public void testRemoteXml() throws IOException {
-    final XmlAudit xmlAudit = testXml("remote.xml");
-    assertEquals("remote.xsd", URLs.getName(xmlAudit.getImports().get(xmlAudit.getRootElement().getNamespaceURI())));
+    final XmlPreview preview = testXml("remote.xml");
+    assertEquals("remote.xsd", URLs.getName(preview.getImports().get(preview.getRootElement().getNamespaceURI())));
   }
 
   @Test
   public void testValidXml() throws IOException {
-    final XmlAudit xmlAudit = testXml("valid.xml");
-    assertEquals("test.xsd", URLs.getName(xmlAudit.getImports().get(xmlAudit.getRootElement().getNamespaceURI())));
+    final XmlPreview preview = testXml("valid.xml");
+    assertEquals("test.xsd", URLs.getName(preview.getImports().get(preview.getRootElement().getNamespaceURI())));
   }
 
   @Test
   public void testEmptyXml() throws IOException {
-    final XmlAudit xmlAudit = testXml("empty.xml");
-    assertNull(xmlAudit.getImports());
+    final XmlPreview preview = testXml("empty.xml");
+    assertNull(preview.getImports());
   }
 
   @Test
   public void testDoctypeXml() throws Exception {
     final URL url = ClassLoader.getSystemClassLoader().getResource("doctype.xml");
 //    try (final ReplayReader reader = new ReplayReader(new InputStreamReader(url.openStream()))) {
-      XmlAuditParser.parse(url);
+      XmlPreviewParser.parse(url);
 
 //      final char[] chars = new char[19];
 //      assertEquals(chars.length, reader.read(chars));

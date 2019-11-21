@@ -26,14 +26,14 @@ import org.libj.net.URLs;
 import org.xml.sax.InputSource;
 
 /**
- * Parser for XML documents that produces {@link XmlAudit} objects.
+ * Parser for XML documents that produces {@link XmlPreview} objects.
  */
-public final class XmlAuditParser {
+public final class XmlPreviewParser {
   /**
    * Parses an XML document at the specified {@link URL}.
    *
    * @param url The {@link URL}.
-   * @return A {@link XmlAudit} containing the {@link XmlCatalog} and
+   * @return A {@link XmlPreview} containing the {@link XmlCatalog} and
    *         manifest information for the XML document represented by the
    *         specified {@link URL}.
    * @throws IOException If the stream does not support
@@ -41,7 +41,7 @@ public final class XmlAuditParser {
    *           occurred.
    * @throws NullPointerException If the specified {@link URL} is null.
    */
-  public static XmlAudit parse(final URL url) throws IOException {
+  public static XmlPreview parse(final URL url) throws IOException {
     try (final CachedInputSource inputSource = new CachedInputSource(null, url.toString(), null, url.openStream())) {
       return parse(url, inputSource);
     }
@@ -52,7 +52,7 @@ public final class XmlAuditParser {
    *
    * @param url The {@link URL}.
    * @param inputSource The {@link InputSource}.
-   * @return A {@link XmlAudit} containing the {@link XmlCatalog} and manifest
+   * @return A {@link XmlPreview} containing the {@link XmlCatalog} and manifest
    *         information for the XML document represented by the specified
    *         {@link InputSource}.
    * @throws IOException If the stream does not support
@@ -60,61 +60,61 @@ public final class XmlAuditParser {
    *           occurred.
    * @throws NullPointerException If the specified {@link InputSource} is null.
    */
-  static XmlAudit parse(final URL url, final CachedInputSource inputSource) throws IOException {
-    final XmlAuditHandler auditHandler = new XmlAuditHandler(new XmlCatalog(url, inputSource));
-    FastSAXParser.parse(inputSource.getCharacterStream(), auditHandler);
+  static XmlPreview parse(final URL url, final CachedInputSource inputSource) throws IOException {
+    final XmlPreviewHandler previewHandler = new XmlPreviewHandler(new XmlCatalog(url, inputSource));
+    FastSAXParser.parse(inputSource.getCharacterStream(), previewHandler);
 
-    final XmlAudit xmlAudit = auditHandler.toXmlAudit();
-    process(auditHandler, url.toString(), true);
-    return xmlAudit;
+    final XmlPreview preview = previewHandler.toXmlPreview();
+    process(previewHandler, url.toString(), true);
+    return preview;
   }
 
-  private static boolean process(final XmlAuditHandler auditHandler, final String uri, final boolean isImport) throws IOException {
-    final HashMap<String,URL> includes = auditHandler.getIncludes() == null ? null : new HashMap<>(auditHandler.getIncludes());
-    final HashMap<String,URL> imports = auditHandler.getImports() == null ? null : new HashMap<>(auditHandler.getImports());
+  private static boolean process(final XmlPreviewHandler previewHandler, final String uri, final boolean isImport) throws IOException {
+    final HashMap<String,URL> includes = previewHandler.getIncludes() == null ? null : new HashMap<>(previewHandler.getIncludes());
+    final HashMap<String,URL> imports = previewHandler.getImports() == null ? null : new HashMap<>(previewHandler.getImports());
 
     if (imports != null && imports.size() > 0)
-      auditHandler.getVisitedURIs().addAll(imports.keySet());
+      previewHandler.getVisitedURIs().addAll(imports.keySet());
 
     if (includes != null && includes.size() > 0)
-      traverse(auditHandler, includes, false);
+      traverse(previewHandler, includes, false);
 
     if (isImport) {
-      auditHandler.getVisitedURIs().remove(uri);
-      if (auditHandler.getVisitedURIs().isEmpty()) {
+      previewHandler.getVisitedURIs().remove(uri);
+      if (previewHandler.getVisitedURIs().isEmpty()) {
         return false;
       }
     }
 
     if (imports != null && imports.size() > 0)
-      traverse(auditHandler, imports, true);
+      traverse(previewHandler, imports, true);
 
     return true;
   }
 
-  private static void traverse(final XmlAuditHandler auditHandler, final Map<String,URL> schemaLocations, final boolean isImport) throws IOException {
+  private static void traverse(final XmlPreviewHandler previewHandler, final Map<String,URL> schemaLocations, final boolean isImport) throws IOException {
     for (final Map.Entry<String,URL> entry : schemaLocations.entrySet()) {
       final URL location = entry.getValue();
-      if (!auditHandler.getVisitedURLs().add(location))
+      if (!previewHandler.getVisitedURLs().add(location))
         continue;
 
       final String uri = entry.getKey();
-      final XmlCatalog catalog = auditHandler.getCatalog();
+      final XmlCatalog catalog = previewHandler.getCatalog();
       if (catalog.getEntity(uri) == null) {
         try {
-          final CachedInputSource inputSource = new CachedInputSource(null, location.toString(), auditHandler.getSystemId(), location.openStream());
+          final CachedInputSource inputSource = new CachedInputSource(null, location.toString(), previewHandler.getSystemId(), location.openStream());
 
           final XmlEntity entity;
           if (isImport) {
             final XmlCatalog nextCatalog = new XmlCatalog(location, inputSource);
-            auditHandler.reset(nextCatalog);
+            previewHandler.reset(nextCatalog);
             entity = nextCatalog;
           }
           else {
             entity = new XmlEntity(location, inputSource);
           }
 
-          FastSAXParser.parse(inputSource.getCharacterStream(), auditHandler);
+          FastSAXParser.parse(inputSource.getCharacterStream(), previewHandler);
           catalog.putEntity(uri, entity);
         }
         catch (final IOException e) {
@@ -122,12 +122,12 @@ public final class XmlAuditParser {
             throw e;
         }
 
-        if (!process(auditHandler, uri, isImport))
+        if (!process(previewHandler, uri, isImport))
           break;
       }
     }
   }
 
-  private XmlAuditParser() {
+  private XmlPreviewParser() {
   }
 }

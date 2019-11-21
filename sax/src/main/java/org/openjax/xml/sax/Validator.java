@@ -160,7 +160,7 @@ public final class Validator {
    */
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
     try (final InputStream in = url.openStream()) {
-      validate(url, new CachedInputSource(null, url.toString(), null, in), (XmlAuditHandler)null, errorHandler);
+      validate(url, new CachedInputSource(null, url.toString(), null, in), (XmlPreviewHandler)null, errorHandler);
     }
   }
 
@@ -206,7 +206,7 @@ public final class Validator {
    *
    * @param inputSource The {@link InputSource} providing the source for the XML
    *          document to validate.
-   * @param auditHandler The {@link XmlAuditHandler} for the document to
+   * @param previewHandler The {@link XmlPreviewHandler} for the document to
    *          validate (can be {@code null}).
    * @param errorHandler The {@link ErrorHandler} for parsing and validation
    *          errors.
@@ -217,8 +217,8 @@ public final class Validator {
    *           during processing.
    * @throws NullPointerException If the specified {@link InputSource} is null.
    */
-  public static void validate(final InputSource inputSource, final XmlAuditHandler auditHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
-    validate(null, inputSource, auditHandler, errorHandler);
+  public static void validate(final InputSource inputSource, final XmlPreviewHandler previewHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
+    validate(null, inputSource, previewHandler, errorHandler);
   }
 
   /**
@@ -227,7 +227,7 @@ public final class Validator {
    *
    * @param inputSource The {@link InputSource} providing the source for the XML
    *          document to validate.
-   * @param xmlAudit The {@link XmlAudit} for the document to validate.
+   * @param preview The {@link XmlPreview} for the document to validate.
    * @param errorHandler The {@link ErrorHandler} for parsing and validation
    *          errors.
    * @throws IOException If an I/O error has occurred.
@@ -236,10 +236,10 @@ public final class Validator {
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
    * @throws NullPointerException If the specified {@link InputSource} or
-   *           {@link XmlAudit} is null.
+   *           {@link XmlPreview} is null.
    */
-  public static void validate(final InputSource inputSource, final XmlAudit xmlAudit, final ErrorHandler errorHandler) throws IOException, SAXException {
-    validate(inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource), xmlAudit, errorHandler);
+  public static void validate(final InputSource inputSource, final XmlPreview preview, final ErrorHandler errorHandler) throws IOException, SAXException {
+    validate(inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource), preview, errorHandler);
   }
 
   /**
@@ -250,7 +250,7 @@ public final class Validator {
    *          validate.
    * @param inputSource The {@link InputSource} providing the source for the XML
    *          document to validate.
-   * @param auditHandler The {@link XmlAuditHandler} for the document to
+   * @param previewHandler The {@link XmlPreviewHandler} for the document to
    *          validate (can be {@code null}).
    * @param errorHandler The {@link ErrorHandler} for parsing and validation
    *          errors.
@@ -261,22 +261,22 @@ public final class Validator {
    *           during processing.
    * @throws NullPointerException If the specified {@link Reader} is null.
    */
-  private static void validate(final URL url, final InputSource inputSource, final XmlAuditHandler auditHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
+  private static void validate(final URL url, final InputSource inputSource, final XmlPreviewHandler previewHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
     final CachedInputSource cachedInputSource = inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource);
-    final XmlAudit xmlAudit = initInputSource(url, cachedInputSource, auditHandler);
-    validate(cachedInputSource, xmlAudit, errorHandler);
+    final XmlPreview preview = initInputSource(url, cachedInputSource, previewHandler);
+    validate(cachedInputSource, preview, errorHandler);
   }
 
-  private static XmlAudit initInputSource(final URL url, final CachedInputSource inputSource, final XmlAuditHandler auditHandler) throws IOException {
-    if (auditHandler == null) {
-      final XmlAudit xmlAudit = XmlAuditParser.parse(url != null ? url : new URL(inputSource.getSystemId()), inputSource);
+  private static XmlPreview initInputSource(final URL url, final CachedInputSource inputSource, final XmlPreviewHandler previewHandler) throws IOException {
+    if (previewHandler == null) {
+      final XmlPreview preview = XmlPreviewParser.parse(url != null ? url : new URL(inputSource.getSystemId()), inputSource);
       inputSource.getCharacterStream().close();
-      return xmlAudit;
+      return preview;
     }
 
-    final XmlAudit xmlAudit = auditHandler.toXmlAudit();
-    auditHandler.reset();
-    return xmlAudit;
+    final XmlPreview preview = previewHandler.toXmlPreview();
+    previewHandler.reset();
+    return preview;
   }
 
   /**
@@ -285,7 +285,7 @@ public final class Validator {
    *
    * @param inputSource The {@link CachedInputSource} providing the source for
    *          the XML document to validate.
-   * @param xmlAudit The {@link XmlAudit} for the document to validate .
+   * @param preview The {@link XmlPreview} for the document to validate .
    * @param errorHandler The {@link ErrorHandler} for parsing and validation
    *          errors.
    * @throws IOException If an I/O error has occurred.
@@ -294,19 +294,19 @@ public final class Validator {
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
    * @throws NullPointerException If the specified {@link InputSource} or
-   *           {@link XmlAudit} is null.
+   *           {@link XmlPreview} is null.
    */
-  private static void validate(final CachedInputSource inputSource, final XmlAudit xmlAudit, final ErrorHandler errorHandler) throws IOException, SAXException {
+  private static void validate(final CachedInputSource inputSource, final XmlPreview preview, final ErrorHandler errorHandler) throws IOException, SAXException {
     try {
       final SAXParser parser = SAXParsers.newParser(false);
       final SAXSource saxSource;
-      if (xmlAudit.isSchema()) {
+      if (preview.isSchema()) {
         final StringBuilder xml = new StringBuilder();
         xml.append('<').append(dynamicXmlRoot);
         xml.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-        if (xmlAudit.getTargetNamespace().length() > 0) {
-          xml.append(" xmlns=\"").append(xmlAudit.getTargetNamespace()).append('"');
-          xml.append(" xsi:schemaLocation=\"").append(xmlAudit.getTargetNamespace()).append(' ').append(inputSource.getSystemId()).append('"');
+        if (preview.getTargetNamespace().length() > 0) {
+          xml.append(" xmlns=\"").append(preview.getTargetNamespace()).append('"');
+          xml.append(" xsi:schemaLocation=\"").append(preview.getTargetNamespace()).append(' ').append(inputSource.getSystemId()).append('"');
         }
         else {
           xml.append(" xsi:noNamespaceSchemaLocation=\"").append(inputSource.getSystemId()).append('"');
@@ -322,9 +322,9 @@ public final class Validator {
       }
 
       final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
-      validator.setResourceResolver(new XmlCatalogResolver(xmlAudit.getCatalog()));
+      validator.setResourceResolver(new XmlCatalogResolver(preview.getCatalog()));
 
-      final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, inputSource, xmlAudit.isSchema() || xmlAudit.getImports() != null || xmlAudit.getIncludes() != null);
+      final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, inputSource, preview.isSchema() || preview.getImports() != null || preview.getIncludes() != null);
       validator.setErrorHandler(validatorErrorHandler);
 
       validator.validate(saxSource);
@@ -340,8 +340,8 @@ public final class Validator {
       }
     }
     finally {
-      if (xmlAudit != null)
-        xmlAudit.getCatalog().close();
+      if (preview != null)
+        preview.getCatalog().close();
     }
   }
 

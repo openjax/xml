@@ -42,12 +42,12 @@ import org.xml.sax.InputSource;
  * This handler dereferences external references to imported or included
  * documents and schemas, in order to comprise a complete catalog.
  * <p>
- * One {@link XmlAuditHandler} instance is created for <b>each</b> XML document.
+ * One {@link XmlPreviewHandler} instance is created for <b>all</b> XML documents.
  * <p>
  * One {@link XmlCatalog} instance is created for <b>all</b> XML documents.
  */
-class XmlAuditHandler extends FastSAXHandler {
-  private static final Logger logger = LoggerFactory.getLogger(XmlAuditHandler.class);
+class XmlPreviewHandler extends FastSAXHandler {
+  private static final Logger logger = LoggerFactory.getLogger(XmlPreviewHandler.class);
 
   /**
    * Returns a string encoding of the specified {@code attributes}. The encoding
@@ -92,20 +92,20 @@ class XmlAuditHandler extends FastSAXHandler {
   private String targetNamespace;
 
   /**
-   * Creates a new {@link XmlAuditHandler} to be initialized with the specified {@link XmlCatalog}.
+   * Creates a new {@link XmlPreviewHandler} to be initialized with the specified {@link XmlCatalog}.
    * @param catalog
    * @throws NullPointerException If the specified {@link XmlCatalog} is null.
    * @throws IllegalArgumentException If the {@link InputSource} in the
    *           specified {@link XmlCatalog} does not have a byte stream or
    *           character stream.
    */
-  XmlAuditHandler(final XmlCatalog catalog) {
+  XmlPreviewHandler(final XmlCatalog catalog) {
     init(catalog);
   }
 
   /**
    * Initializes the specified {@link XmlCatalog} in this
-   * {@link XmlAuditHandler}.
+   * {@link XmlPreviewHandler}.
    *
    * @param catalog The {@link XmlCatalog}.
    * @throws NullPointerException If the specified {@link XmlCatalog} is null.
@@ -151,10 +151,10 @@ class XmlAuditHandler extends FastSAXHandler {
 
   /**
    * Returns a set of the URIs visited throughout the lifecycle of this
-   * {@link XmlAuditHandler} instance.
+   * {@link XmlPreviewHandler} instance.
    *
    * @return A set of the URIs visited throughout the lifecycle of this
-   *         {@link XmlAuditHandler} instance.
+   *         {@link XmlPreviewHandler} instance.
    */
   Set<String> getVisitedURIs() {
     return visitedURIs;
@@ -162,10 +162,10 @@ class XmlAuditHandler extends FastSAXHandler {
 
   /**
    * Returns a set of the URLs visited throughout the lifecycle of this
-   * {@link XmlAuditHandler} instance.
+   * {@link XmlPreviewHandler} instance.
    *
    * @return A set of the URLs visited throughout the lifecycle of this
-   *         {@link XmlAuditHandler} instance.
+   *         {@link XmlPreviewHandler} instance.
    */
   Set<URL> getVisitedURLs() {
     return visitedURLs;
@@ -175,13 +175,13 @@ class XmlAuditHandler extends FastSAXHandler {
 
   /**
    * Specifies whether the XML document represented by the {@link XmlCatalog} in
-   * this {@link XmlAuditHandler} instance is an XML Schema Document.
+   * this {@link XmlPreviewHandler} instance is an XML Schema Document.
    *
    * @return Whether the XML document represented by the {@link XmlCatalog} in
-   *         this {@link XmlAuditHandler} instance is an XML Schema Document.
+   *         this {@link XmlPreviewHandler} instance is an XML Schema Document.
    * @throws IllegalStateException If this method is called before the XML
    *           document represented by the {@link XmlCatalog} in this
-   *           {@link XmlAuditHandler} instance is parsed.
+   *           {@link XmlPreviewHandler} instance is parsed.
    */
   boolean isSchema() {
     if (rootElement == null)
@@ -194,15 +194,15 @@ class XmlAuditHandler extends FastSAXHandler {
 
   /**
    * Returns the {@link QName} of the root element of the XML document
-   * represented by the {@link XmlCatalog} in this {@link XmlAuditHandler}
+   * represented by the {@link XmlCatalog} in this {@link XmlPreviewHandler}
    * instance.
    *
    * @return The {@link QName} of the root element of the XML document
    *         represented by the {@link XmlCatalog} in this
-   *         {@link XmlAuditHandler} instance.
+   *         {@link XmlPreviewHandler} instance.
    * @throws IllegalStateException If this method is called before the XML
    *           document represented by the {@link XmlCatalog} in this
-   *           {@link XmlAuditHandler} instance is parsed.
+   *           {@link XmlPreviewHandler} instance is parsed.
    */
   QName getRootElement() {
     if (rootElement == null)
@@ -213,12 +213,12 @@ class XmlAuditHandler extends FastSAXHandler {
 
   /**
    * Returns the "targetNamespace" attribute of the XML document represented by
-   * the {@link XmlCatalog} in this {@link XmlAuditHandler} instance. This
+   * the {@link XmlCatalog} in this {@link XmlPreviewHandler} instance. This
    * method is only useful for XML Schema Documents (i.e. when
    * {@link #isSchema()} is {@code true}).
    *
    * @return The "targetNamespace" attribute of the XML document represented by
-   *         the {@link XmlCatalog} in this {@link XmlAuditHandler} instance.
+   *         the {@link XmlCatalog} in this {@link XmlPreviewHandler} instance.
    */
   String getTargetNamespace() {
     return this.targetNamespace;
@@ -233,7 +233,7 @@ class XmlAuditHandler extends FastSAXHandler {
   /**
    * Returns the map of namespace-to-URL entries of "import" references for the
    * XML document represented by the {@link XmlCatalog} in this
-   * {@link XmlAuditHandler} instance.
+   * {@link XmlPreviewHandler} instance.
    * <ul>
    * <li>If {@link #isSchema()} is {@code true}, this method represents the
    * {@code <xs:import/>} elements of an XML Schema Document.</li>
@@ -243,7 +243,7 @@ class XmlAuditHandler extends FastSAXHandler {
    *
    * @return The map of namespace-to-URL entries of "import" references for the
    *         XML document represented by the {@link XmlCatalog} in this
-   *         {@link XmlAuditHandler} instance.
+   *         {@link XmlPreviewHandler} instance.
    */
   Map<String,URL> getImports() {
     return imports;
@@ -265,7 +265,7 @@ class XmlAuditHandler extends FastSAXHandler {
   /**
    * Returns the map of {@link String}-to-{@link URL} entries of "include"
    * references for the XML document represented by the {@link XmlCatalog} in
-   * this {@link XmlAuditHandler} instance. The key and value of each entry in
+   * this {@link XmlPreviewHandler} instance. The key and value of each entry in
    * this map represents the same logical string, differing only in class type.
    * <ul>
    * <li>If {@link #isSchema()} is {@code true}, this method represents the
@@ -277,7 +277,7 @@ class XmlAuditHandler extends FastSAXHandler {
    *
    * @return The map of {@link String}-to-{@link URL} entries of "include"
    *         references for the XML document represented by the
-   *         {@link XmlCatalog} in this {@link XmlAuditHandler} instance.
+   *         {@link XmlCatalog} in this {@link XmlPreviewHandler} instance.
    */
   Map<String,URL> getIncludes() {
     return includes;
@@ -413,11 +413,11 @@ class XmlAuditHandler extends FastSAXHandler {
   }
 
   /**
-   * Returns an {@link XmlAudit} representation of this {@link XmlAuditHandler}.
+   * Returns an {@link XmlPreview} representation of this {@link XmlPreviewHandler}.
    *
-   * @return An {@link XmlAudit} representation of this {@link XmlAuditHandler}.
+   * @return An {@link XmlPreview} representation of this {@link XmlPreviewHandler}.
    */
-  public XmlAudit toXmlAudit() {
-    return new XmlAudit(catalog, isLocal, isSchema, rootElement, targetNamespace, imports == null ? null : new HashMap<>(imports), includes == null ? null : new HashMap<>(includes));
+  public XmlPreview toXmlPreview() {
+    return new XmlPreview(catalog, isLocal, isSchema, rootElement, targetNamespace, imports == null ? null : new HashMap<>(imports), includes == null ? null : new HashMap<>(includes));
   }
 }
