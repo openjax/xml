@@ -45,30 +45,31 @@ public class ValidatorMojo extends XmlMojo {
         final File recordFile = new File(recordDir, URLs.getName(url));
         final String filePath = URLs.isLocalFile(url) ? CWD.relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
         long lastModified = -1;
-        if (recordFile.exists() && recordFile.lastModified() >= (lastModified = URLs.getLastModified(url)) && recordFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
+        if (recordFile.exists() && (lastModified = url.openConnection().getLastModified()) <= recordFile.lastModified() && recordFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
           getLog().info("Pre-validated: " + filePath);
+          continue;
         }
-        else {
-          try {
-            getLog().info("   Validating: " + filePath);
-            Validator.validate(url);
-          }
-          catch (final FileNotFoundException | SAXException e) {
-            if (!offline || !(e instanceof SAXException) || !Validator.isRemoteAccessException((SAXException)e)) {
-              final String message = e instanceof FileNotFoundException ? e.getClass().getSimpleName() + e.getMessage() : e.getMessage();
-              final StringBuilder builder = new StringBuilder("\nURL: ").append(url.toExternalForm());
-              builder.append("\nReason: ").append(message).append('\n');
-              for (final Throwable t : e.getSuppressed())
-                builder.append("        ").append(t.getMessage()).append('\n');
 
-              final MojoFailureException exception = new MojoFailureException("Failed to validate xml.", "", builder.toString());
-              exception.initCause(e);
-              throw exception;
-            }
+        try {
+          getLog().info("   Validating: " + filePath);
+          Validator.validate(url);
+        }
+        catch (final FileNotFoundException | SAXException e) {
+          if (!offline || !(e instanceof SAXException) || !Validator.isRemoteAccessException((SAXException)e)) {
+            final String message = e instanceof FileNotFoundException ? e.getClass().getSimpleName() + e.getMessage() : e.getMessage();
+            final StringBuilder builder = new StringBuilder("\nURL: ").append(url.toExternalForm());
+            builder.append("\nReason: ").append(message).append('\n');
+            for (final Throwable t : e.getSuppressed())
+              builder.append("        ").append(t.getMessage()).append('\n');
 
-            if (!recordFile.createNewFile())
-              recordFile.setLastModified(lastModified != -1 ? lastModified : URLs.getLastModified(url));
+            final MojoFailureException exception = new MojoFailureException("Failed to validate xml.", "", builder.toString());
+            exception.initCause(e);
+            throw exception;
           }
+        }
+
+        if (!recordFile.createNewFile()) {
+          recordFile.setLastModified(lastModified > 0 ? lastModified : System.currentTimeMillis());
         }
       }
     }

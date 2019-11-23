@@ -55,7 +55,7 @@ public class TransformMojo extends XmlMojo {
         final String inFilePath = URLs.isLocalFile(url) ? CWD.relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
 
         long lastModified;
-        if (destFile.exists() && destFile.lastModified() >= (lastModified = URLs.getLastModified(url)) && destFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
+        if (destFile.exists() && (lastModified = url.openConnection().getLastModified()) <= destFile.lastModified() && destFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
           getLog().info("Pre-transformed: " + inFilePath);
         }
         else {
