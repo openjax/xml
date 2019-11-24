@@ -123,6 +123,7 @@ class XmlPreviewHandler extends FastSAXHandler {
    * Resets the local variables in this handler and initializes it for the
    * specified {@link XmlCatalog}.
    *
+   * @param catalog The {@link XmlCatalog}.
    * @see #reset()
    */
   void reset(final XmlCatalog catalog) {
