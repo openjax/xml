@@ -19,6 +19,7 @@ package org.openjax.xml.sax;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * The {@link XmlEntity} represents an XML entity, which associates a
@@ -40,23 +41,23 @@ public class XmlEntity implements AutoCloseable, Serializable {
    *           {@link CachedInputSource} is null.
    */
   public XmlEntity(final URL location, final CachedInputSource inputSource) {
-    this.location = location;
-    this.inputSource = inputSource;
+    this.location = Objects.requireNonNull(location);
+    this.inputSource = Objects.requireNonNull(inputSource);
   }
 
   /**
-   * Returns the {@link URL} for this {@link XmlEntity}.
+   * Returns the {@link URL}.
    *
-   * @return The {@link URL} for this {@link XmlEntity}.
+   * @return The {@link URL}.
    */
   public final URL getLocation() {
     return location;
   }
 
   /**
-   * Returns the {@link CachedInputSource} for this {@link XmlEntity}.
+   * Returns the {@link CachedInputSource}.
    *
-   * @return The {@link CachedInputSource} for this {@link XmlEntity}.
+   * @return The {@link CachedInputSource}.
    */
   public CachedInputSource getInputSource() {
     return this.inputSource;
@@ -64,7 +65,7 @@ public class XmlEntity implements AutoCloseable, Serializable {
 
   /**
    * Closes this {@link XmlEntity}. This method calls
-   * {@link CachedInputSource#close()} on the underlying
+   * {@link CachedInputSource#close() close()} on the underlying
    * {@link CachedInputSource}.
    *
    * @throws IOException If an I/O error has occurred.
