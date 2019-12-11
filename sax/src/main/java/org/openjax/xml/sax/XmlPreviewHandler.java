@@ -53,7 +53,9 @@ class XmlPreviewHandler extends FastSAXHandler {
    * Returns a string encoding of the specified {@code attributes}. The encoding
    * is of the form:
    *
-   * <pre>name = "value"</pre>
+   * <pre>
+   * {@code name = "value"}
+   * </pre>
    *
    * @param attributes The map of attributes.
    * @return A string encoding of the specified {@code attributes}.

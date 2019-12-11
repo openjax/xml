@@ -25,7 +25,7 @@ import java.io.Reader;
  * This parser performs as few operations as necessary to parse well-formed XML
  * documents.
  * <p>
- * <i><b>Note:</b> This parser does not perform any validation.</i>
+ * <b>Note:</b> This parser does not perform any validation.
  *
  * @see FasterSAXHandler
  */
@@ -36,8 +36,8 @@ public final class FastSAXParser {
    * Parse the data provided by the input stream, and handle parse events with
    * the specified {@link FasterSAXHandler}.
    * <p>
-   * <i><b>Note:</b> The provided input stream must support
-   * {@link Reader#mark(int)}.</i>
+   * <b>Note:</b> The provided input stream must support
+   * {@link Reader#mark(int)}.
    *
    * @param in The {@link Reader} input stream.
    * @param handler The {@link FasterSAXHandler}.
