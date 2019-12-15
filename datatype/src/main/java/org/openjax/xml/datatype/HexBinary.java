@@ -101,7 +101,7 @@ public class HexBinary implements Serializable {
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(bytes);
+    return 31 + Arrays.hashCode(bytes);
   }
 
   /**

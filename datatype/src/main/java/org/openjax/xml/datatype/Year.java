@@ -142,6 +142,6 @@ public class Year extends TemporalType implements Serializable {
 
   @Override
   public int hashCode() {
-    return super.hashCode() + year ^ 5;
+    return 31 * super.hashCode() + year;
   }
 }

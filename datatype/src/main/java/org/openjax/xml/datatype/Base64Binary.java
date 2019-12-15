@@ -61,7 +61,7 @@ public class Base64Binary implements Serializable {
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(bytes);
+    return 31 + Arrays.hashCode(bytes);
   }
 
   /**

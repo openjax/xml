@@ -276,6 +276,10 @@ public class Time extends TemporalType implements Serializable {
 
   @Override
   public int hashCode() {
-    return super.hashCode() + hour ^ 3 + minute ^ 5 + (int)(second * 1000) ^ 7;
+    int hashCode = super.hashCode();
+    hashCode = 31 * hashCode + hour;
+    hashCode = 31 * hashCode + minute;
+    hashCode = 31 * hashCode + Float.hashCode(second);
+    return hashCode;
   }
 }

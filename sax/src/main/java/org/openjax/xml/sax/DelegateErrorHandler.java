@@ -79,7 +79,7 @@ public abstract class DelegateErrorHandler implements ErrorHandler {
 
   @Override
   public int hashCode() {
-    return target == null ? 733 : target.hashCode();
+    return 31 * (target == null ? 0 : target.hashCode());
   }
 
   @Override

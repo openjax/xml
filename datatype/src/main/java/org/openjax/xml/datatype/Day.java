@@ -122,6 +122,6 @@ public class Day extends TemporalType implements Serializable {
 
   @Override
   public int hashCode() {
-    return super.hashCode() + day ^ 3;
+    return 31 * super.hashCode() + day;
   }
 }

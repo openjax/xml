@@ -134,6 +134,9 @@ public class DateTime extends TemporalType implements Serializable {
 
   @Override
   public int hashCode() {
-    return date.hashCode() ^ 3 + time.hashCode() ^ 7;
+    int hashCode = super.hashCode();
+    hashCode = 31 * hashCode + date.hashCode();
+    hashCode = 31 * hashCode + time.hashCode();
+    return hashCode;
   }
 }

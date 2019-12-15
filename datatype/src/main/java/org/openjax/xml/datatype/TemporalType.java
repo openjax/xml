@@ -50,6 +50,6 @@ public abstract class TemporalType {
 
   @Override
   public int hashCode() {
-    return timeZone.hashCode();
+    return 31 * timeZone.hashCode();
   }
 }

@@ -128,6 +128,9 @@ public class MonthDay extends TemporalType implements Serializable {
 
   @Override
   public int hashCode() {
-    return super.hashCode() + month.hashCode() ^ 3 + day.hashCode() ^ 7;
+    int hashCode = super.hashCode();
+    hashCode = 31 * hashCode + month.hashCode();
+    hashCode = 31 * hashCode + day.hashCode();
+    return hashCode;
   }
 }

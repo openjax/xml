@@ -64,7 +64,7 @@ public final class DOMStyle {
 
   @Override
   public int hashCode() {
-    return mask;
+    return 31 * mask;
   }
 
   @Override
@@ -75,6 +75,6 @@ public final class DOMStyle {
     if (!(obj instanceof DOMStyle))
       return false;
 
-    return ((DOMStyle)obj).mask == mask;
+    return mask == ((DOMStyle)obj).mask;
   }
 }

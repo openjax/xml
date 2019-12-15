@@ -122,6 +122,9 @@ public class YearMonth extends TemporalType implements Serializable {
 
   @Override
   public int hashCode() {
-    return super.hashCode() + (year != null ? year.hashCode() : -1) + (month != null ? month.hashCode() : -1);
+    int hashCode = super.hashCode();
+    hashCode = 31 * hashCode + (year == null ? 0 : year.hashCode());
+    hashCode = 31 * hashCode + (month == null ? 0 : month.hashCode());
+    return hashCode;
   }
 }

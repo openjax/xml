@@ -173,6 +173,8 @@ public class XmlCatalog extends XmlEntity {
 
   @Override
   public int hashCode() {
-    return super.hashCode() ^ (uriToEntity == null ? 733 : uriToEntity.hashCode());
+    int hashCode = super.hashCode();
+    hashCode = 31 * hashCode + (uriToEntity == null ? 0 : uriToEntity.hashCode());
+    return hashCode;
   }
 }
