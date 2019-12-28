@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class XmlElement implements Cloneable, Serializable {
   private static final long serialVersionUID = 3766554839993594188L;
-  private static Pattern qName = Pattern.compile("^[a-zA-Z_][\\w.-]*(:[a-zA-Z_][\\w.-]*)?$");
+  private static final Pattern qName = Pattern.compile("^[a-zA-Z_][\\w.-]*(:[a-zA-Z_][\\w.-]*)?$");
 
   /**
    * Asserts the specified string is a valid <a href=
@@ -194,7 +194,7 @@ public class XmlElement implements Cloneable, Serializable {
       return false;
 
     final XmlElement that = (XmlElement)obj;
-    return name.equals(that.name) && (attributes == null ? that.attributes == null : attributes.equals(that.attributes)) && (elements == null ? that.elements == null : that.elements != null && elements.size() == that.elements.size() && elements.equals(that.elements));
+    return name.equals(that.name) && Objects.equals(attributes, that.attributes) && (elements == null ? that.elements == null : that.elements != null && elements.size() == that.elements.size() && elements.equals(that.elements));
   }
 
   @Override
@@ -230,11 +230,13 @@ public class XmlElement implements Cloneable, Serializable {
     final StringBuilder builder = new StringBuilder("<");
     builder.append(name);
     if (attributes != null && attributes.size() > 0) {
+      final StringBuilder value = new StringBuilder();
       for (final Map.Entry entry : (Set<Map.Entry>)attributes.entrySet()) {
         final String name = requireQName(entry.getKey());
-        final String value = String.valueOf(Objects.requireNonNull(entry.getValue()));
+        value.append(Objects.requireNonNull(entry.getValue()));
         builder.append(' ').append(name).append("=\"");
-        builder.append(CharacterDatas.escapeForAttr(new StringBuilder(value), '"'));
+        builder.append(CharacterDatas.escapeForAttr(value, '"'));
+        value.setLength(0);
         builder.append('"');
       }
     }

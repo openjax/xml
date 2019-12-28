@@ -36,8 +36,11 @@ class XmlCatalogResolver implements LSResourceResolver {
     XML_XSD(XMLConstants.XML_NS_URI, "xmlschema/xml.xsd");
 
     XmlEntity getEntity() throws IOException {
-      final URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
-      return new XmlEntity(url, new CachedInputSource(null, namespaceURI, null, url.openStream()));
+      final URL resource = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+      if (resource == null)
+        throw new IllegalStateException("Unable to find " + resourceName + " in class loader " + Thread.currentThread().getContextClassLoader());
+
+      return new XmlEntity(resource, new CachedInputSource(null, namespaceURI, null, resource.openStream()));
     }
 
     private final String namespaceURI;

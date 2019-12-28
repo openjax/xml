@@ -16,13 +16,12 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.Serializable;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gMonth
  */
-public class Month extends TemporalType implements Serializable {
+public class Month extends TemporalType {
   private static final long serialVersionUID = 9191134240521332696L;
 
   public static String print(final Month month) {
@@ -100,7 +99,7 @@ public class Month extends TemporalType implements Serializable {
   }
 
   @Override
-  protected String toEmbededString() {
+  protected String toEmbeddedString() {
     return (month < 10 ? "--0" : "--") + month;
   }
 

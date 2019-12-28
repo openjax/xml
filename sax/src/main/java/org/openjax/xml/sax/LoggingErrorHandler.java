@@ -19,7 +19,6 @@ package org.openjax.xml.sax;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -31,7 +30,7 @@ public class LoggingErrorHandler implements ErrorHandler {
   private static final Logger logger = LoggerFactory.getLogger(LoggingErrorHandler.class);
 
   @Override
-  public void warning(final SAXParseException exception) throws SAXException {
+  public void warning(final SAXParseException exception) throws SAXParseException {
     final String message = exception.getMessage() + " (" + exception.getLineNumber() + "," + exception.getColumnNumber() + ")";
     if (exception.getMessage() != null && exception.getMessage().startsWith("schema_reference.4")) {
       logger.error(message);
@@ -42,12 +41,12 @@ public class LoggingErrorHandler implements ErrorHandler {
   }
 
   @Override
-  public void error(final SAXParseException exception) throws SAXException {
+  public void error(final SAXParseException exception) {
     logger.error(exception.getMessage() + " (" + exception.getLineNumber() + "," + exception.getColumnNumber() + ")");
   }
 
   @Override
-  public void fatalError(final SAXParseException exception) throws SAXException {
+  public void fatalError(final SAXParseException exception) {
     logger.error(exception.getMessage() + " (" + exception.getLineNumber() + "," + exception.getColumnNumber() + ")");
   }
 }

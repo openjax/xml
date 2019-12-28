@@ -16,7 +16,6 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.TimeZone;
@@ -24,7 +23,7 @@ import java.util.TimeZone;
 /**
  * https://www.w3.org/TR/xmlschema11-2/#dateTime
  */
-public class DateTime extends TemporalType implements Serializable {
+public class DateTime extends TemporalType {
   private static final long serialVersionUID = 7756729079060501414L;
 
   public static String print(final DateTime dateTime) {
@@ -108,14 +107,14 @@ public class DateTime extends TemporalType implements Serializable {
   }
 
   @Override
-  protected String toEmbededString() {
+  protected String toEmbeddedString() {
     final StringBuilder builder = new StringBuilder();
     if (date != null)
-      builder.append(date.toEmbededString());
+      builder.append(date.toEmbeddedString());
 
     builder.append('T');
     if (time != null)
-      builder.append(time.toEmbededString());
+      builder.append(time.toEmbeddedString());
 
     return builder.toString();
   }

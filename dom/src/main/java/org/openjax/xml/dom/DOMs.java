@@ -64,7 +64,7 @@ public final class DOMs {
     final DOMStyle style = DOMStyle.merge(styles);
     final Set<String> namespaces = style.isIgnoreNamespaces() || schemaLocations == null ? null : new HashSet<>();
     final StringBuilder builder = domToString(new StringBuilder(), namespaces, namespaceToPrefix, node, 0, style);
-    if (schemaLocations == null || schemaLocations.size() == 0 || namespaces.size() == 0)
+    if (schemaLocations == null || schemaLocations.size() == 0 || namespaces == null || namespaces.size() == 0)
       return builder.toString();
 
     final StringBuilder locations = new StringBuilder();
@@ -94,7 +94,7 @@ public final class DOMs {
     return namespaceURI != null && !XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI) && !XMLConstants.XML_NS_URI.equals(namespaceURI);
   }
 
-  private static StringBuilder domToString(final StringBuilder builder, final Set<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, int depth, final DOMStyle style) {
+  private static StringBuilder domToString(final StringBuilder builder, final Set<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final DOMStyle style) {
     if (node == null)
       return builder;
 
@@ -153,7 +153,7 @@ public final class DOMs {
     return builder;
   }
 
-  private static StringBuilder attributeToString(final StringBuilder builder, final Set<String> namespaces, final Map<String,String> namespaceToPrefix, final Attr attribute, int depth, final DOMStyle style) {
+  private static StringBuilder attributeToString(final StringBuilder builder, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Attr attribute, final int depth, final DOMStyle style) {
     if (style.isIndentAttributes()) {
       builder.append('\n');
       for (int i = 0; i < depth; ++i)
@@ -212,7 +212,7 @@ public final class DOMs {
     return builder;
   }
 
-  private static StringBuilder attributesToString(final StringBuilder builder, final Set<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, int depth, final DOMStyle style) {
+  private static StringBuilder attributesToString(final StringBuilder builder, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final DOMStyle style) {
     final NamedNodeMap attributes = node.getAttributes();
     if (attributes == null)
       return builder;

@@ -16,13 +16,13 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.Serializable;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gYearMonth
  */
-public class YearMonth extends TemporalType implements Serializable {
+public class YearMonth extends TemporalType {
   private static final long serialVersionUID = -5629415172932276877L;
 
   public static String print(final YearMonth yearMonth) {
@@ -98,9 +98,9 @@ public class YearMonth extends TemporalType implements Serializable {
   }
 
   @Override
-  protected String toEmbededString() {
+  protected String toEmbeddedString() {
     final StringBuilder builder = new StringBuilder();
-    builder.append(year.toEmbededString()).append('-');
+    builder.append(year.toEmbeddedString()).append('-');
     if (getMonth() < 10)
       builder.append('0');
 
@@ -117,7 +117,7 @@ public class YearMonth extends TemporalType implements Serializable {
       return false;
 
     final YearMonth that = (YearMonth)obj;
-    return super.equals(obj) && (year != null ? year.equals(that.year) : that.year == null) && (month != null ? month.equals(that.month) : that.month == null);
+    return super.equals(obj) && Objects.equals(year, that.year) && Objects.equals(month, that.month);
   }
 
   @Override

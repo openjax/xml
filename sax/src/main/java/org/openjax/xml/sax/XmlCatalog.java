@@ -136,6 +136,7 @@ public class XmlCatalog extends XmlEntity {
 
       final XmlEntity entity = entry.getValue();
       final String line = "\"" + entry.getKey() + "\" \"" + entity.getLocation() + "\"";
+      // FIXME: What's going on here?
       builder.append(entry.getKey().equals(entry.getKey()) ? "PUBLIC " : "SYSTEM ").append(line);
       builder.append("\nREWRITE_SYSTEM ").append(line);
       if (entity instanceof XmlCatalog && entity != this) {
@@ -167,8 +168,7 @@ public class XmlCatalog extends XmlEntity {
     if (!(obj instanceof XmlCatalog) || !super.equals(obj))
       return false;
 
-    final XmlCatalog that = (XmlCatalog)obj;
-    return uriToEntity == null ? that.uriToEntity == null : uriToEntity.equals(that.uriToEntity);
+    return Objects.equals(uriToEntity, ((XmlCatalog)obj).uriToEntity);
   }
 
   @Override

@@ -35,7 +35,7 @@ public class Duration extends DurationImpl {
     super(durationInMilliSeconds);
   }
 
-  protected Duration(String lexicalRepresentation) {
+  protected Duration(final String lexicalRepresentation) {
     super(lexicalRepresentation);
   }
 
@@ -47,19 +47,19 @@ public class Duration extends DurationImpl {
     super(isPositive, years, months, 0, 0, 0, 0);
   }
 
-  public Duration(final boolean isPositive, final int years, int months, final int days) {
+  public Duration(final boolean isPositive, final int years, final int months, final int days) {
     super(isPositive, years, months, days, 0, 0, 0);
   }
 
-  public Duration(final boolean isPositive, final int years, int months, final int days, final int hours) {
+  public Duration(final boolean isPositive, final int years, final int months, final int days, final int hours) {
     super(isPositive, years, months, days, hours, 0, 0);
   }
 
-  public Duration(final boolean isPositive, final int years, int months, final int days, int hours, final int minutes) {
+  public Duration(final boolean isPositive, final int years, final int months, final int days, final int hours, final int minutes) {
     super(isPositive, years, months, days, hours, minutes, 0);
   }
 
-  public Duration(final boolean isPositive, final int years, int months, final int days, int hours, final int minutes, final int seconds) {
+  public Duration(final boolean isPositive, final int years, final int months, final int days, final int hours, final int minutes, final int seconds) {
     super(isPositive, years, months, days, hours, minutes, seconds);
   }
 }

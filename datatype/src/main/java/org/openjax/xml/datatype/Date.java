@@ -16,7 +16,6 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.TimeZone;
@@ -24,7 +23,7 @@ import java.util.TimeZone;
 /**
  * http://www.w3.org/TR/xmlschema11-2/#date
  */
-public class Date extends TemporalType implements Serializable {
+public class Date extends TemporalType {
   private static final long serialVersionUID = -9016233681424543761L;
 
   public static String print(final Date date) {
@@ -57,7 +56,7 @@ public class Date extends TemporalType implements Serializable {
 
     final int year = Year.parseYearFrag(string);
     final int index = string.indexOf('-', Year.YEAR_FRAG_MIN_LENGTH);
-    final MonthDay monthDay = MonthDay.parseMonthDayFrag(string = string.substring(index + 1));
+    final MonthDay monthDay = MonthDay.parseMonthDayFrag(string.substring(index + 1));
     if (year % 4 != 0 && monthDay.getMonth() == 2 && monthDay.getDay() == 29)
       throw new IllegalArgumentException("year == " + year + " month == " + monthDay.getMonth() + " day == " + monthDay.getDay());
 
@@ -76,7 +75,7 @@ public class Date extends TemporalType implements Serializable {
     this.epochTime = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), day.getDay(), 0, 0, 0).toEpochSecond(ZoneOffset.ofTotalSeconds(getTimeZone().getRawOffset() / 1000));
   }
 
-  public Date(final int year, final int month, int day, final TimeZone timeZone) {
+  public Date(final int year, final int month, final int day, final TimeZone timeZone) {
     this(new YearMonth(year, month), new Day(day), timeZone);
   }
 
@@ -113,9 +112,9 @@ public class Date extends TemporalType implements Serializable {
   }
 
   @Override
-  protected String toEmbededString() {
+  protected String toEmbeddedString() {
     final StringBuilder builder = new StringBuilder();
-    builder.append(yearMonth.toEmbededString()).append('-');
+    builder.append(yearMonth.toEmbeddedString()).append('-');
     if (getDay() < 10)
       builder.append('0').append(getDay());
     else

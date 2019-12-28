@@ -16,13 +16,12 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.Serializable;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gDay
  */
-public class Day extends TemporalType implements Serializable {
+public class Day extends TemporalType {
   private static final long serialVersionUID = -2605382792284795205L;
 
   public static String print(final Day day) {
@@ -104,7 +103,7 @@ public class Day extends TemporalType implements Serializable {
   }
 
   @Override
-  protected String toEmbededString() {
+  protected String toEmbeddedString() {
     return (day < 10 ? "---0" : "---") + day;
   }
 

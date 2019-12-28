@@ -50,7 +50,7 @@ public class XMLManifestParserTest {
 
   @Test
   public void testEmptyXsd() throws IOException {
-    assertEquals(null, testXsd("empty.xsd").getTargetNamespace());
+    assertNull(testXsd("empty.xsd").getTargetNamespace());
   }
 
   @Test
@@ -70,7 +70,7 @@ public class XMLManifestParserTest {
 
   @Test
   public void testNoNamespaceXsd() throws IOException {
-    assertEquals(null, testXsd("noNamespace.xsd").getTargetNamespace());
+    assertNull(testXsd("noNamespace.xsd").getTargetNamespace());
   }
 
   @Test

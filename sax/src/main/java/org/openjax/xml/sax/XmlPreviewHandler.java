@@ -42,7 +42,8 @@ import org.xml.sax.InputSource;
  * This handler dereferences external references to imported or included
  * documents and schemas, in order to comprise a complete catalog.
  * <p>
- * One {@link XmlPreviewHandler} instance is created for <b>all</b> XML documents.
+ * One {@link XmlPreviewHandler} instance is created for <b>all</b> XML
+ * documents.
  * <p>
  * One {@link XmlCatalog} instance is created for <b>all</b> XML documents.
  */
@@ -94,8 +95,10 @@ class XmlPreviewHandler extends FastSAXHandler {
   private String targetNamespace;
 
   /**
-   * Creates a new {@link XmlPreviewHandler} to be initialized with the specified {@link XmlCatalog}.
-   * @param catalog
+   * Creates a new {@link XmlPreviewHandler} to be initialized with the
+   * specified {@link XmlCatalog}.
+   *
+   * @param catalog The {@link XmlCatalog}.
    * @throws NullPointerException If the specified {@link XmlCatalog} is null.
    * @throws IllegalArgumentException If the {@link InputSource} in the
    *           specified {@link XmlCatalog} does not have a byte stream or
@@ -416,9 +419,11 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Returns an {@link XmlPreview} representation of this {@link XmlPreviewHandler}.
+   * Returns an {@link XmlPreview} representation of this
+   * {@link XmlPreviewHandler}.
    *
-   * @return An {@link XmlPreview} representation of this {@link XmlPreviewHandler}.
+   * @return An {@link XmlPreview} representation of this
+   *         {@link XmlPreviewHandler}.
    */
   public XmlPreview toXmlPreview() {
     return new XmlPreview(catalog, isLocal, isSchema, rootElement, targetNamespace, imports == null ? null : new HashMap<>(imports), includes == null ? null : new HashMap<>(includes));

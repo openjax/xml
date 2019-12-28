@@ -25,55 +25,55 @@
       <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="tokenNonEmpty">
     <xs:restriction base="xs:token">
       <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="stringWord">
     <xs:restriction base="xs:string">
       <xs:pattern value="[A-Za-z\d_]*"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="stringWordNonEmpty">
     <xs:restriction base="xs:string">
       <xs:pattern value="[A-Za-z\d_]+"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="stringNonEmpty">
     <xs:restriction base="xs:string">
       <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="NCNameNonEmpty">
     <xs:restriction base="xs:NCName">
       <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="hexBinaryNonEmpty">
     <xs:restriction base="xs:hexBinary">
       <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="NCWName">
     <xs:restriction base="xs:NCName">
       <xs:pattern value="[\S]*"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="NCWNameNonEmpty">
     <xs:restriction base="dt:NCWName">
       <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="char">
     <xs:restriction base="xs:normalizedString">
       <xs:maxLength value="1"/>
@@ -86,103 +86,103 @@
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonPositiveByte">
     <xs:restriction base="xs:byte">
       <xs:maxInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="positiveByte">
     <xs:restriction base="xs:byte">
       <xs:minExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="negativeByte">
     <xs:restriction base="xs:byte">
       <xs:maxExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonNegativeShort">
     <xs:restriction base="xs:short">
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonPositiveShort">
     <xs:restriction base="xs:short">
       <xs:maxInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="positiveShort">
     <xs:restriction base="xs:short">
       <xs:minExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="negativeShort">
     <xs:restriction base="xs:short">
       <xs:maxExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonNegativeInt">
     <xs:restriction base="xs:int">
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonPositiveInt">
     <xs:restriction base="xs:int">
       <xs:maxInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="positiveInt">
     <xs:restriction base="xs:int">
       <xs:minExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="negativeInt">
     <xs:restriction base="xs:int">
       <xs:maxExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonNegativeLong">
     <xs:restriction base="xs:long">
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonPositiveLong">
     <xs:restriction base="xs:long">
       <xs:maxInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="positiveLong">
     <xs:restriction base="xs:long">
       <xs:minExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="negativeLong">
     <xs:restriction base="xs:long">
       <xs:maxExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonNegativeDecimal">
     <xs:restriction base="xs:decimal">
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonPositiveDecimal">
     <xs:restriction base="xs:nonPositiveInteger">
       <xs:maxInclusive value="0"/>
@@ -206,67 +206,67 @@
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonPositiveFloat">
     <xs:restriction base="xs:float">
       <xs:maxInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="positiveFloat">
     <xs:restriction base="xs:float">
       <xs:minExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="negativeFloat">
     <xs:restriction base="xs:float">
       <xs:maxExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonNegativeDouble">
     <xs:restriction base="xs:double">
       <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="nonPositiveDouble">
     <xs:restriction base="xs:double">
       <xs:maxInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="positiveDouble">
     <xs:restriction base="xs:double">
       <xs:minExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="negativeDouble">
     <xs:restriction base="xs:double">
       <xs:maxExclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="email">
     <xs:restriction base="xs:string">
       <xs:pattern value="[a-zA-Z]([.]?([a-zA-Z\d_-]+)*)?@([a-zA-Z\d\-_]+\.)+[a-zA-Z]{2,4}"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="qualifiedIdentifier">
     <xs:restriction base="xs:string">
       <xs:pattern value="(([a-zA-Z_$][a-zA-Z\d_$]*)\.)*[a-zA-Z_$][a-zA-Z\d_$]*"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="identifier">
     <xs:restriction base="dt:qualifiedIdentifier">
       <xs:pattern value="[a-zA-Z_$][a-zA-Z\d_$]*"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="javaTimeZone">
     <xs:restriction base="xs:token">
       <xs:enumeration value="Etc/GMT+12"/>
@@ -1051,48 +1051,48 @@
       <xs:pattern value="(((25[0-5]|2[0-4]\d|[01]?\d\d?)(\.(25[0-5]|2[0-4]\d|[01]?\d\d?)){3})|((([a-zA-Z]|[a-zA-Z][a-zA-Z\d\-]*[a-zA-Z\d])\.)*([A-Za-z]|[A-Za-z][A-Za-z\d\-]*[A-Za-z\d]))):(\d{1,4}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="mimeType">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[a-zA-Z]*\/(([a-zA-Z][a-zA-Z\d]*([-\.][a-zA-Z\d]*)*)+(\+[a-zA-Z\d]+)?)?"/>
+      <xs:pattern value="[a-zA-Z]*/(([a-zA-Z][a-zA-Z\d]*([-.][a-zA-Z\d]*)*)+(\+[a-zA-Z\d]+)?)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="hexadecimal">
     <xs:restriction base="xs:string">
       <xs:pattern value="[\da-fA-F]*"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="localDate">
     <xs:restriction base="xs:string">
       <xs:pattern value="-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30)))"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="localTime">
     <xs:restriction base="xs:string">
       <xs:pattern value="(([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d{1,9})?"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="localDateTime">
     <xs:restriction base="xs:string">
       <xs:pattern value="(-?\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\d|3[01])|(02-(0[1-9]|1\d|2\d))|((0[469]|11)-(0[1-9]|[12]\d|30)))) (([01]\d)|(2[0-3])):[0-5]\d:[0-5]\d(\.\d{1,9})?"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="uuid">
     <xs:restriction base="xs:string">
       <xs:length value="36" fixed="true"/>
       <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-4[\da-fA-F]{3}-[8-9a-bA-B][\da-fA-F]{3}-[\da-fA-F]{12}"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="url">
     <xs:restriction base="xs:string">
-      <xs:pattern value="([a-z][a-z\d+\-.]*):(\/\/([a-z\d\-._~%!$&amp;'()*+,;=]+@)?([a-z\d\-._~%]+|\[[a-f\d:.]+\]|\[v[a-f\d][a-z\d\-._~%!$&amp;'()*+,;=:]+\])(:\d+)?(\/[a-z\d\-._~%!$&amp;'()*+,;=:@]+)*\/?|(\/?[a-z\d\-._~%!$&amp;'()*+,;=:@]+(\/[a-z\d\-._~%!$&amp;'()*+,;=:@]+)*\/?)?)(\?[a-z\d\-._~%!$&amp;'()*+,;=:@/?]*)?(#[a-z\d\-._~%!$&amp;'()*+,;=:@/?]*)?"/>
+      <xs:pattern value="([a-z][a-z\d+\-.]*):(//([a-z\d\-._~%!$&amp;'()*+,;=]+@)?([a-z\d\-._~%]+|\[[a-f\d:.]+\]|\[v[a-f\d][a-z\d\-._~%!$&amp;'()*+,;=:]+\])(:\d+)?(/[a-z\d\-._~%!$&amp;'()*+,;=:@]+)*/?|(/?[a-z\d\-._~%!$&amp;'()*+,;=:@]+(/[a-z\d\-._~%!$&amp;'()*+,;=:@]+)*/?)?)(\?[a-z\d\-._~%!$&amp;'()*+,;=:@/?]*)?(#[a-z\d\-._~%!$&amp;'()*+,;=:@/?]*)?"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
 </xs:schema>

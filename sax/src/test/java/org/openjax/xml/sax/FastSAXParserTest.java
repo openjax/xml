@@ -50,7 +50,7 @@ public class FastSAXParserTest {
     ATTR
   }
 
-  private static class Event {
+  private static final class Event {
     private final Type type;
     private final String[] fields;
 
@@ -65,7 +65,7 @@ public class FastSAXParserTest {
     }
   }
 
-  private static class FasterTestHandler implements FasterSAXHandler {
+  private static final class FasterTestHandler implements FasterSAXHandler {
     private final Iterator<Event> iterator;
     private final Reader in;
 
@@ -135,7 +135,7 @@ public class FastSAXParserTest {
     }
   };
 
-  private static void add(final List<Event> events, final Type type, final String ... fields) {
+  private static void add(final List<? super Event> events, final Type type, final String ... fields) {
     events.add(new Event(type, fields));
   }
 

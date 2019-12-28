@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Serializable;
 
 import org.libj.io.ReplayReader;
 import org.w3c.dom.ls.LSInput;
@@ -30,14 +31,16 @@ import org.xml.sax.InputSource;
  * that allows character stream data to be re-read multiple time, for optimized
  * performance reading external XML entities.
  */
-public class CachedInputSource extends InputSource implements AutoCloseable, LSInput {
-  private static class CachedReader extends ReplayReader {
-    public CachedReader(final Reader in) {
+public class CachedInputSource extends InputSource implements AutoCloseable, LSInput, Serializable {
+  private static final long serialVersionUID = 4371604845681155607L;
+
+  private static final class CachedReader extends ReplayReader {
+    private CachedReader(final Reader in) {
       super(in);
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
       buffer.reset(0);
     }
 
@@ -137,18 +140,6 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
   public CachedInputSource(final InputSource inputSource) {
     this(inputSource.getPublicId(), inputSource.getSystemId(), null);
     setCharacterStream(getReader(inputSource));
-  }
-
-  /**
-   * {@inheritDoc}
-   * <p>
-   * <b>Note:</b> This method has been modified to accept only
-   * {@link CachedReader} references.
-   */
-  @Override
-  @SuppressWarnings("cast")
-  public void setCharacterStream(final Reader characterStream) {
-    super.setCharacterStream((CachedReader)characterStream);
   }
 
   /**

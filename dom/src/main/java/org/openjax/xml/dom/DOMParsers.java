@@ -23,7 +23,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public final class DOMParsers {
@@ -32,7 +31,7 @@ public final class DOMParsers {
   private static final ErrorHandler errorHandler = new ErrorHandler() {
     // ignore fatal errors (an exception is guaranteed)
     @Override
-    public void fatalError(final SAXParseException exception) throws SAXException {
+    public void fatalError(final SAXParseException exception) {
     }
 
     // treat validation errors as fatal
@@ -45,7 +44,7 @@ public final class DOMParsers {
 
     // dump warnings too
     @Override
-    public void warning(final SAXParseException e) throws SAXParseException {
+    public void warning(final SAXParseException e) {
       final String message = e.getMessage() != null ? " " + e.getMessage() : "";
       logger.warn("[" + e.getLineNumber() + "," + e.getColumnNumber() + "] systemId=\"" + e.getSystemId() + "\"" + message);
     }

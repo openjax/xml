@@ -16,14 +16,13 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gYear
  */
-public class Year extends TemporalType implements Serializable {
+public class Year extends TemporalType {
   private static final long serialVersionUID = 1715357512840880045L;
 
   public static String print(final Year year) {
@@ -86,7 +85,7 @@ public class Year extends TemporalType implements Serializable {
   public Year(final int year, final TimeZone timeZone) {
     super(timeZone);
     this.year = year;
-    epochTime = java.util.Date.UTC(year - 1900, 0, 1, 0, 0, 0) - getTimeZone().getRawOffset() - getTimeZone().getDSTSavings();
+    epochTime = java.util.Date.UTC(year - 1900, Calendar.JANUARY, 1, 0, 0, 0) - getTimeZone().getRawOffset() - getTimeZone().getDSTSavings();
   }
 
   public Year(final int year) {
@@ -114,7 +113,7 @@ public class Year extends TemporalType implements Serializable {
   }
 
   @Override
-  protected String toEmbededString() {
+  protected String toEmbeddedString() {
     final StringBuilder builder = new StringBuilder();
     if (year < 10)
       builder.append("000").append(year);

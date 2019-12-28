@@ -17,7 +17,6 @@
 package org.openjax.xml.sax;
 
 import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -28,20 +27,20 @@ public class SilentErrorHandler implements ErrorHandler {
    * Silently consumes notification of a warning.
    */
   @Override
-  public void warning(final SAXParseException exception) throws SAXException {
+  public void warning(final SAXParseException exception) {
   }
 
   /**
    * Silently consumes notification of a recoverable error.
    */
   @Override
-  public void error(final SAXParseException exception) throws SAXException {
+  public void error(final SAXParseException exception) {
   }
 
   /**
    * Silently consumes notification of an unrecoverable error.
    */
   @Override
-  public void fatalError(final SAXParseException exception) throws SAXException {
+  public void fatalError(final SAXParseException exception) {
   }
 }

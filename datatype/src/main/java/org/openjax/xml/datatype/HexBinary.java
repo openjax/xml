@@ -52,7 +52,7 @@ public class HexBinary implements Serializable {
       else if ('A' <= c1 && c1 <= 'F')
         b += (c1 - 'A' + 10) * 16;
       else
-        throw new IllegalArgumentException("Bad characted in hex string: " + c1);
+        throw new IllegalArgumentException("Bad character in hex string: " + c1);
 
       if ('0' <= c2 && c2 <= '9')
         b += c2 - '0';
@@ -61,7 +61,7 @@ public class HexBinary implements Serializable {
       else if ('A' <= c2 && c2 <= 'F')
         b += c2 - 'A' + 10;
       else
-        throw new IllegalArgumentException("Bad characted in hex string: " + c2);
+        throw new IllegalArgumentException("Bad character in hex string: " + c2);
 
       out.write(b);
     }
@@ -92,7 +92,7 @@ public class HexBinary implements Serializable {
     if (obj == this)
       return true;
 
-    if (!(obj instanceof Base64Binary))
+    if (!(obj instanceof HexBinary))
       return false;
 
     final HexBinary that = (HexBinary)obj;

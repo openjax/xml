@@ -61,36 +61,54 @@ public final class Validator {
     }
   }
 
-  private static SchemaFactory newSchemaFactory() throws SAXNotRecognizedException, SAXNotRecognizedException, SAXNotSupportedException {
+  private static SchemaFactory newSchemaFactory() throws SAXNotRecognizedException, SAXNotSupportedException {
     final SchemaFactory factory = SchemaFactory.newInstance(Constants.W3C_XML_SCHEMA11_NS_URI);
     factory.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
     factory.setFeature("http://apache.org/xml/features/validation/schema/augment-psvi", true);
     factory.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
-    // factory.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
+    // factory.setFeature("http://apache.org/xml/features/allow-java-encodings",
+    // true);
     factory.setFeature("http://apache.org/xml/features/standard-uri-conformant", true);
-    // factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-    // factory.setFeature("http://apache.org/xml/features/generate-synthetic-annotations", true);
+    // factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl",
+    // true);
+    // factory.setFeature("http://apache.org/xml/features/generate-synthetic-annotations",
+    // true);
     factory.setFeature("http://apache.org/xml/features/validate-annotations", true);
     factory.setFeature("http://apache.org/xml/features/honour-all-schemaLocations", true);
-    // factory.setFeature("http://apache.org/xml/features/namespace-growth", true);
+    // factory.setFeature("http://apache.org/xml/features/namespace-growth",
+    // true);
     factory.setFeature("http://apache.org/xml/features/internal/tolerate-duplicates", true);
     factory.setFeature("http://apache.org/xml/features/validation/cta-full-xpath-checking", true);
-    // factory.setFeature("http://apache.org/xml/features/validation/assert-comments-and-pi-checking", true);
+    // factory.setFeature("http://apache.org/xml/features/validation/assert-comments-and-pi-checking",
+    // true);
 
-    // factory.setProperty("http://apache.org/xml/properties/internal/entity-manager", ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/symbol-table", ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/error-reporter", ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/error-handler", ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/entity-resolver", ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/grammar-pool", ???);
-    // factory.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation", ???);
-    // factory.setProperty("http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation", ???);
-    // factory.setProperty("http://java.sun.com/xml/jaxp/properties/schemaSource", ???);
-    // factory.setProperty("http://apache.org/xml/properties/security-manager", ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/entity-manager",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/symbol-table",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/error-reporter",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/error-handler",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/entity-resolver",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/grammar-pool",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation",
+    // ???);
+    // factory.setProperty("http://java.sun.com/xml/jaxp/properties/schemaSource",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/security-manager",
+    // ???);
     // factory.setProperty("http://apache.org/xml/properties/locale", ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/validation/schema/dv-factory", ???);
-    // factory.setProperty("http://apache.org/xml/properties/validation/schema/version", ???);
-    // factory.setProperty("http://apache.org/xml/properties/validation/schema/datatype-xml-version", ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/validation/schema/dv-factory",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/validation/schema/version",
+    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/validation/schema/datatype-xml-version",
+    // ???);
     return factory;
   }
 
@@ -160,7 +178,7 @@ public final class Validator {
    */
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
     try (final InputStream in = url.openStream()) {
-      validate(url, new CachedInputSource(null, url.toString(), null, in), (XmlPreviewHandler)null, errorHandler);
+      validate(url, new CachedInputSource(null, url.toString(), null, in), null, errorHandler);
     }
   }
 
@@ -329,7 +347,8 @@ public final class Validator {
 
       validator.validate(saxSource);
 
-      // NOTE: The following code is skipped if the validate() call above throws an exception.
+      // NOTE: The following code is skipped if the validate() call above throws
+      // an exception.
       if (validatorErrorHandler.errors != null) {
         final Iterator<SAXParseException> iterator = validatorErrorHandler.errors.iterator();
         final SAXParseException exception = iterator.next();
@@ -345,7 +364,7 @@ public final class Validator {
     }
   }
 
-  private static class ValidatorErrorHandler extends DelegateErrorHandler {
+  private static final class ValidatorErrorHandler extends DelegateErrorHandler {
     private final InputSource inputSource;
     private final boolean hasSchema;
     private List<SAXParseException> errors;

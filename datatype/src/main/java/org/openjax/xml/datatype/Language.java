@@ -97,7 +97,7 @@ public class Language implements CharSequence, Serializable {
     if (obj == this)
       return true;
 
-    if (!(obj instanceof Year))
+    if (!(obj instanceof Language))
       return false;
 
     final Language that = (Language)obj;

@@ -16,6 +16,8 @@
 
 package org.openjax.xml.sax;
 
+import java.util.Objects;
+
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -74,7 +76,7 @@ public abstract class DelegateErrorHandler implements ErrorHandler {
       return false;
 
     final DelegateErrorHandler that = (DelegateErrorHandler)obj;
-    return target != null ? target.equals(that.target) : that.target == null;
+    return Objects.equals(target, that.target);
   }
 
   @Override

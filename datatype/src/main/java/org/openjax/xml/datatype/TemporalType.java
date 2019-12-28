@@ -16,16 +16,20 @@
 
 package org.openjax.xml.datatype;
 
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.TimeZone;
 
-public abstract class TemporalType {
+public abstract class TemporalType implements Serializable {
+  private static final long serialVersionUID = 1142096964773369716L;
+
   protected final TimeZone timeZone;
 
   protected TemporalType(final TimeZone timeZone) {
     this.timeZone = timeZone == null ? TimeZone.getDefault() : timeZone;
   }
 
-  protected abstract String toEmbededString();
+  protected abstract String toEmbeddedString();
 
   public final TimeZone getTimeZone() {
     return timeZone;
@@ -33,7 +37,7 @@ public abstract class TemporalType {
 
   @Override
   public final String toString() {
-    return toEmbededString() + Time.formatTimeZone(timeZone);
+    return toEmbeddedString() + Time.formatTimeZone(timeZone);
   }
 
   @Override
@@ -45,7 +49,7 @@ public abstract class TemporalType {
       return false;
 
     final TemporalType that = (TemporalType)obj;
-    return timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null;
+    return Objects.equals(timeZone, that.timeZone);
   }
 
   @Override

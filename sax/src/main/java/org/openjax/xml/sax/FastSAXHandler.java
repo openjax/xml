@@ -33,7 +33,7 @@ import javax.xml.namespace.QName;
  * @see FasterSAXHandler
  */
 public abstract class FastSAXHandler implements FasterSAXHandler {
-  private class Element {
+  private static final class Element {
     private final String prefix;
     private final String localName;
 
@@ -77,8 +77,8 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
   protected FastSAXHandler() {
   }
 
-  private final int DEFAULT_BUFFER_SIZE = 64;
-  private final double RESIZE_FACTOR = 1.5;
+  private static final int DEFAULT_BUFFER_SIZE = 64;
+  private static final double RESIZE_FACTOR = 1.5;
   private char[] buf = new char[DEFAULT_BUFFER_SIZE];
 
   @SuppressWarnings("unused")

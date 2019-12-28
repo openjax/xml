@@ -41,7 +41,7 @@ public interface FasterSAXHandler {
    */
   default boolean startDocument() throws IOException {
     return true;
-  };
+  }
 
   /**
    * Called when the end of the document is encountered.
@@ -51,7 +51,7 @@ public interface FasterSAXHandler {
    */
   default boolean endDocument() throws IOException {
     return true;
-  };
+  }
 
   /**
    * Called when a declaration element is encountered (i.e. {@code '<?xml'}).
@@ -61,9 +61,9 @@ public interface FasterSAXHandler {
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
-  default boolean startDeclaration(int nameLen) throws IOException {
+  default boolean startDeclaration(final int nameLen) throws IOException {
     return true;
-  };
+  }
 
   /**
    * Called when an declaration end tag is encountered (i.e. {@code '?>'}).
@@ -73,7 +73,7 @@ public interface FasterSAXHandler {
    */
   default boolean endDeclaration() throws IOException {
     return true;
-  };
+  }
 
   /**
    * Callback method for DOCTYPE blocks (i.e. {@code <!DOCTYPE [ ]>}).
@@ -83,9 +83,9 @@ public interface FasterSAXHandler {
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
-  default boolean doctype(int doctypeLen) throws IOException {
+  default boolean doctype(final int doctypeLen) throws IOException {
     return true;
-  };
+  }
 
   /**
    * Callback method for comment blocks (i.e. {@code <!-- COMMENT -->}).
@@ -95,9 +95,9 @@ public interface FasterSAXHandler {
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
-  default boolean comment(int commentLen) throws IOException {
+  default boolean comment(final int commentLen) throws IOException {
     return true;
-  };
+  }
 
   /**
    * Callback method for attribute occurrences.
@@ -114,9 +114,9 @@ public interface FasterSAXHandler {
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
-  default boolean attribute(int prefixLen, int localPartLen, int skip, int valueLen) throws IOException {
+  default boolean attribute(final int prefixLen, final int localPartLen, final int skip, final int valueLen) throws IOException {
     return true;
-  };
+  }
 
   /**
    * Called when an element's "start tag" is opened with a {@code '<'} character.
@@ -127,9 +127,9 @@ public interface FasterSAXHandler {
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
-  default boolean startElement(int prefixLen, int localPartLen) throws IOException {
+  default boolean startElement(final int prefixLen, final int localPartLen) throws IOException {
     return true;
-  };
+  }
 
   /**
    * Called when an element's "start tag" is closed with a {@code '>'} character.
@@ -139,7 +139,7 @@ public interface FasterSAXHandler {
    */
   default boolean startElement() throws IOException {
     return true;
-  };
+  }
 
   /**
    * Called when an element's "end tag" is encountered.
@@ -153,5 +153,5 @@ public interface FasterSAXHandler {
    */
   default boolean endElement() throws IOException {
     return true;
-  };
+  }
 }

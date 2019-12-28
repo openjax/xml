@@ -16,14 +16,13 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#time
  */
-public class Time extends TemporalType implements Serializable {
+public class Time extends TemporalType {
   private static final long serialVersionUID = -9015566323752593968L;
 
   static Calendar newCalendar(final long time, final TimeZone timeZone) {
@@ -76,7 +75,7 @@ public class Time extends TemporalType implements Serializable {
   }
 
   protected static int parseMinuteFrag(final String string) {
-    int minute = Integer.parseInt(string.substring(0, MINUTE_FRAG_MIN_LENGTH));
+    final int minute = Integer.parseInt(string.substring(0, MINUTE_FRAG_MIN_LENGTH));
     if (minute < 0 || 59 < minute)
       throw new IllegalArgumentException("minute == " + string);
 
@@ -87,11 +86,11 @@ public class Time extends TemporalType implements Serializable {
     if (string.length() < SECOND_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("second == " + string);
 
-    char ch1 = string.charAt(0);
+    final char ch1 = string.charAt(0);
     if (ch1 < '0' || '5' < ch1)
       throw new IllegalArgumentException("second == " + string);
 
-    char ch2 = string.charAt(1);
+    final char ch2 = string.charAt(1);
     if (ch2 < '0' || '9' < ch2)
       throw new IllegalArgumentException("second == " + string);
 
@@ -176,7 +175,7 @@ public class Time extends TemporalType implements Serializable {
   private final int minute;
   private final float second;
 
-  public Time(final int hour, final int minute, float second, final TimeZone timeZone) {
+  public Time(final int hour, final int minute, final float second, final TimeZone timeZone) {
     super(timeZone);
     this.hour = hour;
     if (24 < hour || hour < 0)
@@ -228,7 +227,7 @@ public class Time extends TemporalType implements Serializable {
   }
 
   @Override
-  protected String toEmbededString() {
+  protected String toEmbeddedString() {
     final StringBuilder builder = new StringBuilder();
     if (hour < 10)
       builder.append('0');

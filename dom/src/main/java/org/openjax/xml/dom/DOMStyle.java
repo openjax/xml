@@ -29,7 +29,7 @@ public final class DOMStyle {
 
     final DOMStyle merged = new DOMStyle(DEFAULT_MASK);
     for (final DOMStyle style : styles)
-      merged.mask = merged.mask | style.mask;
+      merged.mask |= style.mask;
 
     return merged;
   }
@@ -44,7 +44,7 @@ public final class DOMStyle {
   public static final DOMStyle INDENT_ATTRS = new DOMStyle(INDENT_ATTRS_MASK);
   public static final DOMStyle IGNORE_NAMESPACES = new DOMStyle(IGNORE_NAMESPACES_MASK);
 
-  private int mask = 0;
+  private int mask;
 
   private DOMStyle(final int mask) {
     this.mask = mask;

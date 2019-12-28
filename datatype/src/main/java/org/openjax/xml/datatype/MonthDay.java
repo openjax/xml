@@ -16,14 +16,13 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.TimeZone;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#gMonthDay
  */
-public class MonthDay extends TemporalType implements Serializable {
+public class MonthDay extends TemporalType {
   private static final long serialVersionUID = 6702644782424414369L;
 
   public static String print(final MonthDay monthDay) {
@@ -51,7 +50,7 @@ public class MonthDay extends TemporalType implements Serializable {
       throw new IllegalArgumentException("month-day == " + string);
 
     final int month = Month.parseMonthFrag(string);
-    final int day = Day.parseDayFrag(string = string.substring(Month.MONTH_FRAG_MIN_LENGTH + 1));
+    final int day = Day.parseDayFrag(string.substring(Month.MONTH_FRAG_MIN_LENGTH + 1));
     if (month == 2 && 29 < day)
       throw new IllegalArgumentException("month == " + month + " day == " + day);
 
@@ -62,7 +61,7 @@ public class MonthDay extends TemporalType implements Serializable {
   }
 
   protected static final int MONTH_DAY_FRAG_MIN_LENGTH = Month.MONTH_FRAG_MIN_LENGTH + 1 + Day.DAY_FRAG_MIN_LENGTH;
-  private static final int[] LONG_MONTHS = new int[] {1, 3, 5, 7, 8, 10, 12};
+  private static final int[] LONG_MONTHS = {1, 3, 5, 7, 8, 10, 12};
   private static final String PAD_FRAG = "--";
 
   private final Month month;
@@ -104,9 +103,9 @@ public class MonthDay extends TemporalType implements Serializable {
   }
 
   @Override
-  protected String toEmbededString() {
+  protected String toEmbeddedString() {
     final StringBuilder builder = new StringBuilder();
-    builder.append(month.toEmbededString()).append('-');
+    builder.append(month.toEmbeddedString()).append('-');
     if (getDay() < 10)
       builder.append('0');
 
