@@ -18,7 +18,7 @@ package org.openjax.xml;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedHashSet;
 
 import javax.xml.transform.TransformerException;
@@ -29,7 +29,7 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.libj.net.URLs;
+import org.libj.net.URIs;
 import org.libj.util.Dates;
 import org.openjax.maven.mojo.MojoUtil;
 import org.openjax.xml.transform.Transformer;
@@ -47,22 +47,22 @@ public class TransformMojo extends XmlMojo {
   private File stylesheet;
 
   @Override
-  public void execute(final LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException {
+  public void execute(final LinkedHashSet<URI> uris) throws MojoExecutionException, MojoFailureException {
     try {
-      for (final URL url : urls) {
-        final String outFileName = MojoUtil.getRenamedFileName(url, rename);
+      for (final URI uri : uris) {
+        final String outFileName = MojoUtil.getRenamedFileName(uri.toString(), rename);
         final File destFile = new File(destDir, outFileName);
-        final String inFilePath = URLs.isLocalFile(url) ? CWD.relativize(new File(url.getFile()).getAbsoluteFile().toPath()).toString() : url.toExternalForm();
+        final String inFilePath = URIs.isLocalFile(uri) ? CWD.relativize(new File(uri).getAbsoluteFile().toPath()).toString() : uri.toString();
 
         final long lastModified;
-        if (destFile.exists() && (lastModified = url.openConnection().getLastModified()) <= destFile.lastModified() && destFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
+        if (destFile.exists() && (lastModified = uri.toURL().openConnection().getLastModified()) <= destFile.lastModified() && destFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
           getLog().info("Pre-transformed: " + inFilePath);
         }
         else {
           final String outFilePath = CWD.relativize(destFile.getAbsoluteFile().toPath()).toString();
           getLog().info("   Transforming: " + inFilePath + " -> " + outFilePath);
 
-          Transformer.transform(stylesheet.toURI().toURL(), url, destFile);
+          Transformer.transform(stylesheet.toURI(), uri, destFile);
         }
       }
     }

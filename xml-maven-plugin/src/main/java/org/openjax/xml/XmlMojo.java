@@ -17,7 +17,7 @@
 package org.openjax.xml;
 
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,7 +27,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.libj.net.URLs;
 import org.openjax.maven.mojo.FilterParameter;
 import org.openjax.maven.mojo.FilterType;
 import org.openjax.maven.mojo.PatternSetMojo;
@@ -72,12 +71,12 @@ public abstract class XmlMojo extends PatternSetMojo {
   @Override
   public final void execute(final Configuration configuration) throws MojoExecutionException, MojoFailureException {
     setHttpProxy();
-    final LinkedHashSet<URL> fileSets = new LinkedHashSet<>(configuration.getFileSets());
+    final LinkedHashSet<URI> fileSets = new LinkedHashSet<>(configuration.getFileSets());
     for (final String resource : new LinkedHashSet<>(resources))
-      fileSets.add(URLs.create(resource));
+      fileSets.add(URI.create(resource));
 
     execute(fileSets);
   }
 
-  public abstract void execute(LinkedHashSet<URL> urls) throws MojoExecutionException, MojoFailureException;
+  public abstract void execute(LinkedHashSet<URI> urls) throws MojoExecutionException, MojoFailureException;
 }

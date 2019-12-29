@@ -21,14 +21,14 @@ import java.net.URL;
 
 import javax.xml.XMLConstants;
 
-import org.libj.util.Paths;
+import org.libj.util.StringPaths;
 import org.libj.util.function.Throwing;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
 class XmlCatalogResolver implements LSResourceResolver {
   static String getPath(final String referrer, final String location) {
-    return Paths.isAbsolute(location) ? location : Paths.newPath(Paths.getCanonicalParent(referrer), location);
+    return StringPaths.isAbsolute(location) ? location : StringPaths.newPath(StringPaths.getCanonicalParent(referrer), location);
   }
 
   enum W3C {

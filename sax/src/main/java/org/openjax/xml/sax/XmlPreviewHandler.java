@@ -30,7 +30,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.libj.net.URLs;
-import org.libj.util.Paths;
+import org.libj.util.StringPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -257,9 +257,9 @@ class XmlPreviewHandler extends FastSAXHandler {
 
   private void addImport(final String namespace, final String location) {
     final String path = XmlCatalogResolver.getPath(systemId, location);
-    isLocal &= Paths.isAbsoluteLocal(path);
+    isLocal &= StringPaths.isAbsoluteLocal(path);
     if (!imports().containsKey(namespace))
-      imports.put(namespace, Paths.getProtocol(path) == null ? URLs.create("file:" + path) : URLs.create(path));
+      imports.put(namespace, StringPaths.getProtocol(path) == null ? URLs.create("file:" + path) : URLs.create(path));
   }
 
   private Map<String,URL> includes;
@@ -291,7 +291,7 @@ class XmlPreviewHandler extends FastSAXHandler {
 
   private void addInclude(final String schemaLocation) {
     final String path = XmlCatalogResolver.getPath(systemId, schemaLocation);
-    isLocal &= Paths.isAbsoluteLocal(path);
+    isLocal &= StringPaths.isAbsoluteLocal(path);
     URL url = absoluteIncludes.get(path);
     if (url == null)
       absoluteIncludes.put(path, url = URLs.create(path));
@@ -339,7 +339,7 @@ class XmlPreviewHandler extends FastSAXHandler {
         }
 
         final String path = XmlCatalogResolver.getPath(systemId, schemaLocation);
-        isLocal &= Paths.isAbsoluteLocal(path);
+        isLocal &= StringPaths.isAbsoluteLocal(path);
         visitedURIs.add(namespace);
         if (!imports().containsKey(namespace))
           imports.put(namespace, URLs.create(path));

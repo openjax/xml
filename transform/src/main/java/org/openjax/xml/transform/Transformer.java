@@ -19,8 +19,8 @@ package org.openjax.xml.transform;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.MalformedURLException;
+import java.net.URI;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -40,13 +40,13 @@ public final class Transformer {
     }
   }
 
-  public static void transform(final URL stylesheet, final URL in, final File out) throws IOException, TransformerException {
-    try (final InputStream input = in.openStream()) {
-      final StreamSource streamSource = new StreamSource(stylesheet.openStream(), stylesheet.toURI().toString());
+  public static void transform(final URI stylesheet, final URI in, final File out) throws IOException, TransformerException {
+    try (final InputStream input = in.toURL().openStream()) {
+      final StreamSource streamSource = new StreamSource(stylesheet.toURL().openStream(), stylesheet.toString());
       final javax.xml.transform.Transformer transformer = factory.newTransformer(streamSource);
-      transformer.transform(new StreamSource(input, in.toURI().toString()), new StreamResult(out));
+      transformer.transform(new StreamSource(input, in.toString()), new StreamResult(out));
     }
-    catch (final URISyntaxException e) {
+    catch (final MalformedURLException e) {
       throw new TransformerException(e);
     }
   }
