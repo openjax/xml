@@ -47,7 +47,7 @@ public abstract class Validator {
           if (i > 0)
             namespaceLocations.append(' ');
 
-          namespaceLocations.append(namespaceURI).append(' ').append(schemaLocation.toExternalForm());
+          namespaceLocations.append(namespaceURI).append(' ').append(schemaLocation);
         }
       }
     }
