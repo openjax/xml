@@ -31,6 +31,7 @@ import javax.xml.namespace.QName;
 
 import org.libj.net.URLs;
 import org.libj.util.StringPaths;
+import org.openjax.xml.schema.SchemaResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -233,7 +234,15 @@ class XmlPreviewHandler extends FastSAXHandler {
   private Map<String,URL> imports;
 
   private Map<String,URL> imports() {
-    return imports == null ? imports = new LinkedHashMap<>() : imports;
+    return imports == null ? imports = new LinkedHashMap<String,URL>() {
+      private static final long serialVersionUID = -7668491539881674270L;
+
+      @Override
+      public URL put(final String key, final URL value) {
+        final URL schemaUrl = SchemaResolver.resolve(key, value.toString());
+        return schemaUrl != null ? super.put(key, schemaUrl) : super.put(key, value);
+      }
+    } : imports;
   }
 
   /**
@@ -359,10 +368,8 @@ class XmlPreviewHandler extends FastSAXHandler {
       if ("include".equals(name.getLocalPart())) {
         for (final Map.Entry<QName,String> entry : attributes.entrySet()) {
           final String namespaceURI = entry.getKey().getNamespaceURI();
-          if ("http://www.w3.org/2001/XInclude".equals(namespaceURI)) {
-            if ("href".equals(entry.getKey().getLocalPart())) {
-              addInclude(entry.getValue());
-            }
+          if ("http://www.w3.org/2001/XInclude".equals(namespaceURI) && "href".equals(entry.getKey().getLocalPart())) {
+            addInclude(entry.getValue());
           }
         }
       }

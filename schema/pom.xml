@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2014 OpenJAX
+  Copyright (c) 2020 OpenJAX
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -24,33 +24,9 @@
     <artifactId>xml</artifactId>
     <version>0.9.4-SNAPSHOT</version>
   </parent>
-  <artifactId>sax</artifactId>
-  <name>OpenJAX XML SAX</name>
+  <artifactId>schema</artifactId>
+  <name>OpenJAX XML Schema</name>
   <description>
-    Utility functions and convenience patterns specializing in the Java's SAX libraries.
+    XML Schema.
   </description>
-  <dependencies>
-    <dependency>
-      <groupId>org.libj</groupId>
-      <artifactId>net</artifactId>
-      <version>0.5.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.libj</groupId>
-      <artifactId>io</artifactId>
-      <version>0.7.7-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openjax.xml</groupId>
-      <artifactId>schema</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.openjax.xml</groupId>
-      <artifactId>api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opengis.cite.xerces</groupId>
-      <artifactId>xercesImpl-xsd11</artifactId>
-    </dependency>
-  </dependencies>
 </project>

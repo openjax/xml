@@ -27,17 +27,9 @@ import org.libj.net.URLs;
 public class XMLManifestParserTest {
   private static XmlPreview test(final String fileName, final boolean expectXsd) throws IOException {
     final URL url = ClassLoader.getSystemClassLoader().getResource(fileName);
-//    try {
-      final XmlPreview preview = XmlPreviewParser.parse(url);
-      assertEquals(expectXsd, preview.isSchema());
-//      assertEquals('<', reader.read());
-//      final char[] chars = new char[2048];
-//      reader.read(chars);
-//      System.err.println("<" + new String(chars));
-//      System.err.println("\n\n\n");
-//      assertEquals('!', reader.read());
-      return preview;
-//    }
+    final XmlPreview preview = XmlPreviewParser.parse(url);
+    assertEquals(expectXsd, preview.isSchema());
+    return preview;
   }
 
   private static XmlPreview testXsd(final String fileName) throws IOException {

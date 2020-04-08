@@ -18,11 +18,9 @@ package org.openjax.xml.sax;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.libj.net.URLs;
 import org.xml.sax.ErrorHandler;
@@ -75,6 +73,11 @@ public class ValidatorTest {
   }
 
   @Test
+  public void testXmlXsd() throws IOException, SAXException {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("xmlschema/xml.xsd"));
+  }
+
+  @Test
   public void testOffline() throws IOException {
     try {
       Validator.validate(ClassLoader.getSystemClassLoader().getResource("remote.xml"));
@@ -93,12 +96,6 @@ public class ValidatorTest {
   @Test
   public void testXInclude() throws IOException, SAXException {
     Validator.validate(ClassLoader.getSystemClassLoader().getResource("xinclude.xml"));
-  }
-
-  @Test
-  @Ignore
-  public void testXIncludex() throws IOException, SAXException {
-    Validator.validate(new File("/Users/seva/Work/oss/jaxdb/sqlx/src/test/resources/classicmodels.ddlx").toURI().toURL());
   }
 
   @Test

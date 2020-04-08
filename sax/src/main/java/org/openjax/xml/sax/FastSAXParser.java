@@ -32,6 +32,10 @@ import java.io.Reader;
 public final class FastSAXParser {
   private static final int DEFAULT_READ_LIMIT = 8192;
 
+  private static boolean q(final boolean inDeclaration, final int ch) {
+    return ch == '"' || inDeclaration && ch == '\'';
+  }
+
   /**
    * Parse the data provided by the input stream, and handle parse events with
    * the specified {@link FasterSAXHandler}.
@@ -122,7 +126,7 @@ public final class FastSAXParser {
           else
             throw new IllegalStateException();
         }
-        else if (ch0 == '>' || ch0 == '=' || ch0 == '"' || isWs) {
+        else if (ch0 == '>' || ch0 == '=' || q(inDeclaration, ch0) || isWs) {
           if (startElem != -1) {
             in.reset();
             final int localName = i - startElem - prefixLen - 1;
@@ -138,7 +142,7 @@ public final class FastSAXParser {
             if (attrNameLen == 0) {
               attrNameLen = i - startAttr - prefixLen - 1;
             }
-            else if (ch0 == '"') {
+            else if (q(inDeclaration, ch0)) {
               if (!inQuote && startValue == -1) {
                 startValue = i;
               }
@@ -193,7 +197,7 @@ public final class FastSAXParser {
 
       ch2 = ch1;
       ch1 = ch0;
-      if (!inComment && ch0 == '"')
+      if (!inComment && q(inDeclaration, ch0))
         inQuote = !inQuote;
 
 //      System.err.print((char)ch0);

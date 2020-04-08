@@ -23,32 +23,36 @@ import javax.xml.XMLConstants;
 
 import org.libj.util.StringPaths;
 import org.libj.util.function.Throwing;
+import org.openjax.xml.schema.SchemaResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
 class XmlCatalogResolver implements LSResourceResolver {
+  private static final Logger logger = LoggerFactory.getLogger(XmlCatalogResolver.class);
+
   static String getPath(final String referrer, final String location) {
     return StringPaths.isAbsolute(location) ? location : StringPaths.newPath(StringPaths.getCanonicalParent(referrer), location);
   }
 
   enum W3C {
-    SCHEMA_XSD(XMLConstants.W3C_XML_SCHEMA_NS_URI, "xmlschema/XMLSchema.xsd"),
-    XML_XSD(XMLConstants.XML_NS_URI, "xmlschema/xml.xsd");
+    SCHEMA_XSD(XMLConstants.W3C_XML_SCHEMA_NS_URI),
+    XML_XSD(XMLConstants.XML_NS_URI);
 
     XmlEntity getEntity() throws IOException {
-      final URL resource = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+      final URL resource = SchemaResolver.resolve(namespaceURI, null);
       if (resource == null)
-        throw new IllegalStateException("Unable to find " + resourceName + " in class loader " + Thread.currentThread().getContextClassLoader());
+        throw new IllegalStateException("Unable to find resource for namespace=\"" + namespaceURI + "\"");
 
+      // FIXME: Why can't I cache this?
       return new XmlEntity(resource, new CachedInputSource(null, namespaceURI, null, resource.openStream()));
     }
 
     private final String namespaceURI;
-    private final String resourceName;
 
-    W3C(final String namespaceURI, final String resourceName) {
+    W3C(final String namespaceURI) {
       this.namespaceURI = namespaceURI;
-      this.resourceName = resourceName;
     }
   }
 
@@ -60,7 +64,9 @@ class XmlCatalogResolver implements LSResourceResolver {
 
   @Override
   public LSInput resolveResource(final String type, final String namespaceURI, final String publicId, String systemId, final String baseURI) {
-//    System.err.println("resolveResource(\"" + type + "\", \"" + namespaceURI + "\", \"" + publicId + "\", \"" + systemId + "\", \"" + baseURI + "\")");
+    if (logger.isDebugEnabled())
+      logger.debug("resolveResource(\"" + type + "\", \"" + namespaceURI + "\", \"" + publicId + "\", \"" + systemId + "\", \"" + baseURI + "\")");
+
     if (namespaceURI == null && systemId == null)
       return null;
 

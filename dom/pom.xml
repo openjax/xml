@@ -32,6 +32,10 @@
   <dependencies>
     <dependency>
       <groupId>org.openjax.xml</groupId>
+      <artifactId>schema</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjax.xml</groupId>
       <artifactId>api</artifactId>
     </dependency>
   </dependencies>
