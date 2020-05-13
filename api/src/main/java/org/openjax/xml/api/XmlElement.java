@@ -200,8 +200,12 @@ public class XmlElement implements Cloneable, Serializable {
   @Override
   public int hashCode() {
     int hashCode = 31 + name.hashCode();
-    hashCode = 31 * hashCode + (attributes == null ? 0 : attributes.hashCode());
-    hashCode = 31 * hashCode + (elements == null ? 0 : elements.hashCode());
+    if (attributes != null)
+      hashCode = 31 * hashCode + attributes.hashCode();
+
+    if (elements != null)
+      hashCode = 31 * hashCode + elements.hashCode();
+
     return hashCode;
   }
 

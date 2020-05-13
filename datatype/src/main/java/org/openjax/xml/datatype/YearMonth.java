@@ -123,8 +123,12 @@ public class YearMonth extends TemporalType {
   @Override
   public int hashCode() {
     int hashCode = super.hashCode();
-    hashCode = 31 * hashCode + (year == null ? 0 : year.hashCode());
-    hashCode = 31 * hashCode + (month == null ? 0 : month.hashCode());
+    if (year != null)
+      hashCode = 31 * hashCode + year.hashCode();
+
+    if (month != null)
+      hashCode = 31 * hashCode + month.hashCode();
+
     return hashCode;
   }
 }
