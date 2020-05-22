@@ -1,6 +1,21 @@
 # Changes by Version
 
-## v0.9.3 (2019-07-21)
+## [v0.9.4](https://github.com/openjax/xml/compare/cc44b4706d3802ab7a6737f11bcc84341c7fe1de..HEAD) (2020-05-23)
+* Add `CachedInputSource`.
+* Add `DelegateErrorHandler`.
+* Add `FastSAXHandler`.
+* Add `FastSAXParser`.
+* Add `FasterSAXHandler`.
+* Move `Parsers` to `SAXParsers`.
+* Support parsing and validation with XInclude.
+* Rewrite `SchemaResolver`.
+* Rewrite `XmlCatalog`.
+* Add `XmlCatalogResolver`, `XmlEntity`, `XmlPreview`, and `XmlPreviewParser`.
+* Upgrade `net.sf.saxon:Saxon-HE` from `v9.9.1-4` to `v9.9.1-5`.
+* Improve tests.
+* Improve javadocs.
+
+## [v0.9.3](https://github.com/openjax/xml/compare/d2b32b14b98199fa90721eb9b345c4abaa7447c2..cc44b4706d3802ab7a6737f11bcc84341c7fe1de) (2019-07-21)
 * Improve date regex in `datatypes-0.8.xsd`.
 * Add `SilentErrorHandler`.
 * Add configurable logging levels to `LoggingErrorHandler`.
