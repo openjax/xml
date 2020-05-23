@@ -1,6 +1,8 @@
 # Changes by Version
 
-## [v0.9.4](https://github.com/openjax/xml/compare/cc44b4706d3802ab7a6737f11bcc84341c7fe1de..HEAD) (2020-05-23)
+## [v0.9.5-SNAPSHOT](https://github.com/openjax/xml/compare/cb61e8271d217eb106e6d62b972e0562fb20697c..HEAD)
+
+## [v0.9.4](https://github.com/openjax/xml/compare/cc44b4706d3802ab7a6737f11bcc84341c7fe1de..cb61e8271d217eb106e6d62b972e0562fb20697c) (2020-05-23)
 * Add `CachedInputSource`.
 * Add `DelegateErrorHandler`.
 * Add `FastSAXHandler`.

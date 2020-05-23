@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.openjax.xml</groupId>
     <artifactId>xml</artifactId>
-    <version>0.9.4</version>
+    <version>0.9.5-SNAPSHOT</version>
   </parent>
   <artifactId>sax</artifactId>
   <name>OpenJAX XML SAX</name>
@@ -33,12 +33,12 @@
     <dependency>
       <groupId>org.libj</groupId>
       <artifactId>net</artifactId>
-      <version>0.5.2</version>
+      <version>0.5.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.libj</groupId>
       <artifactId>io</artifactId>
-      <version>0.7.7</version>
+      <version>0.7.8-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.openjax.xml</groupId>
