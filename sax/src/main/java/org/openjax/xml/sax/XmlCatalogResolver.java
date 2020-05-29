@@ -24,14 +24,10 @@ import javax.xml.XMLConstants;
 import org.libj.util.StringPaths;
 import org.libj.util.function.Throwing;
 import org.openjax.xml.schema.SchemaResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
 class XmlCatalogResolver implements LSResourceResolver {
-  private static final Logger logger = LoggerFactory.getLogger(XmlCatalogResolver.class);
-
   static String getPath(final String referrer, final String location) {
     return StringPaths.isAbsolute(location) ? location : StringPaths.newPath(StringPaths.getCanonicalParent(referrer), location);
   }
@@ -64,9 +60,6 @@ class XmlCatalogResolver implements LSResourceResolver {
 
   @Override
   public LSInput resolveResource(final String type, final String namespaceURI, final String publicId, String systemId, final String baseURI) {
-    if (logger.isDebugEnabled())
-      logger.debug("resolveResource(\"" + type + "\", \"" + namespaceURI + "\", \"" + publicId + "\", \"" + systemId + "\", \"" + baseURI + "\")");
-
     if (namespaceURI == null && systemId == null)
       return null;
 

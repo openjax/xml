@@ -310,9 +310,9 @@ class XmlPreviewHandler extends FastSAXHandler {
 
   @Override
   public boolean startElement(final QName name, final Map<QName,String> attributes) throws IOException {
-    if (logger.isDebugEnabled()) {
+    if (logger.isTraceEnabled()) {
       final String attrs = toString(attributes);
-      logger.debug("<" + name.getLocalPart() + " xmlns=\"" + name.getNamespaceURI() + "\"" + (attrs != null ? " " + attrs + ">" : ">"));
+      logger.trace("<" + name.getLocalPart() + " xmlns=\"" + name.getNamespaceURI() + "\"" + (attrs != null ? " " + attrs + ">" : ">"));
     }
 
     if (rootElement == null) {
