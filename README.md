@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/openjax/xml/badge.svg?1)](https://coveralls.io/github/openjax/xml)
 [![Javadocs](https://www.javadoc.io/badge/org.openjax.xml/xml-maven-plugin.svg?1)](https://www.javadoc.io/doc/org.openjax.xml/xml-maven-plugin)
 [![Released Version](https://img.shields.io/maven-central/v/org.openjax.xml/xml-maven-plugin.svg?1)](https://mvnrepository.com/artifact/org.openjax.xml/xml-maven-plugin)
+![Snapshot Version](https://img.shields.io/nexus/s/org.openjax.xml/xml-maven-plugin?label=maven-snapshot&server=https%3A%2F%2Foss.sonatype.org)
 
 ## Introduction
 
