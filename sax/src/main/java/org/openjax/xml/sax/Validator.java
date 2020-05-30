@@ -285,7 +285,7 @@ public final class Validator {
     validate(cachedInputSource, preview, errorHandler);
   }
 
-  private static XmlPreview initInputSource(final URL url, final CachedInputSource inputSource, final XmlPreviewHandler previewHandler) throws IOException {
+  private static XmlPreview initInputSource(final URL url, final CachedInputSource inputSource, final XmlPreviewHandler previewHandler) throws IOException, SAXParseException {
     if (previewHandler == null) {
       final XmlPreview preview = XmlPreviewParser.parse(url != null ? url : new URL(inputSource.getSystemId()), inputSource);
       inputSource.getCharacterStream().close();

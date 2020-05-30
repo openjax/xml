@@ -23,68 +23,69 @@ import java.net.URL;
 
 import org.junit.Test;
 import org.libj.net.URLs;
+import org.xml.sax.SAXParseException;
 
 public class XMLManifestParserTest {
-  private static XmlPreview test(final String fileName, final boolean expectXsd) throws IOException {
+  private static XmlPreview test(final String fileName, final boolean expectXsd) throws IOException, SAXParseException {
     final URL url = ClassLoader.getSystemClassLoader().getResource(fileName);
     final XmlPreview preview = XmlPreviewParser.parse(url);
     assertEquals(expectXsd, preview.isSchema());
     return preview;
   }
 
-  private static XmlPreview testXsd(final String fileName) throws IOException {
+  private static XmlPreview testXsd(final String fileName) throws IOException, SAXParseException {
     return test(fileName, true);
   }
 
-  private static XmlPreview testXml(final String fileName) throws IOException {
+  private static XmlPreview testXml(final String fileName) throws IOException, SAXParseException {
     return test(fileName, false);
   }
 
   @Test
-  public void testEmptyXsd() throws IOException {
+  public void testEmptyXsd() throws IOException, SAXParseException {
     assertNull(testXsd("empty.xsd").getTargetNamespace());
   }
 
   @Test
-  public void testTestXsd() throws IOException {
+  public void testTestXsd() throws IOException, SAXParseException {
     assertEquals("http://www.openjax.org/xml/test.xsd", testXsd("test.xsd").getTargetNamespace());
   }
 
   @Test
-  public void testLocalXsd() throws IOException {
+  public void testLocalXsd() throws IOException, SAXParseException {
     assertEquals("http://www.openjax.org/xml/local.xsd", testXsd("local.xsd").getTargetNamespace());
   }
 
   @Test
-  public void testRemoteXsd() throws IOException {
+  public void testRemoteXsd() throws IOException, SAXParseException {
     assertEquals("http://www.openjax.org/xml/remote.xsd", testXsd("remote.xsd").getTargetNamespace());
   }
 
   @Test
-  public void testNoNamespaceXsd() throws IOException {
+  public void testNoNamespaceXsd() throws IOException, SAXParseException {
     assertNull(testXsd("noNamespace.xsd").getTargetNamespace());
   }
 
   @Test
-  public void testNoNamespaceXml() throws IOException {
+  public void testNoNamespaceXml() throws IOException, SAXParseException {
     final XmlPreview preview = testXml("invalid.xml");
     assertEquals("test.xsd", URLs.getName(preview.getImports().get(preview.getRootElement().getNamespaceURI())));
   }
 
   @Test
-  public void testRemoteXml() throws IOException {
+  public void testRemoteXml() throws IOException, SAXParseException {
     final XmlPreview preview = testXml("remote.xml");
     assertEquals("remote.xsd", URLs.getName(preview.getImports().get(preview.getRootElement().getNamespaceURI())));
   }
 
   @Test
-  public void testValidXml() throws IOException {
+  public void testValidXml() throws IOException, SAXParseException {
     final XmlPreview preview = testXml("valid.xml");
     assertEquals("test.xsd", URLs.getName(preview.getImports().get(preview.getRootElement().getNamespaceURI())));
   }
 
   @Test
-  public void testEmptyXml() throws IOException {
+  public void testEmptyXml() throws IOException, SAXParseException {
     final XmlPreview preview = testXml("empty.xml");
     assertNull(preview.getImports());
   }

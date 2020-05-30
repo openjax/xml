@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.libj.io.ReplayReader;
+import org.xml.sax.SAXParseException;
 
 public class FastSAXParserTest {
   private static String read(final Reader in, final int len) throws IOException {
@@ -154,7 +155,7 @@ public class FastSAXParserTest {
       assertEquals(event.fields[i], fields[i]);
   }
 
-  private static void test(final List<Event> events, final URL url) throws IOException {
+  private static void test(final List<Event> events, final URL url) throws IOException, SAXParseException {
     final Iterator<Event> iterator = events.iterator();
     try (final Reader in = new ReplayReader(new InputStreamReader(url.openStream()))) {
       FastSAXParser.parse(in, new FasterTestHandler(iterator, in));
@@ -162,7 +163,7 @@ public class FastSAXParserTest {
   }
 
   @Test
-  public void testTestXsd() throws IOException {
+  public void testTestXsd() throws IOException, SAXParseException {
     final List<Event> events = new ArrayList<>();
     add(events, Type.DOST);
     add(events, Type.CMNT, "\n  Copyright (c) 2006 OpenJAX\n\n  Permission is hereby granted, free of charge, to any person obtaining a copy\n  of this software and associated documentation files (the \"Software\"), to deal\n  in the Software without restriction, including without limitation the rights\n  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n  copies of the Software, and to permit persons to whom the Software is\n  furnished to do so, subject to the following conditions:\n\n  The above copyright notice and this permission notice shall be included in\n  all copies or substantial portions of the Software.\n\n  You should have received a copy of The MIT License (MIT) along with this\n  program. If not, see <http://opensource.org/licenses/MIT/>.\n");
@@ -287,7 +288,7 @@ public class FastSAXParserTest {
   }
 
   @Test
-  public void testNumeralsXml() throws IOException {
+  public void testNumeralsXml() throws IOException, SAXParseException {
     final List<Event> events = new ArrayList<>();
     add(events, Type.DOST);
     add(events, Type.CMNT, "\n  Copyright (c) 2008 OpenJAX\n\n  Permission is hereby granted, free of charge, to any person obtaining a copy\n  of this software and associated documentation files (the \"Software\"), to deal\n  in the Software without restriction, including without limitation the rights\n  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n  copies of the Software, and to permit persons to whom the Software is\n  furnished to do so, subject to the following conditions:\n\n  The above copyright notice and this permission notice shall be included in\n  all copies or substantial portions of the Software.\n\n  You should have received a copy of The MIT License (MIT) along with this\n  program. If not, see <http://opensource.org/licenses/MIT/>.\n");
@@ -331,7 +332,7 @@ public class FastSAXParserTest {
   }
 
   @Test
-  public void testDoctypeXml() throws IOException {
+  public void testDoctypeXml() throws IOException, SAXParseException {
     final List<Event> events = new ArrayList<>();
     add(events, Type.DOST);
     add(events, Type.CMNT, "\n  Copyright (c) 2019 OpenJAX\n\n  Permission is hereby granted, free of charge, to any person obtaining a copy\n  of this software and associated documentation files (the \"Software\"), to deal\n  in the Software without restriction, including without limitation the rights\n  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n  copies of the Software, and to permit persons to whom the Software is\n  furnished to do so, subject to the following conditions:\n\n  The above copyright notice and this permission notice shall be included in\n  all copies or substantial portions of the Software.\n\n  You should have received a copy of The MIT License (MIT) along with this\n  program. If not, see <http://opensource.org/licenses/MIT/>.\n");

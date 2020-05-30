@@ -19,6 +19,9 @@ package org.openjax.xml.sax;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.libj.lang.ObjectUtil;
+import org.xml.sax.SAXParseException;
+
 /**
  * Fast SAX parser for XML data.
  * <p>
@@ -48,12 +51,13 @@ public final class FastSAXParser {
    * @throws IOException If the input stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
+   * @throws SAXParseException If provided XML document cannot be parsed.
    * @throws NullPointerException If the specified {@link Reader} or
    *           {@link FasterSAXHandler} is null.
    * @see java.io.BufferedInputStream
    * @see org.libj.io.ReplayReader
    */
-  public static void parse(final Reader in, final FasterSAXHandler handler) throws IOException {
+  public static void parse(final Reader in, final FasterSAXHandler handler) throws IOException, SAXParseException {
     char skipToNext = '\0';
     boolean inElement = false;
     int startElem = -1;
@@ -124,7 +128,8 @@ public final class FastSAXParser {
           else if (startAttr != -1)
             prefixLen = i - startAttr;
           else
-            throw new IllegalStateException();
+            // FIXME: Property get the line/column
+            throw new SAXParseException("Unable to parse XML", null, ObjectUtil.simpleIdentityString(in), 0, i);
         }
         else if (ch0 == '>' || ch0 == '=' || q(inDeclaration, ch0) || isWs) {
           if (startElem != -1) {

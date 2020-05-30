@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.libj.net.URLs;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
 
 /**
  * Parser for XML documents that produces {@link XmlPreview} objects.
@@ -39,9 +40,10 @@ public final class XmlPreviewParser {
    * @throws IOException If the stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
+   * @throws SAXParseException If provided XML document cannot be parsed.
    * @throws NullPointerException If the specified {@link URL} is null.
    */
-  public static XmlPreview parse(final URL url) throws IOException {
+  public static XmlPreview parse(final URL url) throws IOException, SAXParseException {
     try (final CachedInputSource inputSource = new CachedInputSource(null, url.toString(), null, url.openStream())) {
       return parse(url, inputSource);
     }
@@ -58,9 +60,10 @@ public final class XmlPreviewParser {
    * @throws IOException If the stream does not support
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
+   * @throws SAXParseException If provided XML document cannot be parsed.
    * @throws NullPointerException If the specified {@link InputSource} is null.
    */
-  static XmlPreview parse(final URL url, final CachedInputSource inputSource) throws IOException {
+  static XmlPreview parse(final URL url, final CachedInputSource inputSource) throws IOException, SAXParseException {
     final XmlPreviewHandler previewHandler = new XmlPreviewHandler(new XmlCatalog(url, inputSource));
     FastSAXParser.parse(inputSource.getCharacterStream(), previewHandler);
 
@@ -69,7 +72,7 @@ public final class XmlPreviewParser {
     return preview;
   }
 
-  private static boolean process(final XmlPreviewHandler previewHandler, final String uri, final boolean isImport) throws IOException {
+  private static boolean process(final XmlPreviewHandler previewHandler, final String uri, final boolean isImport) throws IOException, SAXParseException {
     final HashMap<String,URL> includes = previewHandler.getIncludes() == null ? null : new HashMap<>(previewHandler.getIncludes());
     final HashMap<String,URL> imports = previewHandler.getImports() == null ? null : new HashMap<>(previewHandler.getImports());
 
@@ -92,7 +95,7 @@ public final class XmlPreviewParser {
     return true;
   }
 
-  private static void traverse(final XmlPreviewHandler previewHandler, final Map<String,URL> schemaLocations, final boolean isImport) throws IOException {
+  private static void traverse(final XmlPreviewHandler previewHandler, final Map<String,URL> schemaLocations, final boolean isImport) throws IOException, SAXParseException {
     for (final Map.Entry<String,URL> entry : schemaLocations.entrySet()) {
       final URL location = entry.getValue();
       if (!previewHandler.getVisitedURLs().add(location))
