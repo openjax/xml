@@ -40,6 +40,7 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
     }
 
     @Override
+    @SuppressWarnings("sync-override")
     public void close() {
       buffer.reset(0);
     }
