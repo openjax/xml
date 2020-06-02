@@ -71,7 +71,14 @@ public final class FastSAXParser {
     int attrNameLen = 0;
     in.mark(DEFAULT_READ_LIMIT);
     handler.startDocument();
-    for (int ch0, ch1 = '\0', ch2 = '\0', i = 0; (ch0 = in.read()) != -1; ++i) {
+    int row = 1;
+    int col = 1;
+    for (int ch0, ch1 = '\0', ch2 = '\0', i = 0; (ch0 = in.read()) != -1; ++i, ++col) {
+      if (ch0 == '\n' || ch0 == '\r' && ch1 != '\n') {
+        col = 1;
+        ++row;
+      }
+
       if (skipToNext != '\0') {
         if (ch0 == skipToNext)
           skipToNext = '\0';
@@ -128,8 +135,7 @@ public final class FastSAXParser {
           else if (startAttr != -1)
             prefixLen = i - startAttr;
           else
-            // FIXME: Property get the line/column
-            throw new SAXParseException("Unable to parse XML", null, ObjectUtil.simpleIdentityString(in), 0, i);
+            throw new SAXParseException("Unable to parse XML", null, ObjectUtil.simpleIdentityString(in), row, col);
         }
         else if (ch0 == '>' || ch0 == '=' || q(inDeclaration, ch0) || isWs) {
           if (startElem != -1) {
