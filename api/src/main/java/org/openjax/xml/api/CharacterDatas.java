@@ -40,7 +40,7 @@ public final class CharacterDatas {
         string.replace(i, i + 1, "&gt;");
       else if (ch == '<')
         string.replace(i, i + 1, "&lt;");
-      if (quote == ch) {
+      else if (quote == ch) {
         if (ch == '\'')
           string.replace(i, i + 1, "&apos;");
         else if (ch == '"')
