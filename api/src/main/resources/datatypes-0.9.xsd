@@ -58,7 +58,7 @@
 
   <xs:simpleType name="hexBinaryNonEmpty">
     <xs:restriction base="xs:hexBinary">
-      <xs:minLength value="1"/>
+      <xs:minLength value="2"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -1061,6 +1061,13 @@
   <xs:simpleType name="hexadecimal">
     <xs:restriction base="xs:string">
       <xs:pattern value="[\da-fA-F]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="hexadecimalNonEmpty">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[\da-fA-F]*"/>
+      <xs:minLength value="2"/>
     </xs:restriction>
   </xs:simpleType>
 
