@@ -322,7 +322,7 @@ public final class Validator {
         final StringBuilder xml = new StringBuilder();
         xml.append('<').append(dynamicXmlRoot);
         xml.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-        if (preview.getTargetNamespace().length() > 0) {
+        if (preview.getTargetNamespace() != null && preview.getTargetNamespace().length() > 0) {
           xml.append(" xmlns=\"").append(preview.getTargetNamespace()).append('"');
           xml.append(" xsi:schemaLocation=\"").append(preview.getTargetNamespace()).append(' ').append(inputSource.getSystemId()).append('"');
         }
@@ -345,22 +345,37 @@ public final class Validator {
       final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, inputSource, preview.isSchema() || preview.getImports() != null || preview.getIncludes() != null);
       validator.setErrorHandler(validatorErrorHandler);
 
-      validator.validate(saxSource);
-
-      // NOTE: The following code is skipped if the validate() call above throws
-      // an exception.
-      if (validatorErrorHandler.errors != null) {
-        final Iterator<SAXParseException> iterator = validatorErrorHandler.errors.iterator();
-        final SAXParseException exception = iterator.next();
-        while (iterator.hasNext())
-          exception.addSuppressed(iterator.next());
-
-        throw exception;
+      try {
+        validator.validate(saxSource);
       }
+      catch (final IOException | SAXException e) {
+        checkException(validatorErrorHandler, e);
+      }
+
+      checkException(validatorErrorHandler, null);
     }
     finally {
       if (preview != null)
         preview.getCatalog().close();
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <E extends Exception>void checkException(final ValidatorErrorHandler validatorErrorHandler, final Throwable suppressor) throws E, SAXParseException {
+    if (validatorErrorHandler.errors != null) {
+      final Iterator<SAXParseException> iterator = validatorErrorHandler.errors.iterator();
+      final SAXParseException exception = iterator.next();
+      while (iterator.hasNext())
+        exception.addSuppressed(iterator.next());
+
+      if (suppressor == null)
+        throw exception;
+
+      suppressor.addSuppressed(exception);
+      throw (E)suppressor;
+    }
+    else if (suppressor != null) {
+      throw (E)suppressor;
     }
   }
 

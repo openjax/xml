@@ -68,6 +68,11 @@ public class ValidatorTest {
   }
 
   @Test
+  public void testNoNamespaceXsd() throws IOException, SAXException {
+    Validator.validate(ClassLoader.getSystemClassLoader().getResource("noNamespace.xsd"));
+  }
+
+  @Test
   public void testValidXml() throws IOException, SAXException {
     Validator.validate(ClassLoader.getSystemClassLoader().getResource("valid.xml"));
   }
