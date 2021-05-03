@@ -55,10 +55,16 @@
       <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
-
+  
   <xs:simpleType name="hexBinaryNonEmpty">
     <xs:restriction base="xs:hexBinary">
       <xs:minLength value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="base64BinaryNonEmpty">
+    <xs:restriction base="xs:base64Binary">
+      <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
 
