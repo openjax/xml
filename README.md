@@ -1,6 +1,6 @@
 # XML
 
-[![Build Status](https://travis-ci.org/openjax/xml.svg?branch=master)](https://travis-ci.org/openjax/xml)
+[![Build Status](https://github.com/openjax/xml/workflows/build.yml/badge.svg)](https://github.com/openjax/xml/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/openjax/xml/badge.svg)](https://coveralls.io/github/openjax/xml)
 [![Javadocs](https://www.javadoc.io/badge/org.openjax.xml/xml-maven-plugin.svg)](https://www.javadoc.io/doc/org.openjax.xml/xml-maven-plugin)
 [![Released Version](https://img.shields.io/maven-central/v/org.openjax.xml/xml-maven-plugin.svg)](https://mvnrepository.com/artifact/org.openjax.xml/xml-maven-plugin)
