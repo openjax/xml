@@ -62,6 +62,7 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
    * @throws IllegalArgumentException If the specified {@link InputSource} does
    *           not have a byte stream or character stream.
    */
+  @SuppressWarnings("resource")
   private static ReplayReader getReader(final InputSource inputSource) {
     if (inputSource.getCharacterStream() instanceof ReplayReader)
       return (ReplayReader)inputSource.getCharacterStream();
