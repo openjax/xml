@@ -17,6 +17,7 @@
 package org.openjax.xml.sax;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -34,6 +35,7 @@ import javax.xml.validation.SchemaFactory;
 import org.apache.xerces.impl.Constants;
 import org.libj.net.MemoryURLStreamHandler;
 import org.libj.net.URLs;
+import org.libj.util.StringPaths;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -66,50 +68,42 @@ public final class Validator {
     factory.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
     factory.setFeature("http://apache.org/xml/features/validation/schema/augment-psvi", true);
     factory.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
-    // factory.setFeature("http://apache.org/xml/features/allow-java-encodings",
-    // true);
+    // factory.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
     factory.setFeature("http://apache.org/xml/features/standard-uri-conformant", true);
-    // factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl",
-    // true);
-    // factory.setFeature("http://apache.org/xml/features/generate-synthetic-annotations",
-    // true);
+    // factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    // factory.setFeature("http://apache.org/xml/features/generate-synthetic-annotations", true);
     factory.setFeature("http://apache.org/xml/features/validate-annotations", true);
     factory.setFeature("http://apache.org/xml/features/honour-all-schemaLocations", true);
-    // factory.setFeature("http://apache.org/xml/features/namespace-growth",
-    // true);
+    // factory.setFeature("http://apache.org/xml/features/namespace-growth", true);
     factory.setFeature("http://apache.org/xml/features/internal/tolerate-duplicates", true);
     factory.setFeature("http://apache.org/xml/features/validation/cta-full-xpath-checking", true);
-    // factory.setFeature("http://apache.org/xml/features/validation/assert-comments-and-pi-checking",
-    // true);
+    // factory.setFeature("http://apache.org/xml/features/validation/assert-comments-and-pi-checking", true);
 
-    // factory.setProperty("http://apache.org/xml/properties/internal/entity-manager",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/symbol-table",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/error-reporter",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/error-handler",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/entity-resolver",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/grammar-pool",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation",
-    // ???);
-    // factory.setProperty("http://java.sun.com/xml/jaxp/properties/schemaSource",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/security-manager",
-    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/entity-manager", ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/symbol-table", ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/error-reporter", ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/error-handler", ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/entity-resolver", ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/grammar-pool", ???);
+    // factory.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation", ???);
+    // factory.setProperty("http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation", ???);
+    // factory.setProperty("http://java.sun.com/xml/jaxp/properties/schemaSource", ???);
+    // factory.setProperty("http://apache.org/xml/properties/security-manager", ???);
     // factory.setProperty("http://apache.org/xml/properties/locale", ???);
-    // factory.setProperty("http://apache.org/xml/properties/internal/validation/schema/dv-factory",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/validation/schema/version",
-    // ???);
-    // factory.setProperty("http://apache.org/xml/properties/validation/schema/datatype-xml-version",
-    // ???);
+    // factory.setProperty("http://apache.org/xml/properties/internal/validation/schema/dv-factory", ???);
+    // factory.setProperty("http://apache.org/xml/properties/validation/schema/version", ???);
+    // factory.setProperty("http://apache.org/xml/properties/validation/schema/datatype-xml-version", ???);
     return factory;
+  }
+
+  public static void main(final String[] args) throws IOException, SAXException {
+    if (args.length != 1) {
+      System.err.println("Usage: Validator <FILE>");
+      System.exit(1);
+    }
+
+    final String path = args[0];
+    validate(StringPaths.getProtocol(path) != null ? new URL(path) : new File(path).toURI().toURL());
   }
 
   /**

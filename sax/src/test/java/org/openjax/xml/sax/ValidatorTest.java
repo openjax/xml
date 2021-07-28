@@ -18,7 +18,9 @@ package org.openjax.xml.sax;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
@@ -28,17 +30,19 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class ValidatorTest {
+  private static final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+
   static {
     URLs.disableRemote();
   }
 
   private static void testNoDeclaration(final String fileName) throws IOException, SAXException {
-    final AtomicBoolean sawWarning = new AtomicBoolean();
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource(fileName), new ErrorHandler() {
+    final AtomicBoolean hasWarning = new AtomicBoolean();
+    Validator.validate(classLoader.getResource(fileName), new ErrorHandler() {
       @Override
       public void warning(final SAXParseException exception) throws SAXException {
         assertEquals("There is no schema or DTD associated with the document", exception.getMessage());
-        sawWarning.set(true);
+        hasWarning.set(true);
       }
 
       @Override
@@ -49,7 +53,7 @@ public class ValidatorTest {
       public void error(final SAXParseException exception) throws SAXException {
       }
     });
-    assertTrue(sawWarning.get());
+    assertTrue(hasWarning.get());
   }
 
   @Test
@@ -64,28 +68,28 @@ public class ValidatorTest {
 
   @Test
   public void testTestXsd() throws IOException, SAXException {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("test.xsd"));
+    Validator.validate(classLoader.getResource("test.xsd"));
   }
 
   @Test
   public void testNoNamespaceXsd() throws IOException, SAXException {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("noNamespace.xsd"));
+    Validator.validate(classLoader.getResource("noNamespace.xsd"));
   }
 
   @Test
   public void testValidXml() throws IOException, SAXException {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("valid.xml"));
+    Validator.validate(classLoader.getResource("valid.xml"));
   }
 
   @Test
   public void testXmlXsd() throws IOException, SAXException {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("xmlschema/xml.xsd"));
+    Validator.validate(classLoader.getResource("xmlschema/xml.xsd"));
   }
 
   @Test
   public void testOffline() throws IOException {
     try {
-      Validator.validate(ClassLoader.getSystemClassLoader().getResource("remote.xml"));
+      Validator.validate(classLoader.getResource("remote.xml"));
       fail("Expected SAXException");
     }
     catch (final SAXException e) {
@@ -95,18 +99,18 @@ public class ValidatorTest {
 
   @Test
   public void testOverride() throws IOException, SAXException {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("override.xml"));
+    Validator.validate(classLoader.getResource("override.xml"));
   }
 
   @Test
   public void testXInclude() throws IOException, SAXException {
-    Validator.validate(ClassLoader.getSystemClassLoader().getResource("xinclude.xml"));
+    Validator.validate(classLoader.getResource("xinclude.xml"));
   }
 
   @Test
   public void testInvalid() throws IOException {
     try {
-      Validator.validate(ClassLoader.getSystemClassLoader().getResource("invalid.xml"));
+      Validator.validate(classLoader.getResource("invalid.xml"));
       fail("Expected SAXException");
     }
     catch (final SAXException e) {
@@ -114,5 +118,25 @@ public class ValidatorTest {
       if (!e.getMessage().startsWith("cvc-datatype-valid.1.2.1: 'a' is not a valid value for 'integer'."))
         fail(e.getMessage());
     }
+  }
+
+  @Test
+  public void testMainUrl() throws IOException, SAXException {
+    final URL url = classLoader.getResource("override.xml");
+    Validator.main(new String[] {url.toString()});
+  }
+
+  @Test
+  public void testMainAbsolute() throws IOException, SAXException {
+    final URL url = classLoader.getResource("override.xml");
+    Validator.main(new String[] {url.getFile()});
+  }
+
+  @Test
+  public void testMainRelative() throws IOException, SAXException {
+    final URL url = classLoader.getResource("override.xml");
+    final String cwd = new File("").getAbsolutePath();
+    final String path = url.getFile().substring(cwd.length() + 1);
+    Validator.main(new String[] {path});
   }
 }
