@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.libj.lang.Assertions;
 import org.libj.net.URLs;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
@@ -41,10 +42,10 @@ public final class XmlPreviewParser {
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
-   * @throws NullPointerException If the specified {@link URL} is null.
+   * @throws IllegalArgumentException If {@code url} is null.
    */
   public static XmlPreview parse(final URL url) throws IOException, SAXParseException {
-    try (final CachedInputSource inputSource = new CachedInputSource(null, url.toString(), null, url.openStream())) {
+    try (final CachedInputSource inputSource = new CachedInputSource(null, Assertions.assertNotNull(url).toString(), null, url.openStream())) {
       return parse(url, inputSource);
     }
   }
@@ -61,7 +62,7 @@ public final class XmlPreviewParser {
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
-   * @throws NullPointerException If the specified {@link InputSource} is null.
+   * @throws IllegalArgumentException If {@code inputSource} is null.
    */
   static XmlPreview parse(final URL url, final CachedInputSource inputSource) throws IOException, SAXParseException {
     final XmlPreviewHandler previewHandler = new XmlPreviewHandler(new XmlCatalog(url, inputSource));

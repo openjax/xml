@@ -21,9 +21,10 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.xml.namespace.QName;
+
+import org.libj.lang.Assertions;
 
 /**
  * Fast handler for parsing events from {@link FastSAXParser}, which declares
@@ -65,10 +66,10 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
    * Creates a new {@link FastSAXHandler} with the specified input stream.
    *
    * @param reader The input stream.
-   * @throws NullPointerException If the specified input stream is null.
+   * @throws IllegalArgumentException If the specified input stream is null.
    */
   public FastSAXHandler(final Reader reader) {
-    this.reader = Objects.requireNonNull(reader);
+    this.reader = Assertions.assertNotNull(reader);
   }
 
   /**

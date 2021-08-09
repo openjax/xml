@@ -48,13 +48,12 @@ public class XmlElement implements Cloneable, Serializable {
    *
    * @param name The string.
    * @return The specified string.
-   * @throws NullPointerException If the specified string is null.
-   * @throws IllegalArgumentException If the specified string is not a valid
-   *           <a href=
+   * @throws IllegalArgumentException If {@code name} is null, or if
+   *           {@code name} is not a valid <a href=
    *           "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   private static String requireQName(final Object name) {
-    Objects.requireNonNull(name);
+    CharacterDatas.assertNotNull(name);
     final String string = String.valueOf(name);
     if (string.length() == 0 || !qName.matcher(string).matches())
       throw new IllegalArgumentException(string + " is not a valid xs:QName");
@@ -73,8 +72,8 @@ public class XmlElement implements Cloneable, Serializable {
    * @param name The name.
    * @param attributes The attributes.
    * @param elements The child elements.
-   * @throws NullPointerException If {@code name} is null.
-   * @throws IllegalArgumentException If {@code name} is not a valid <a href=
+   * @throws IllegalArgumentException If {@code name} is null, or if
+   *           {@code name} is not a valid <a href=
    *           "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   public XmlElement(final String name, final Map attributes, final Collection elements) {
@@ -89,8 +88,8 @@ public class XmlElement implements Cloneable, Serializable {
    *
    * @param name The name.
    * @param attributes The attributes.
-   * @throws NullPointerException If {@code name} is null.
-   * @throws IllegalArgumentException If {@code name} is not a valid <a href=
+   * @throws IllegalArgumentException If {@code name} is null, or if
+   *           {@code name} is not a valid <a href=
    *           "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   public XmlElement(final String name, final Map attributes) {
@@ -103,8 +102,8 @@ public class XmlElement implements Cloneable, Serializable {
    *
    * @param name The name.
    * @param elements The child elements.
-   * @throws NullPointerException If {@code name} is null.
-   * @throws IllegalArgumentException If {@code name} is not a valid <a href=
+   * @throws IllegalArgumentException If {@code name} is null, or if
+   *           {@code name} is not a valid <a href=
    *           "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   public XmlElement(final String name, final Collection elements) {
@@ -115,8 +114,8 @@ public class XmlElement implements Cloneable, Serializable {
    * Creates a new {@link XmlElement} with the specified name.
    *
    * @param name The name.
-   * @throws NullPointerException If {@code name} is null.
-   * @throws IllegalArgumentException If {@code name} is not a valid <a href=
+   * @throws IllegalArgumentException If {@code name} is null., or if
+   *           {@code name} is not a valid <a href=
    *           "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   public XmlElement(final String name) {
@@ -219,10 +218,9 @@ public class XmlElement implements Cloneable, Serializable {
    *          {@code 0}, child elements are not indented, nor placed on a new
    *          line.
    * @return An XML string representation of this element.
-   * @throws NullPointerException If a child element is null, or the name or
-   *           value of an attribute is null.
-   * @throws IllegalArgumentException If the name of an attribute is not a valid
-   *           <a href=
+   * @throws IllegalArgumentException If a child element is null, or the name or
+   *           value of an attribute is null, or if the name of an attribute is
+   *           not a valid <a href=
    *           "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>,
    *           or if {@code indent} is negative.
    * @throws StackOverflowError If the graph of child elements has cycles.
@@ -237,7 +235,7 @@ public class XmlElement implements Cloneable, Serializable {
       final StringBuilder value = new StringBuilder();
       for (final Map.Entry entry : (Set<Map.Entry>)attributes.entrySet()) {
         final String name = requireQName(entry.getKey());
-        value.append(Objects.requireNonNull(entry.getValue()));
+        value.append(CharacterDatas.assertNotNull(entry.getValue()));
         builder.append(' ').append(name).append("=\"");
         builder.append(CharacterDatas.escapeForAttr(value, '"'));
         value.setLength(0);
@@ -274,9 +272,8 @@ public class XmlElement implements Cloneable, Serializable {
    * Returns an XML string representation of this element with no indentation.
    *
    * @return An XML string representation of this element.
-   * @throws NullPointerException If the name of an attribute is null.
-   * @throws IllegalArgumentException If the name of an attribute is not a valid
-   *           <a href=
+   * @throws IllegalArgumentException If the name of an attribute is null, or if
+   *           the name of an attribute is not a valid <a href=
    *           "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    * @throws StackOverflowError If the graph of child elements has cycles.
    */

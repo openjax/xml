@@ -26,13 +26,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.impl.Constants;
+import org.libj.lang.Assertions;
 import org.libj.net.MemoryURLStreamHandler;
 import org.libj.net.URLs;
 import org.libj.util.StringPaths;
@@ -115,7 +115,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified string is null.
+   * @throws IllegalArgumentException If the specified string is null.
    */
   public static void validate(final String xml) throws IOException, SAXException {
     validate(xml, DEFAULT_ERROR_HANDLER);
@@ -132,7 +132,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified string is null.
+   * @throws IllegalArgumentException If the specified string is null.
    */
   public static void validate(final String xml, final ErrorHandler errorHandler) throws IOException, SAXException {
     validate(MemoryURLStreamHandler.createURL(xml.getBytes()), errorHandler);
@@ -149,7 +149,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified {@link URL} is null.
+   * @throws IllegalArgumentException If the specified {@link URL} is null.
    */
   public static void validate(final URL url) throws IOException, SAXException {
     validate(url, DEFAULT_ERROR_HANDLER);
@@ -168,7 +168,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified {@link URL} is null.
+   * @throws IllegalArgumentException If the specified {@link URL} is null.
    */
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
     try (final InputStream in = url.openStream()) {
@@ -187,7 +187,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified {@link InputSource} is null.
+   * @throws IllegalArgumentException If the specified {@link InputSource} is null.
    */
   public static void validate(final InputSource inputSource) throws IOException, SAXException {
     validate(inputSource, DEFAULT_ERROR_HANDLER);
@@ -206,7 +206,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified {@link InputSource} is null.
+   * @throws IllegalArgumentException If the specified {@link InputSource} is null.
    */
   public static void validate(final InputSource inputSource, final ErrorHandler errorHandler) throws IOException, SAXException {
     validate(null, inputSource, null, errorHandler);
@@ -227,7 +227,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified {@link InputSource} is null.
+   * @throws IllegalArgumentException If the specified {@link InputSource} is null.
    */
   public static void validate(final InputSource inputSource, final XmlPreviewHandler previewHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
     validate(null, inputSource, previewHandler, errorHandler);
@@ -247,7 +247,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified {@link InputSource} or
+   * @throws IllegalArgumentException If the specified {@link InputSource} or
    *           {@link XmlPreview} is null.
    */
   public static void validate(final InputSource inputSource, final XmlPreview preview, final ErrorHandler errorHandler) throws IOException, SAXException {
@@ -271,7 +271,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified {@link Reader} is null.
+   * @throws IllegalArgumentException If the specified {@link Reader} is null.
    */
   private static void validate(final URL url, final InputSource inputSource, final XmlPreviewHandler previewHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
     final CachedInputSource cachedInputSource = inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource);
@@ -305,7 +305,7 @@ public final class Validator {
    *           {@link SAXException}, if a fatal error is found and the
    *           {@link ErrorHandler} returns normally, or if any SAX errors occur
    *           during processing.
-   * @throws NullPointerException If the specified {@link InputSource} or
+   * @throws IllegalArgumentException If the specified {@link InputSource} or
    *           {@link XmlPreview} is null.
    */
   private static void validate(final CachedInputSource inputSource, final XmlPreview preview, final ErrorHandler errorHandler) throws IOException, SAXException {
@@ -380,7 +380,7 @@ public final class Validator {
 
     private ValidatorErrorHandler(final ErrorHandler handler, final InputSource inputSource, final boolean hasSchema) {
       super(handler);
-      this.inputSource = Objects.requireNonNull(inputSource);
+      this.inputSource = Assertions.assertNotNull(inputSource);
       this.hasSchema = hasSchema;
     }
 
@@ -415,7 +415,7 @@ public final class Validator {
    * @param exception The {@link IOException} to test.
    * @return Whether the provided exception could be the result of the JVM being
    *         offline.
-   * @throws NullPointerException If the provided {@link IOException} is null.
+   * @throws IllegalArgumentException If the provided {@link IOException} is null.
    */
   public static boolean isRemoteAccessException(final IOException exception) {
     final String methodName = exception.getStackTrace()[0].getMethodName();
@@ -429,7 +429,7 @@ public final class Validator {
    * @param exception The {@link SAXException} to test.
    * @return Whether the provided exception could be the result of the JVM being
    *         offline.
-   * @throws NullPointerException If the provided {@link SAXException} is null.
+   * @throws IllegalArgumentException If the provided {@link SAXException} is null.
    */
   public static boolean isRemoteAccessException(final SAXException exception) {
     final String message = exception.getMessage();

@@ -31,30 +31,23 @@ public class XmlElementTest {
   public void test() {
     try {
       new XmlElement(null);
-      fail("Expected NullPointerException");
+      fail("Expected IllegalArgumentException");
     }
-    catch (final NullPointerException e) {
+    catch (final IllegalArgumentException e) {
     }
 
     try {
       new XmlElement("a", Collections.singletonMap(null, "c")).toString();
-      fail("Expected NullPointerException");
+      fail("Expected IllegalArgumentException");
     }
-    catch (final NullPointerException e) {
+    catch (final IllegalArgumentException e) {
     }
 
     try {
       new XmlElement("a", Collections.singletonMap("b", null)).toString();
-      fail("Expected NullPointerException");
+      fail("Expected IllegalArgumentException");
     }
-    catch (final NullPointerException e) {
-    }
-
-    try {
-      new XmlElement("a", Collections.singletonList(null)).toString();
-      fail("Expected NullPointerException");
-    }
-    catch (final NullPointerException e) {
+    catch (final IllegalArgumentException e) {
     }
 
     try {

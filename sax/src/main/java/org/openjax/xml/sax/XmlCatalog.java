@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.libj.lang.Assertions;
+
 /**
  * The {@link XmlCatalog} class represents a catalog for XML entities as defined
  * by <a href=
@@ -45,11 +47,11 @@ public class XmlCatalog extends XmlEntity {
    *
    * @param location The {@link URL}.
    * @param inputSource The {@link CachedInputSource}.
-   * @throws NullPointerException If the specified {@link URL} or
+   * @throws IllegalArgumentException If the specified {@link URL} or
    *           {@link CachedInputSource} is null.
    */
   public XmlCatalog(final URL location, final CachedInputSource inputSource) {
-    super(location, Objects.requireNonNull(inputSource));
+    super(location, Assertions.assertNotNull(inputSource));
   }
 
   private Map<String,XmlEntity> uriToSystemId() {
@@ -63,10 +65,10 @@ public class XmlCatalog extends XmlEntity {
    * @param entity The schema location value.
    * @return The previous value associated with key, or {@code null} if there
    *         was no mapping for key.
-   * @throws NullPointerException If the specified {@link XmlEntity} is null.
+   * @throws IllegalArgumentException If the specified {@link XmlEntity} is null.
    */
   public XmlEntity putEntity(final String uri, final XmlEntity entity) {
-    return uriToSystemId().put(uri, Objects.requireNonNull(entity));
+    return uriToSystemId().put(uri, Assertions.assertNotNull(entity));
   }
 
   /**

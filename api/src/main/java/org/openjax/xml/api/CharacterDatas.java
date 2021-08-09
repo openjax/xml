@@ -20,39 +20,49 @@ package org.openjax.xml.api;
  * Utility functions for operations pertaining to XML character data.
  */
 public final class CharacterDatas {
-  private static void assertRange(final int fromIndex, final int toIndex, final CharSequence string) {
+  static <T>T assertNotNull(final T obj) {
+    if (obj == null)
+      throw new IllegalArgumentException("null");
+
+    return obj;
+  }
+
+  private static void assertRange(final int fromIndex, final int toIndex, final CharSequence str) {
+    if (str == null)
+      throw new IllegalArgumentException("str == null");
+
     if (fromIndex < 0)
       throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
 
-    if (toIndex > string.length())
+    if (toIndex > str.length())
       throw new IndexOutOfBoundsException("toIndex = " + toIndex);
 
     if (fromIndex > toIndex)
       throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ")");
   }
 
-  private static StringBuilder escape(final StringBuilder string, final char quote, final int fromIndex, final int toIndex) {
+  private static StringBuilder escape(final StringBuilder str, final char quote, final int fromIndex, final int toIndex) {
     for (int i = toIndex - 1; i >= fromIndex; --i) {
-      final char ch = string.charAt(i);
+      final char ch = str.charAt(i);
       if (ch == '&')
-        string.replace(i, i + 1, "&amp;");
+        str.replace(i, i + 1, "&amp;");
       else if (ch == '>')
-        string.replace(i, i + 1, "&gt;");
+        str.replace(i, i + 1, "&gt;");
       else if (ch == '<')
-        string.replace(i, i + 1, "&lt;");
+        str.replace(i, i + 1, "&lt;");
       else if (quote == ch) {
         if (ch == '\'')
-          string.replace(i, i + 1, "&apos;");
+          str.replace(i, i + 1, "&apos;");
         else if (ch == '"')
-          string.replace(i, i + 1, "&quot;");
+          str.replace(i, i + 1, "&quot;");
       }
     }
 
-    return string;
+    return str;
   }
 
   /**
-   * Returns the XML-escaped {@code string} to be used in an XML attribute. The
+   * Returns the XML-escaped {@code str} to be used in an XML attribute. The
    * specified {@code quote} refers to the character to be used to delimit the
    * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * The escaped characters are:
@@ -68,23 +78,22 @@ public final class CharacterDatas {
    *   "  | &quot;}
    * </pre>
    *
-   * @param string The string to escape.
+   * @param str The string to escape.
    * @param quote The quote character to be used to delimit the attribute's
    *          value in the XML document (either {@code '"'} or {@code '\''}).
-   * @return The XML-escaped {@code string}.
-   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or
-   *           {@code '\''}.
-   * @throws NullPointerException If {@code string} is null.
+   * @return The XML-escaped {@code str}.
+   * @throws IllegalArgumentException If {@code str} is null, or if
+   *           {@code quote} is not {@code '"'} or {@code '\''}.
    */
-  public static String escapeForAttr(final CharSequence string, final char quote) {
+  public static String escapeForAttr(final CharSequence str, final char quote) {
     if (quote != '"' && quote != '\'')
       throw new IllegalArgumentException("Illegal quote character: " + quote);
 
-    return escape(string instanceof StringBuilder ? (StringBuilder)string : new StringBuilder(string), quote, 0, string.length()).toString();
+    return escape(str instanceof StringBuilder ? (StringBuilder)str : new StringBuilder(assertNotNull(str)), quote, 0, str.length()).toString();
   }
 
   /**
-   * Returns the XML-escaped {@code string} to be used in an XML attribute. The
+   * Returns the XML-escaped {@code str} to be used in an XML attribute. The
    * specified {@code quote} refers to the character to be used to delimit the
    * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * The escaped characters are:
@@ -100,29 +109,28 @@ public final class CharacterDatas {
    *   "  | &quot;}
    * </pre>
    *
-   * @param string The string to escape.
+   * @param str The string to escape.
    * @param quote The quote character to be used to delimit the attribute's
    *          value in the XML document (either {@code '"'} or {@code '\''}).
    * @param fromIndex Start index from which to escape characters.
    * @param toIndex End index to which to escape characters.
-   * @return The XML-escaped {@code string}.
-   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or
-   *           {@code '\''}.
+   * @return The XML-escaped {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are
    *           out-of-bounds ({@code fromIndex < 0 || toIndex > size ||
    *         fromIndex > toIndex}).
-   * @throws NullPointerException If {@code string} is null.
+   * @throws IllegalArgumentException If {@code str} is null, or if
+   *           {@code quote} is not {@code '"'} or {@code '\''}.
    */
-  public static String escapeForAttr(final CharSequence string, final char quote, final int fromIndex, final int toIndex) {
+  public static String escapeForAttr(final CharSequence str, final char quote, final int fromIndex, final int toIndex) {
     if (quote != '"' && quote != '\'')
       throw new IllegalArgumentException("Illegal quote character: " + quote);
 
-    assertRange(fromIndex, toIndex, string);
-    return escape(string instanceof StringBuilder ? (StringBuilder)string : new StringBuilder(string), quote, fromIndex, toIndex).toString();
+    assertRange(fromIndex, toIndex, str);
+    return escape(str instanceof StringBuilder ? (StringBuilder)str : new StringBuilder(str), quote, fromIndex, toIndex).toString();
   }
 
   /**
-   * Returns the XML-escaped {@code string} to be used in an XML element. The
+   * Returns the XML-escaped {@code str} to be used in an XML element. The
    * escaped characters are:
    *
    * <pre>
@@ -132,16 +140,19 @@ public final class CharacterDatas {
    *   >  | &gt;
    *   <  | &lt;}
    * </pre>
-   * @param string The string to escape.
-   * @return The XML-escaped {@code string}.
-   * @throws NullPointerException If {@code string} is null.
+   * @param str The string to escape.
+   * @return The XML-escaped {@code str}.
+   * @throws IllegalArgumentException If {@code str} is null.
    */
-  public static String escapeForElem(final CharSequence string) {
-    return escape(string instanceof StringBuilder ? (StringBuilder)string : new StringBuilder(string), '\0', 0, string.length()).toString();
+  public static String escapeForElem(final CharSequence str) {
+    if (str == null)
+      throw new IllegalArgumentException("str == null");
+
+    return escape(str instanceof StringBuilder ? (StringBuilder)str : new StringBuilder(assertNotNull(str)), '\0', 0, str.length()).toString();
   }
 
   /**
-   * Returns the XML-escaped {@code string} to be used in an XML element. The
+   * Returns the XML-escaped {@code str} to be used in an XML element. The
    * escaped characters are:
    *
    * <pre>
@@ -151,23 +162,23 @@ public final class CharacterDatas {
    *   >  | &gt;
    *   <  | &lt;}
    * </pre>
-   * @param string The string to escape.
+   * @param str The string to escape.
    * @param fromIndex Start index from which to escape characters.
    * @param toIndex End index to which to escape characters.
-   * @return The XML-escaped {@code string}.
+   * @return The XML-escaped {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are
    *           out-of-bounds ({@code fromIndex < 0 || toIndex > size ||
    *         fromIndex > toIndex}).
-   * @throws NullPointerException If {@code string} is null.
+   * @throws IllegalArgumentException If {@code str} is null.
    */
-  public static String escapeForElem(final CharSequence string, final int fromIndex, final int toIndex) {
-    assertRange(fromIndex, toIndex, string);
-    return escape(string instanceof StringBuilder ? (StringBuilder)string : new StringBuilder(string), '\0', fromIndex, toIndex).toString();
+  public static String escapeForElem(final CharSequence str, final int fromIndex, final int toIndex) {
+    assertRange(fromIndex, toIndex, str);
+    return escape(str instanceof StringBuilder ? (StringBuilder)str : new StringBuilder(str), '\0', fromIndex, toIndex).toString();
   }
 
-  private static StringBuilder unescape(final StringBuilder string, final char quote, final int fromIndex, final int toIndex) {
+  private static StringBuilder unescape(final StringBuilder str, final char quote, final int fromIndex, final int toIndex) {
     for (int i = toIndex - 1, pos = 0, start = -1; i >= fromIndex; --i) {
-      final char ch = string.charAt(i);
+      final char ch = str.charAt(i);
       if (start >= 0) {
         if (pos == 0) {
           if (ch != 'p' && ch != 't' && (quote != '\0' && quote != '\'' || ch != 's'))
@@ -189,7 +200,7 @@ public final class CharacterDatas {
 
         if (pos == 2) {
           if (ch == '&') {
-            string.replace(i, start + 1, string.charAt(i + 1) == 'g' ? ">" : "<");
+            str.replace(i, start + 1, str.charAt(i + 1) == 'g' ? ">" : "<");
             start = -1;
           }
           else if (ch != 'a' && ch != 'p' && (quote != '\0' && quote != '"' || ch != 'u')) {
@@ -204,7 +215,7 @@ public final class CharacterDatas {
 
         if (pos == 3) {
           if (ch == '&') {
-            string.replace(i, start + 1, "&");
+            str.replace(i, start + 1, "&");
             start = -1;
           }
           else if (quote != '\0' && (quote != '\'' || ch != 'a') && (quote != '"' || ch != 'q')) {
@@ -219,7 +230,7 @@ public final class CharacterDatas {
 
         if (pos == 4) {
           if (ch == '&') {
-            string.replace(i, start + 1, string.charAt(i + 1) == 'a' ? "'" : "\"");
+            str.replace(i, start + 1, str.charAt(i + 1) == 'a' ? "'" : "\"");
             start = -1;
             continue;
           }
@@ -234,11 +245,11 @@ public final class CharacterDatas {
       }
     }
 
-    return string;
+    return str;
   }
 
   /**
-   * Returns the XML-unescaped {@code string} as from an XML attribute. The
+   * Returns the XML-unescaped {@code str} as from an XML attribute. The
    * specified {@code quote} refers to the character used to delimit the
    * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * The unescaped characters are:
@@ -254,20 +265,19 @@ public final class CharacterDatas {
    * &quot; | "}
    * </pre>
    *
-   * @param string The string to unescape.
+   * @param str The string to unescape.
    * @param quote The quote character used to delimit the attribute's value in
    *          the XML document (either {@code '"'} or {@code '\''}).
-   * @return The XML-unescaped {@code string}.
-   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or
-   *           {@code '\''}.
-   * @throws NullPointerException If {@code string} is null.
+   * @return The XML-unescaped {@code str}.
+   * @throws IllegalArgumentException If {@code str} is null, or if
+   *           {@code quote} is not {@code '"'} or {@code '\''}.
    */
-  public static String unescapeFromAttr(final CharSequence string, final char quote) {
-    return unescape(string instanceof StringBuilder ? (StringBuilder)string : new StringBuilder(string), quote, 0, string.length()).toString();
+  public static String unescapeFromAttr(final CharSequence str, final char quote) {
+    return unescape(str instanceof StringBuilder ? (StringBuilder)str : new StringBuilder(assertNotNull(str)), quote, 0, str.length()).toString();
   }
 
   /**
-   * Returns the XML-unescaped {@code string} as from an XML attribute. The
+   * Returns the XML-unescaped {@code str} as from an XML attribute. The
    * specified {@code quote} refers to the character used to delimit the
    * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * The unescaped characters are:
@@ -283,26 +293,25 @@ public final class CharacterDatas {
    * &quot; | "}
    * </pre>
    *
-   * @param string The string to unescape.
+   * @param str The string to unescape.
    * @param quote The quote character used to delimit the attribute's value in
    *          the XML document (either {@code '"'} or {@code '\''}).
    * @param fromIndex Start index from which to unescape characters.
    * @param toIndex End index to which to unescape characters.
-   * @return The XML-unescaped {@code string}.
-   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or
-   *           {@code '\''}.
+   * @return The XML-unescaped {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are
    *           out-of-bounds ({@code fromIndex < 0 || toIndex > size ||
    *         fromIndex > toIndex}).
-   * @throws NullPointerException If {@code string} is null.
+   * @throws IllegalArgumentException If {@code str} is null, or if
+   *           {@code quote} is not {@code '"'} or {@code '\''}.
    */
-  public static String unescapeFromAttr(final CharSequence string, final char quote, final int fromIndex, final int toIndex) {
-    assertRange(fromIndex, toIndex, string);
-    return unescape(string instanceof StringBuilder ? (StringBuilder)string : new StringBuilder(string), quote, fromIndex, toIndex).toString();
+  public static String unescapeFromAttr(final CharSequence str, final char quote, final int fromIndex, final int toIndex) {
+    assertRange(fromIndex, toIndex, str);
+    return unescape(str instanceof StringBuilder ? (StringBuilder)str : new StringBuilder(str), quote, fromIndex, toIndex).toString();
   }
 
   /**
-   * Returns the XML-unescaped {@code string} as from an XML element. The
+   * Returns the XML-unescaped {@code str} as from an XML element. The
    * unescaped characters are:
    *
    * <pre>
@@ -313,16 +322,16 @@ public final class CharacterDatas {
    * &lt;   | <}
    * </pre>
    *
-   * @param string The string to unescape.
-   * @return The XML-unescaped {@code string}.
-   * @throws NullPointerException If {@code string} is null.
+   * @param str The string to unescape.
+   * @return The XML-unescaped {@code str}.
+   * @throws IllegalArgumentException If {@code str} is null.
    */
-  public static String unescapeFromElem(final CharSequence string) {
-    return unescape(string instanceof StringBuilder ? (StringBuilder)string : new StringBuilder(string), '\0', 0, string.length()).toString();
+  public static String unescapeFromElem(final CharSequence str) {
+    return unescape(str instanceof StringBuilder ? (StringBuilder)str : new StringBuilder(assertNotNull(str)), '\0', 0, str.length()).toString();
   }
 
   /**
-   * Returns the XML-unescaped {@code string} as from an XML element. The
+   * Returns the XML-unescaped {@code str} as from an XML element. The
    * unescaped characters are:
    *
    * <pre>
@@ -333,18 +342,18 @@ public final class CharacterDatas {
    * &lt;   | <}
    * </pre>
    *
-   * @param string The string to unescape.
+   * @param str The string to unescape.
    * @param fromIndex Start index from which to unescape characters.
    * @param toIndex End index to which to unescape characters.
-   * @return The XML-unescaped {@code string}.
+   * @return The XML-unescaped {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are
    *           out-of-bounds ({@code fromIndex < 0 || toIndex > size ||
    *         fromIndex > toIndex}).
-   * @throws NullPointerException If {@code string} is null.
+   * @throws IllegalArgumentException If {@code str} is null.
    */
-  public static String unescapeFromElem(final CharSequence string, final int fromIndex, final int toIndex) {
-    assertRange(fromIndex, toIndex, string);
-    return unescape(string instanceof StringBuilder ? (StringBuilder)string : new StringBuilder(string), '\0', fromIndex, toIndex).toString();
+  public static String unescapeFromElem(final CharSequence str, final int fromIndex, final int toIndex) {
+    assertRange(fromIndex, toIndex, str);
+    return unescape(str instanceof StringBuilder ? (StringBuilder)str : new StringBuilder(str), '\0', fromIndex, toIndex).toString();
   }
 
   private CharacterDatas() {

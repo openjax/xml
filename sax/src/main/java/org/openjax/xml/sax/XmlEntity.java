@@ -19,7 +19,8 @@ package org.openjax.xml.sax;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Objects;
+
+import org.libj.lang.Assertions;
 
 /**
  * The {@link XmlEntity} represents an XML entity, which associates a
@@ -37,12 +38,12 @@ public class XmlEntity implements AutoCloseable, Serializable {
    *
    * @param location The {@link URL}.
    * @param inputSource The {@link CachedInputSource}.
-   * @throws NullPointerException If the specified {@link URL} or
+   * @throws IllegalArgumentException If the specified {@link URL} or
    *           {@link CachedInputSource} is null.
    */
   public XmlEntity(final URL location, final CachedInputSource inputSource) {
-    this.location = Objects.requireNonNull(location);
-    this.inputSource = Objects.requireNonNull(inputSource);
+    this.location = Assertions.assertNotNull(location);
+    this.inputSource = Assertions.assertNotNull(inputSource);
   }
 
   /**

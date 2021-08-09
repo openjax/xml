@@ -100,7 +100,7 @@ class XmlPreviewHandler extends FastSAXHandler {
    * specified {@link XmlCatalog}.
    *
    * @param catalog The {@link XmlCatalog}.
-   * @throws NullPointerException If the specified {@link XmlCatalog} is null.
+   * @throws IllegalArgumentException If the specified {@link XmlCatalog} is null.
    * @throws IllegalArgumentException If the {@link InputSource} in the
    *           specified {@link XmlCatalog} does not have a byte stream or
    *           character stream.
@@ -114,7 +114,7 @@ class XmlPreviewHandler extends FastSAXHandler {
    * {@link XmlPreviewHandler}.
    *
    * @param catalog The {@link XmlCatalog}.
-   * @throws NullPointerException If the specified {@link XmlCatalog} is null.
+   * @throws IllegalArgumentException If the specified {@link XmlCatalog} is null.
    * @throws IllegalArgumentException If the {@link InputSource} in the
    *           specified {@link XmlCatalog} does not have a byte stream or
    *           character stream.

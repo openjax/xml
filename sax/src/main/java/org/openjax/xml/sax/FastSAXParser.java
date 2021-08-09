@@ -52,7 +52,7 @@ public final class FastSAXParser {
    *           {@link Reader#mark(int)}, or if some other I/O error has
    *           occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
-   * @throws NullPointerException If the specified {@link Reader} or
+   * @throws IllegalArgumentException If the specified {@link Reader} or
    *           {@link FasterSAXHandler} is null.
    * @see java.io.BufferedInputStream
    * @see org.libj.io.ReplayReader
