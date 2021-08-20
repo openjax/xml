@@ -77,7 +77,7 @@ public final class SchemaResolver {
         if (schema.url != null)
           return schema.url;
 
-        final URL url = ClassLoader.getSystemClassLoader().getResource(schema.resourcePath);
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(schema.resourcePath);
         if (url == null)
           throw new IllegalStateException("Unable to find location of schema: " + schema);
 
