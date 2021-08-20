@@ -32,11 +32,13 @@
   <dependencies>
     <dependency>
       <groupId>org.openjax.xml</groupId>
-      <artifactId>schema</artifactId>
+      <artifactId>api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openjax.xml</groupId>
-      <artifactId>api</artifactId>
+      <artifactId>schema</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>

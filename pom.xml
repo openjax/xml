@@ -61,16 +61,6 @@
         <artifactId>xercesImpl-xsd11</artifactId>
         <version>2.12-beta-r1667115</version>
       </dependency>
-      <dependency>
-        <groupId>org.openjax.xml</groupId>
-        <artifactId>schema</artifactId>
-        <version>0.9.5-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.openjax.xml</groupId>
-        <artifactId>api</artifactId>
-        <version>0.9.5-SNAPSHOT</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 </project>

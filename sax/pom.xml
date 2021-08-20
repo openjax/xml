@@ -73,21 +73,23 @@
   <dependencies>
     <dependency>
       <groupId>org.libj</groupId>
-      <artifactId>net</artifactId>
-      <version>0.5.3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.libj</groupId>
       <artifactId>io</artifactId>
       <version>0.7.8-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.openjax.xml</groupId>
-      <artifactId>schema</artifactId>
+      <groupId>org.libj</groupId>
+      <artifactId>net</artifactId>
+      <version>0.5.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.openjax.xml</groupId>
       <artifactId>api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjax.xml</groupId>
+      <artifactId>schema</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.opengis.cite.xerces</groupId>
