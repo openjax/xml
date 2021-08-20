@@ -38,7 +38,7 @@ public abstract class Validator {
 
     final NamedNodeMap attributes = element.getAttributes();
     final StringBuilder namespaceLocations = new StringBuilder();
-    for (int i = 0; i < attributes.getLength(); ++i) {
+    for (int i = 0, len = attributes.getLength(); i < len; ++i) {
       final Node attribute = attributes.item(i);
       final String namespaceURI = attribute.getNodeValue();
       if (attribute.getNodeName().startsWith(XMLNS.getLocalPart()) && namespaceURI != null && namespaceURI.length() != 0 && !XSI.getNamespaceURI().equals(namespaceURI)) {

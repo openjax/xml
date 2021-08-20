@@ -16,65 +16,101 @@
 
 package org.openjax.xml.dom;
 
-public final class DOMStyle {
-  protected static DOMStyle merge(final DOMStyle ... styles) {
+public enum DOMStyle {
+  /** Indent each element with 2 spaces. */
+  INDENT(true, false, false),
+  /** Indent each attribute with a newline. */
+  INDENT_ATTRS(false, true, false),
+  /** Omit namespace declaration. */
+  OMIT_NAMESPACES(false, false, true);
+
+  private final boolean indentElements;
+  private final boolean indentAttributes;
+  private final boolean omitNamespaces;
+
+  private DOMStyle(final boolean indentElements, final boolean indentAttributes, final boolean omitNamespaces) {
+    this.indentElements = indentElements;
+    this.indentAttributes = indentAttributes;
+    this.omitNamespaces = omitNamespaces;
+  }
+
+  public boolean isIndentAttributes() {
+    return indentAttributes;
+  }
+
+  public boolean isIndent() {
+    return indentElements;
+  }
+
+  public boolean isOmitNamespaces() {
+    return omitNamespaces;
+  }
+
+  public static boolean isIndentAttributes(final DOMStyle ... styles) {
     if (styles == null)
-      return null;
-
-    if (styles.length == 0)
-      return DEFAULT;
-
-    if (styles.length == 1)
-      return styles[0];
-
-    final DOMStyle merged = new DOMStyle(DEFAULT_MASK);
-    for (final DOMStyle style : styles)
-      merged.mask |= style.mask;
-
-    return merged;
-  }
-
-  private static final int DEFAULT_MASK = 0x000;
-  private static final int INDENT_MASK = 0x001;
-  private static final int INDENT_ATTRS_MASK = 0x010;
-  private static final int IGNORE_NAMESPACES_MASK = 0x100;
-
-  private static final DOMStyle DEFAULT = new DOMStyle(DEFAULT_MASK);
-  public static final DOMStyle INDENT = new DOMStyle(INDENT_MASK);
-  public static final DOMStyle INDENT_ATTRS = new DOMStyle(INDENT_ATTRS_MASK);
-  public static final DOMStyle IGNORE_NAMESPACES = new DOMStyle(IGNORE_NAMESPACES_MASK);
-
-  private int mask;
-
-  private DOMStyle(final int mask) {
-    this.mask = mask;
-  }
-
-  protected boolean isIndentAttributes() {
-    return (mask & INDENT_ATTRS_MASK) == INDENT_ATTRS_MASK;
-  }
-
-  protected boolean isIndent() {
-    return (mask & INDENT_MASK) == INDENT_MASK;
-  }
-
-  protected boolean isIgnoreNamespaces() {
-    return (mask & IGNORE_NAMESPACES_MASK) == IGNORE_NAMESPACES_MASK;
-  }
-
-  @Override
-  public int hashCode() {
-    return 31 * mask;
-  }
-
-  @Override
-  public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-
-    if (!(obj instanceof DOMStyle))
       return false;
 
-    return mask == ((DOMStyle)obj).mask;
+    for (int i = 0; i < styles.length; ++i)
+      if (styles[i].isIndentAttributes())
+        return true;
+
+    return false;
+  }
+
+  public static boolean isIndent(final DOMStyle ... styles) {
+    if (styles == null)
+      return false;
+
+    for (int i = 0; i < styles.length; ++i)
+      if (styles[i].isIndent())
+        return true;
+
+    return false;
+  }
+
+  public static boolean isOmitNamespaces(final DOMStyle ... styles) {
+    if (styles == null)
+      return false;
+
+    for (int i = 0; i < styles.length; ++i)
+      if (styles[i].isOmitNamespaces())
+        return true;
+
+    return false;
+  }
+
+  private static int combinations = -1;
+
+  public static int combinations() {
+    return combinations == -1 ? combinations = 1 << values().length : combinations;
+  }
+
+  public static int combination(final DOMStyle ... styles) {
+    if (styles == null)
+      return 0;
+
+    boolean a = false;
+    boolean b = false;
+    boolean c = false;
+    for (final DOMStyle style : styles) {
+      switch (style.ordinal()) {
+        case 0:
+          a = true;
+          break;
+
+        case 1:
+          b = true;
+          break;
+
+        case 2:
+          c = true;
+          break;
+
+        default:
+          throw new UnsupportedOperationException("Unsupported DOMStyle: " + style);
+      }
+    }
+
+    return a ? (b ? (c ? 7 : 6) : (c ? 5 : 4)) : (b ? (c ? 3 : 2) : (c ? 1 : 0));
   }
 }
