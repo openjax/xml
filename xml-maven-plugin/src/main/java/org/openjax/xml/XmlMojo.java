@@ -46,8 +46,12 @@ public abstract class XmlMojo extends PatternSetMojo {
   protected boolean offline;
 
   @FilterParameter(FilterType.RESOURCE)
-  @Parameter(property="resources", required=true)
+  @Parameter(property="resources")
   private List<String> resources;
+
+  @FilterParameter(FilterType.FILE)
+  @Parameter(property="files")
+  private List<File> files;
 
   protected final void setHttpProxy() throws MojoFailureException {
     if (httpProxy == null)
@@ -72,8 +76,21 @@ public abstract class XmlMojo extends PatternSetMojo {
   public final void execute(final Configuration configuration) throws MojoExecutionException, MojoFailureException {
     setHttpProxy();
     final LinkedHashSet<URI> fileSets = new LinkedHashSet<>(configuration.getFileSets());
-    for (final String resource : new LinkedHashSet<>(resources))
-      fileSets.add(URI.create(resource));
+    if (resources != null && !resources.isEmpty())
+      for (final String resource : new LinkedHashSet<>(resources))
+        fileSets.add(URI.create(resource));
+
+    if (files != null && !files.isEmpty())
+      for (final File file : new LinkedHashSet<>(files))
+        fileSets.add(file.toURI());
+
+    if (fileSets.isEmpty()) {
+      if (configuration.getFailOnNoOp())
+        throw new MojoExecutionException("Empty input parameters (failOnNoOp=true)");
+
+      getLog().info("Skipping for empty input parameters.");
+      return;
+    }
 
     execute(fileSets);
   }

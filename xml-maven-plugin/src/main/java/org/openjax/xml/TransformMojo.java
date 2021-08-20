@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 
@@ -46,6 +47,9 @@ public class TransformMojo extends XmlMojo {
   @Parameter(property="stylesheet")
   private File stylesheet;
 
+  @Parameter(property="parameters")
+  private Map<String,String> parameters;
+
   @Override
   public void execute(final LinkedHashSet<URI> uris) throws MojoExecutionException, MojoFailureException {
     try {
@@ -59,10 +63,9 @@ public class TransformMojo extends XmlMojo {
           getLog().info("Pre-transformed: " + inFilePath);
         }
         else {
-          final String outFilePath = CWD.relativize(destFile.getAbsoluteFile().toPath()).toString();
-          getLog().info("   Transforming: " + inFilePath + " -> " + outFilePath);
-
-          Transformer.transform(stylesheet.toURI(), uri, destFile);
+          getLog().info("   Transforming: " + inFilePath + " -> " + CWD.relativize(destFile.getAbsoluteFile().toPath()));
+          destFile.getParentFile().mkdirs();
+          Transformer.transform(stylesheet.toURI().toURL(), uri.toURL(), destFile, parameters);
         }
       }
     }
