@@ -30,8 +30,8 @@ public class Base64Binary implements Serializable {
     return base64Binary == null ? null : base64Binary.toString();
   }
 
-  public static Base64Binary parse(final String string) {
-    return string == null ? null : new Base64Binary(Base64.getDecoder().decode(string));
+  public static Base64Binary parse(final String encoded) {
+    return encoded == null ? null : new Base64Binary(Base64.getDecoder().decode(encoded));
   }
 
   private final byte[] bytes;
@@ -41,6 +41,14 @@ public class Base64Binary implements Serializable {
     this.bytes = bytes;
     if (bytes == null)
       throw new IllegalArgumentException("bytes == null");
+  }
+
+  public Base64Binary(final String encoded) {
+    this.encoded = encoded;
+    if (encoded == null)
+      throw new IllegalArgumentException("encoded == null");
+
+    this.bytes = Base64.getDecoder().decode(encoded);
   }
 
   public byte[] getBytes() {
@@ -65,9 +73,10 @@ public class Base64Binary implements Serializable {
   }
 
   /**
-   * Returns the base64 string representation of this object's byte[] data.
+   * Returns the Base64 string representation of this object's {@code byte[]}
+   * data.
    *
-   * @return The base64 string.
+   * @return The Base64 string.
    */
   @Override
   public String toString() {
