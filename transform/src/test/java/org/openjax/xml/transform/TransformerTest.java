@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 
 import javax.xml.transform.TransformerException;
@@ -29,14 +28,14 @@ import org.junit.Test;
 
 public class TransformerTest {
   @Test
-  public void testTransform() throws TransformerException, IOException, URISyntaxException {
+  public void testTransform() throws TransformerException, IOException {
     final File destFile = new File("target/generated-test-resources/test.txt");
     if (destFile.exists())
       destFile.delete();
     else
       destFile.getParentFile().mkdirs();
 
-    Transformer.transform(ClassLoader.getSystemClassLoader().getResource("test.xsl").toURI(), ClassLoader.getSystemClassLoader().getResource("test.xml").toURI(), destFile);
+    Transformer.transform(ClassLoader.getSystemClassLoader().getResource("test.xsl"), ClassLoader.getSystemClassLoader().getResource("test.xml"), destFile);
     final String string = new String(Files.readAllBytes(destFile.toPath()));
     assertEquals("<HTML>\n   <HEAD>\n      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n      <TITLE></TITLE>\n   </HEAD>\n   <BODY>\n      <H1>Hello, World!</H1>\n      <DIV>from <I>An XSLT Programmer</I></DIV>\n   </BODY>\n</HTML>", string);
   }

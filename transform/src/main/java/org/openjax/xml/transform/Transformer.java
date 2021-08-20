@@ -16,11 +16,14 @@
 
 package org.openjax.xml.transform;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
+import java.io.OutputStream;
 import java.net.URL;
+import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -40,15 +43,98 @@ public final class Transformer {
     }
   }
 
-  public static void transform(final URI stylesheet, final URI in, final File out) throws IOException, TransformerException {
-    transform(stylesheet, in.toURL(), out);
+  public static String transform(final URL stylesheet, final String in, final String systemId) throws IOException, TransformerException {
+    return transform(stylesheet, in, systemId, (Map<String,String>)null);
   }
 
-  public static void transform(final URI stylesheet, final URL in, final File out) throws IOException, TransformerException {
+  public static String transform(final URL stylesheet, final String in, final String systemId, final Map<String,String> parameters) throws IOException, TransformerException {
+    return transform(stylesheet, new ByteArrayInputStream(in.getBytes()), systemId, parameters);
+  }
+
+  public static void transform(final URL stylesheet, final String in, final String systemId, final File out) throws IOException, TransformerException {
+    transform(stylesheet, in, systemId, out, (Map<String,String>)null);
+  }
+
+  public static void transform(final URL stylesheet, final String in, final String systemId, final File out, final Map<String,String> parameters) throws IOException, TransformerException {
+    transform(stylesheet, new ByteArrayInputStream(in.getBytes()), systemId, out, parameters);
+  }
+
+  public static void transform(final URL stylesheet, final String in, final String systemId, final OutputStream out) throws IOException, TransformerException {
+    transform(stylesheet, in, systemId, out, (Map<String,String>)null);
+  }
+
+  public static void transform(final URL stylesheet, final String in, final String systemId, final OutputStream out, final Map<String,String> parameters) throws IOException, TransformerException {
+    transform(stylesheet, new ByteArrayInputStream(in.getBytes()), systemId, out, parameters);
+  }
+
+  public static String transform(final URL stylesheet, final InputStream in, final String systemId) throws IOException, TransformerException {
+    return transform(stylesheet, in, systemId, (Map<String,String>)null);
+  }
+
+  public static String transform(final URL stylesheet, final InputStream in, final String systemId, final Map<String,String> parameters) throws IOException, TransformerException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    transform(stylesheet, new StreamSource(in, systemId), new StreamResult(out), parameters);
+    return new String(out.toByteArray());
+  }
+
+  public static void transform(final URL stylesheet, final InputStream in, final String systemId, final File out) throws IOException, TransformerException {
+    transform(stylesheet,in, systemId, out, (Map<String,String>)null);
+  }
+
+  public static void transform(final URL stylesheet, final InputStream in, final String systemId, final File out, final Map<String,String> parameters) throws IOException, TransformerException {
+    out.createNewFile();
+    transform(stylesheet, new StreamSource(in, systemId), new StreamResult(out), parameters);
+  }
+
+  public static void transform(final URL stylesheet, final InputStream in, final String systemId, final OutputStream out) throws IOException, TransformerException {
+    transform(stylesheet, in, systemId, out, (Map<String,String>)null);
+  }
+
+  public static void transform(final URL stylesheet, final InputStream in, final String systemId, final OutputStream out, final Map<String,String> parameters) throws IOException, TransformerException {
+    transform(stylesheet, new StreamSource(in, systemId), new StreamResult(out), parameters);
+  }
+
+  public static String transform(final URL stylesheet, final URL in) throws IOException, TransformerException {
+    return transform(stylesheet, in, (Map<String,String>)null);
+  }
+
+  public static String transform(final URL stylesheet, final URL in, final Map<String,String> parameters) throws IOException, TransformerException {
     try (final InputStream input = in.openStream()) {
-      final StreamSource streamSource = new StreamSource(stylesheet.toURL().openStream(), stylesheet.toString());
+      final ByteArrayOutputStream out = new ByteArrayOutputStream();
+      transform(stylesheet, new StreamSource(input, in.toString()), new StreamResult(out), parameters);
+      return new String(out.toByteArray());
+    }
+  }
+
+  public static void transform(final URL stylesheet, final URL in, final File out) throws IOException, TransformerException {
+    transform(stylesheet, in, out, (Map<String,String>)null);
+  }
+
+  public static void transform(final URL stylesheet, final URL in, final File out, final Map<String,String> parameters) throws IOException, TransformerException {
+    try (final InputStream input = in.openStream()) {
+      transform(stylesheet, new StreamSource(input, in.toString()), new StreamResult(out), parameters);
+    }
+  }
+
+  public static void transform(final URL stylesheet, final URL in, final OutputStream out) throws IOException, TransformerException {
+    transform(stylesheet, in, out, (Map<String,String>)null);
+  }
+
+  public static void transform(final URL stylesheet, final URL in, final OutputStream out, final Map<String,String> parameters) throws IOException, TransformerException {
+    try (final InputStream input = in.openStream()) {
+      transform(stylesheet, new StreamSource(input, in.toString()), new StreamResult(out), parameters);
+    }
+  }
+
+  private static void transform(final URL stylesheet, final StreamSource in, final StreamResult out, final Map<String,String> parameters) throws IOException, TransformerException {
+    try (final InputStream stylesheetIn = stylesheet.openStream()) {
+      final StreamSource streamSource = new StreamSource(stylesheetIn, stylesheet.toString());
       final javax.xml.transform.Transformer transformer = factory.newTransformer(streamSource);
-      transformer.transform(new StreamSource(input, in.toString()), new StreamResult(out));
+      if (parameters != null)
+        for (final Map.Entry<String,String> entry : parameters.entrySet())
+          transformer.setParameter(entry.getKey(), entry.getValue());
+
+      transformer.transform(in, out);
     }
   }
 
