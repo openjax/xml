@@ -146,11 +146,11 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
 
   /**
    * {@inheritDoc}
-   * <p>
-   * <b>Note:</b> This method has been modified use the specified
-   * {@link InputStream} as the source of a {@link CachedReader} via an
-   * {@link InputStreamReader} that is thereafter provided to
-   * {@link #setCharacterStream(Reader)}.
+   *
+   * @implNote This method has been modified use the specified
+   *           {@link InputStream} as the source of a {@link CachedReader} via
+   *           an {@link InputStreamReader} that is thereafter provided to
+   *           {@link #setCharacterStream(Reader)}.
    */
   @Override
   public void setByteStream(final InputStream byteStream) {

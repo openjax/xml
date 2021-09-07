@@ -27,9 +27,8 @@ import org.xml.sax.SAXParseException;
  * <p>
  * This parser performs as few operations as necessary to parse well-formed XML
  * documents.
- * <p>
- * <b>Note:</b> This parser does not perform any validation.
  *
+ * @implNote This parser does not perform any validation.
  * @see FasterSAXHandler
  */
 public final class FastSAXParser {
@@ -42,10 +41,8 @@ public final class FastSAXParser {
   /**
    * Parse the data provided by the input stream, and handle parse events with
    * the specified {@link FasterSAXHandler}.
-   * <p>
-   * <b>Note:</b> The provided input stream must support
-   * {@link Reader#mark(int)}.
    *
+   * @implNote The provided input stream must support {@link Reader#mark(int)}.
    * @param in The {@link Reader} input stream.
    * @param handler The {@link FasterSAXHandler}.
    * @throws IOException If the input stream does not support
