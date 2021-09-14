@@ -21,24 +21,44 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class CharacterDatasTest {
-  private static final String[] escaped = {"foo &amp; bar", "&lt; foo bar", "foo bar &gt;", "&amp;apos;foo\"'bar&amp;apos;", "&amp;quot;foo bar&amp;quot;"};
-  private static final String[] unescaped = {"foo & bar", "< foo bar", "foo bar >", "&apos;foo\"'bar&apos;", "&quot;foo bar&quot;"};
+  private static final String[] escaped = {"+?&lt;2&amp;v1d6KjT", "qNT|&amp;H/6th.", "foo &amp; bar", "&lt; foo bar", "foo bar &gt;", "&amp;apos;foo\"'bar&amp;apos;", "&amp;quot;foo bar&amp;quot;", "&amp;amp;amp&amp;amp"};
+  private static final String[] unescaped = {"+?<2&v1d6KjT", "qNT|&H/6th.", "foo & bar", "< foo bar", "foo bar >", "&apos;foo\"'bar&apos;", "&quot;foo bar&quot;", "&amp;amp&amp"};
+
+  private static void testEscapeElem(final int message, final String expected, final String in) {
+    assertEquals(String.valueOf(message), expected, CharacterDatas.escapeForElem(new StringBuilder(), in).toString());
+    assertEquals(String.valueOf(message), expected, CharacterDatas.escapeForElem(new StringBuilder(), in.toCharArray()).toString());
+  }
+
+  private static void testEscapeAttr(final String expected, final String in, final char quote) {
+    assertEquals(expected, CharacterDatas.escapeForAttr(new StringBuilder(), in, quote).toString());
+    assertEquals(expected, CharacterDatas.escapeForAttr(new StringBuilder(), in.toCharArray(), quote).toString());
+  }
+
+  private static void testUnescapeAttr(final String expected, final String in, final char quote) {
+    assertEquals(expected, CharacterDatas.unescapeFromAttr(new StringBuilder(), in, quote).toString());
+    assertEquals(expected, CharacterDatas.unescapeFromAttr(new StringBuilder(), in.toCharArray(), quote).toString());
+  }
+
+  private static void testUnescapeElem(final int message, final String expected, final String in) {
+    assertEquals(String.valueOf(message), expected, CharacterDatas.unescapeFromElem(new StringBuilder(), in).toString());
+    assertEquals(String.valueOf(message), expected, CharacterDatas.unescapeFromElem(new StringBuilder(), in.toCharArray()).toString());
+  }
 
   @Test
   public void testEscape() {
     for (int i = 0; i < escaped.length; ++i)
-      assertEquals(String.valueOf(i), escaped[i], CharacterDatas.escapeForElem(unescaped[i]));
+      testEscapeElem(i, escaped[i], unescaped[i]);
 
-    assertEquals("&quot;foo &lt; ' &gt; &amp; bar&quot;", CharacterDatas.escapeForAttr("\"foo < ' > & bar\"", '"'));
-    assertEquals("\"foo &lt; &apos; &gt; &amp; bar\"", CharacterDatas.escapeForAttr("\"foo < ' > & bar\"", '\''));
+    testEscapeAttr("&quot;foo &lt; ' &gt; &amp; bar&quot;", "\"foo < ' > & bar\"", '"');
+    testEscapeAttr("\"foo &lt; &apos; &gt; &amp; bar\"", "\"foo < ' > & bar\"", '\'');
   }
 
   @Test
   public void testUnescape() {
     for (int i = 0; i < unescaped.length; ++i)
-      assertEquals(String.valueOf(i), unescaped[i], CharacterDatas.unescapeFromElem(escaped[i]));
+      testUnescapeElem(i, unescaped[i], escaped[i]);
 
-    assertEquals("\"foo < &apos; > & bar\"", CharacterDatas.unescapeFromAttr("&quot;foo &lt; &apos; &gt; &amp; bar&quot;", '"'));
-    assertEquals("&quot;foo < ' > & bar&quot;", CharacterDatas.unescapeFromAttr("&quot;foo &lt; &apos; &gt; &amp; bar&quot;", '\''));
+    testUnescapeAttr("\"foo < &apos; > & bar\"", "&quot;foo &lt; &apos; &gt; &amp; bar&quot;", '"');
+    testUnescapeAttr("&quot;foo < ' > & bar&quot;", "&quot;foo &lt; &apos; &gt; &amp; bar&quot;", '\'');
   }
 }

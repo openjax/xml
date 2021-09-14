@@ -53,7 +53,7 @@ public class XmlElement implements Cloneable, Serializable {
    *           "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   private static String requireQName(final Object name) {
-    CharacterDatas.assertNotNull(name);
+    CharacterDatas.assertNotNull(name, "name is null");
     final String string = String.valueOf(name);
     if (string.length() == 0 || !qName.matcher(string).matches())
       throw new IllegalArgumentException(string + " is not a valid xs:QName");
@@ -235,9 +235,9 @@ public class XmlElement implements Cloneable, Serializable {
       final StringBuilder value = new StringBuilder();
       for (final Map.Entry entry : (Set<Map.Entry>)attributes.entrySet()) {
         final String name = requireQName(entry.getKey());
-        value.append(CharacterDatas.assertNotNull(entry.getValue()));
+        value.append(CharacterDatas.assertNotNull(entry.getValue(), "name is null"));
         builder.append(' ').append(name).append("=\"");
-        builder.append(CharacterDatas.escapeForAttr(value, '"'));
+        CharacterDatas.escapeForAttr(builder, value, '"');
         value.setLength(0);
         builder.append('"');
       }
