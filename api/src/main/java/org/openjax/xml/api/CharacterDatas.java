@@ -620,19 +620,19 @@ public final class CharacterDatas {
 
     if (depth == 1) {
       if (c0 == 'a' || c0 == 'g' || c0 == 'l' || c0 == 'q')
-        return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, depth + 1, quote, len));
+        return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, 2, quote, len));
 
       return -i;
     }
     else if (depth == 2) {
       if (c0 == 'm' || c0 == 'p' || c0 == 't' || c0 == 'u')
-        return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, depth + 1, quote, len));
+        return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, 3, quote, len));
 
       return -i;
     }
     else if (depth == 3) {
       if (c0 == 'p' || c0 == 'o')
-        return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, depth + 1, quote, len));
+        return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, 4, quote, len));
 
       if (c0 == ';' && c1 == 't') {
         if (c2 == 'g') {
@@ -650,10 +650,10 @@ public final class CharacterDatas {
     }
     else if (depth == 4) {
       if (c0 == 's')
-        return quote != '\'' ? -i : check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, depth + 1, quote, len));
+        return quote != '\'' ? -i : check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, 5, quote, len));
 
       if (c0 == 't')
-        return quote != '"' ? -i : check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, depth + 1, quote, len));
+        return quote != '"' ? -i : check(c4, c3, c2, c1, c0, ++i == len ? '\0' : str.charAt(i), out, unescape(out, str, i, c3, c2, c1, c0, 5, quote, len));
 
       if (c0 == ';' && c1 == 'p') {
         out.append('&');
@@ -689,14 +689,14 @@ public final class CharacterDatas {
       return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, 1, quote, len));
 
     if (depth == 1 && (c0 == 'a' || c0 == 'g' || c0 == 'l' || c0 == 'q'))
-      return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, depth + 1, quote, len));
+      return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, 2, quote, len));
 
     if (depth == 2 && (c0 == 'm' || c0 == 'p' || c0 == 't' || c0 == 'u'))
-      return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, depth + 1, quote, len));
+      return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, 3, quote, len));
 
     if (depth == 3) {
       if (c0 == 'p' || c0 == 'o')
-        return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, depth + 1, quote, len));
+        return check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, 4, quote, len));
 
       if (c0 == ';' && c1 == 't') {
         if (c2 == 'g') {
@@ -714,10 +714,10 @@ public final class CharacterDatas {
     }
     else if (depth == 4) {
       if (c0 == 's')
-        return quote != '\'' ? -i : check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, depth + 1, quote, len));
+        return quote != '\'' ? -i : check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, 5, quote, len));
 
       if (c0 == 't')
-        return quote != '"' ? -i : check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, depth + 1, quote, len));
+        return quote != '"' ? -i : check(c4, c3, c2, c1, c0, ++i == len ? '\0' : chars[i], out, unescape(out, chars, i, c3, c2, c1, c0, 5, quote, len));
 
       if (c0 == ';' && c1 == 'p') {
         out.append('&');
