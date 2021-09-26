@@ -16,13 +16,14 @@
 
 package org.openjax.xml.sax;
 
+import static org.libj.lang.Assertions.*;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.libj.lang.Assertions;
 import org.libj.net.URLs;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
@@ -45,7 +46,7 @@ public final class XmlPreviewParser {
    * @throws IllegalArgumentException If {@code url} is null.
    */
   public static XmlPreview parse(final URL url) throws IOException, SAXParseException {
-    try (final CachedInputSource inputSource = new CachedInputSource(null, Assertions.assertNotNull(url).toString(), null, url.openStream())) {
+    try (final CachedInputSource inputSource = new CachedInputSource(null, assertNotNull(url).toString(), null, url.openStream())) {
       return parse(url, inputSource);
     }
   }

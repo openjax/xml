@@ -16,6 +16,8 @@
 
 package org.openjax.xml.sax;
 
+import static org.libj.lang.Assertions.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +34,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.impl.Constants;
-import org.libj.lang.Assertions;
 import org.libj.net.MemoryURLStreamHandler;
 import org.libj.net.URLs;
 import org.libj.util.StringPaths;
@@ -380,7 +381,7 @@ public final class Validator {
 
     private ValidatorErrorHandler(final ErrorHandler handler, final InputSource inputSource, final boolean hasSchema) {
       super(handler);
-      this.inputSource = Assertions.assertNotNull(inputSource);
+      this.inputSource = assertNotNull(inputSource);
       this.hasSchema = hasSchema;
     }
 

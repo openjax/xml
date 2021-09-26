@@ -16,6 +16,8 @@
 
 package org.openjax.xml.sax;
 
+import static org.libj.lang.Assertions.*;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
@@ -23,8 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
-import org.libj.lang.Assertions;
 
 /**
  * The {@link XmlCatalog} class represents a catalog for XML entities as defined
@@ -49,7 +49,7 @@ public class XmlCatalog extends XmlEntity {
    *           {@link CachedInputSource} is null.
    */
   public XmlCatalog(final URL location, final CachedInputSource inputSource) {
-    super(location, Assertions.assertNotNull(inputSource));
+    super(location, assertNotNull(inputSource));
   }
 
   private Map<String,XmlEntity> uriToSystemId() {
@@ -66,7 +66,7 @@ public class XmlCatalog extends XmlEntity {
    * @throws IllegalArgumentException If the specified {@link XmlEntity} is null.
    */
   public XmlEntity putEntity(final String uri, final XmlEntity entity) {
-    return uriToSystemId().put(uri, Assertions.assertNotNull(entity));
+    return uriToSystemId().put(uri, assertNotNull(entity));
   }
 
   /**

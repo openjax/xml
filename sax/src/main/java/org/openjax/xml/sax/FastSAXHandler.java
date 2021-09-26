@@ -16,6 +16,8 @@
 
 package org.openjax.xml.sax;
 
+import static org.libj.lang.Assertions.*;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -23,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-
-import org.libj.lang.Assertions;
 
 /**
  * Fast handler for parsing events from {@link FastSAXParser}, which declares
@@ -69,7 +69,7 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
    * @throws IllegalArgumentException If the specified input stream is null.
    */
   public FastSAXHandler(final Reader reader) {
-    this.reader = Assertions.assertNotNull(reader);
+    this.reader = assertNotNull(reader);
   }
 
   /**
