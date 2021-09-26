@@ -235,8 +235,6 @@ class XmlPreviewHandler extends FastSAXHandler {
 
   private Map<String,URL> imports() {
     return imports == null ? imports = new LinkedHashMap<String,URL>() {
-      private static final long serialVersionUID = -7668491539881674270L;
-
       @Override
       public URL put(final String key, final URL value) {
         final URL schemaUrl = SchemaResolver.resolve(key, value.toString());

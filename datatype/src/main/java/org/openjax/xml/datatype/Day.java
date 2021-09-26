@@ -22,8 +22,6 @@ import java.util.TimeZone;
  * http://www.w3.org/TR/xmlschema11-2/#gDay
  */
 public class Day extends TemporalType {
-  private static final long serialVersionUID = -2605382792284795205L;
-
   public static String print(final Day day) {
     return day == null ? null : day.toString();
   }

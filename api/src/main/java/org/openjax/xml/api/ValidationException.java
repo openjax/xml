@@ -22,8 +22,6 @@ import org.xml.sax.SAXException;
  * A {@link SAXException} that signifies a validation exception.
  */
 public class ValidationException extends SAXException {
-  private static final long serialVersionUID = -5730844996681538725L;
-
   /**
    * Creates a new {@link ValidationException}.
    */

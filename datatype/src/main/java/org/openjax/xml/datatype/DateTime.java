@@ -24,8 +24,6 @@ import java.util.TimeZone;
  * https://www.w3.org/TR/xmlschema11-2/#dateTime
  */
 public class DateTime extends TemporalType {
-  private static final long serialVersionUID = 7756729079060501414L;
-
   public static String print(final DateTime dateTime) {
     return dateTime == null ? null : dateTime.toString();
   }

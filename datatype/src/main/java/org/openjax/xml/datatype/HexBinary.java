@@ -24,8 +24,6 @@ import java.util.Arrays;
  * http://www.w3.org/TR/xmlschema11-2/#hexBinary
  */
 public class HexBinary implements Serializable {
-  private static final long serialVersionUID = 3972638444033283159L;
-
   public static String print(final HexBinary hexBinary) {
     return hexBinary == null ? null : hexBinary.toString();
   }

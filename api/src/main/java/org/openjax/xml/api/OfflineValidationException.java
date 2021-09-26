@@ -23,8 +23,6 @@ import org.xml.sax.SAXException;
  * attempt to parse a remote document while offline.
  */
 public class OfflineValidationException extends ValidationException {
-  private static final long serialVersionUID = -6362835686505809259L;
-
   /**
    * Creates a new {@link OfflineValidationException}.
    */

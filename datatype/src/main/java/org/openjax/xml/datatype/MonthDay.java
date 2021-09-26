@@ -23,8 +23,6 @@ import java.util.TimeZone;
  * http://www.w3.org/TR/xmlschema11-2/#gMonthDay
  */
 public class MonthDay extends TemporalType {
-  private static final long serialVersionUID = 6702644782424414369L;
-
   public static String print(final MonthDay monthDay) {
     return monthDay == null ? null : monthDay.toString();
   }

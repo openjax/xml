@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class XmlElement implements Cloneable, Serializable {
-  private static final long serialVersionUID = 3766554839993594188L;
   private static final Pattern qName = Pattern.compile("^[a-zA-Z_][\\w.-]*(:[a-zA-Z_][\\w.-]*)?$");
 
   /**

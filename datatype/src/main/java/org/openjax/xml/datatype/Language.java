@@ -27,8 +27,6 @@ import java.util.regex.Pattern;
  * http://www.w3.org/TR/xmlschema11-2/#language
  */
 public class Language implements CharSequence, Serializable {
-  private static final long serialVersionUID = -3019968992019702549L;
-
   public static String print(final Language language) {
     return language == null ? null : language.toString();
   }

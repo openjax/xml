@@ -24,8 +24,6 @@ import java.util.TimeZone;
  * http://www.w3.org/TR/xmlschema11-2/#date
  */
 public class Date extends TemporalType {
-  private static final long serialVersionUID = -9016233681424543761L;
-
   public static String print(final Date date) {
     return date == null ? null : date.toString();
   }

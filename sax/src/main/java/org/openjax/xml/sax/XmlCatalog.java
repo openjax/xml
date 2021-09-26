@@ -37,8 +37,6 @@ import org.libj.lang.Assertions;
  * format</a>.
  */
 public class XmlCatalog extends XmlEntity {
-  private static final long serialVersionUID = -4854713465553698524L;
-
   private LinkedHashMap<String,XmlEntity> uriToEntity;
 
   /**

@@ -21,8 +21,6 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 public abstract class TemporalType implements Serializable {
-  private static final long serialVersionUID = 1142096964773369716L;
-
   protected final TimeZone timeZone;
 
   protected TemporalType(final TimeZone timeZone) {

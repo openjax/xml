@@ -23,8 +23,6 @@ import java.util.TimeZone;
  * http://www.w3.org/TR/xmlschema11-2/#gYear
  */
 public class Year extends TemporalType {
-  private static final long serialVersionUID = 1715357512840880045L;
-
   public static String print(final Year year) {
     return year == null ? null : year.toString();
   }

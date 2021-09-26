@@ -27,8 +27,6 @@ import org.libj.lang.Assertions;
  * {@link CachedInputSource} to an {@link URL}.
  */
 public class XmlEntity implements AutoCloseable, Serializable {
-  private static final long serialVersionUID = 259999207686667185L;
-
   protected final URL location;
   protected final CachedInputSource inputSource;
 

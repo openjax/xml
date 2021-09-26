@@ -32,8 +32,6 @@ import org.xml.sax.InputSource;
  * performance reading external XML entities.
  */
 public class CachedInputSource extends InputSource implements AutoCloseable, LSInput, Serializable {
-  private static final long serialVersionUID = 4371604845681155607L;
-
   private static final class CachedReader extends ReplayReader {
     private CachedReader(final Reader in) {
       super(in);

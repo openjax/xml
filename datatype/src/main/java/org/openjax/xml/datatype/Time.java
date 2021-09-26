@@ -23,8 +23,6 @@ import java.util.TimeZone;
  * http://www.w3.org/TR/xmlschema11-2/#time
  */
 public class Time extends TemporalType {
-  private static final long serialVersionUID = -9015566323752593968L;
-
   static Calendar newCalendar(final long time, final TimeZone timeZone) {
     if (timeZone == null)
       throw new IllegalArgumentException("timeZone == null");

@@ -17,8 +17,6 @@
 package org.apache.xerces.jaxp.datatype;
 
 public class Duration extends DurationImpl {
-  private static final long serialVersionUID = -2163911702795029072L;
-
   public static String print(final Duration duration) {
     return duration == null ? null : duration.toString();
   }

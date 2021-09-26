@@ -22,8 +22,6 @@ import java.util.TimeZone;
  * http://www.w3.org/TR/xmlschema11-2/#gMonth
  */
 public class Month extends TemporalType {
-  private static final long serialVersionUID = 9191134240521332696L;
-
   public static String print(final Month month) {
     return month == null ? null : month.toString();
   }
