@@ -20,7 +20,7 @@ package org.openjax.xml.api;
  * Utility functions for operations pertaining to XML character data.
  */
 public final class CharacterDatas {
-  static <T> T assertNotNull(final T obj, final String message) {
+  static <T>T assertNotNull(final T obj, final String message) {
     if (obj == null)
       throw new IllegalArgumentException(message);
 
@@ -98,10 +98,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code str} to be used in an XML attribute. The
-   * specified {@code quote} refers to the character to be used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The escaped characters are:
+   * Returns the XML-escaped {@code str} to be used in an XML attribute. The specified {@code quote} refers to the character to be
+   * used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -115,12 +113,10 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param str The string to escape.
-   * @param quote The quote character to be used to delimit the attribute's
-   *          value in the XML document (either {@code '"'} or {@code '\''}).
-   * @return A new {@link StringBuilder} with the escaped representation of
-   *         {@code str}.
-   * @throws IllegalArgumentException If {@code str} is null, or if
-   *           {@code quote} is not {@code '"'} or {@code '\''}.
+   * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
+   * @return A new {@link StringBuilder} with the escaped representation of {@code str}.
+   * @throws IllegalArgumentException If {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final CharSequence str, final char quote) {
     assertNotNull(str, "str is null");
@@ -129,10 +125,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code str} to be used in an XML attribute. The
-   * specified {@code quote} refers to the character to be used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The escaped characters are:
+   * Returns the XML-escaped {@code str} to be used in an XML attribute. The specified {@code quote} refers to the character to be
+   * used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -145,15 +139,12 @@ public final class CharacterDatas {
    *   "  | &quot;}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the escaped contents of
-   *          {@code str} are to be appended.
+   * @param out The {@link StringBuilder} to which the escaped contents of {@code str} are to be appended.
    * @param str The string to escape.
-   * @param quote The quote character to be used to delimit the attribute's
-   *          value in the XML document (either {@code '"'} or {@code '\''}).
-   * @return The provided {@link StringBuilder} with the escaped representation
-   *         of {@code str}.
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or
-   *           if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
+   * @return The provided {@link StringBuilder} with the escaped representation of {@code str}.
+   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final StringBuilder out, final CharSequence str, final char quote) {
     assertNotNull(out, "out is null");
@@ -163,10 +154,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code chars} to be used in an XML attribute. The
-   * specified {@code quote} refers to the character to be used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The escaped characters are:
+   * Returns the XML-escaped {@code chars} to be used in an XML attribute. The specified {@code quote} refers to the character to be
+   * used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -180,12 +169,10 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param chars The {@code char[]} to escape.
-   * @param quote The quote character to be used to delimit the attribute's
-   *          value in the XML document (either {@code '"'} or {@code '\''}).
-   * @return A new {@link StringBuilder} with the escaped representation of
-   *         {@code chars}.
-   * @throws IllegalArgumentException If {@code chars} is null, or if
-   *           {@code quote} is not {@code '"'} or {@code '\''}.
+   * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
+   * @return A new {@link StringBuilder} with the escaped representation of {@code chars}.
+   * @throws IllegalArgumentException If {@code chars} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final char[] chars, final char quote) {
     assertNotNull(chars, "chars is null");
@@ -194,10 +181,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code chars} to be used in an XML attribute. The
-   * specified {@code quote} refers to the character to be used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The escaped characters are:
+   * Returns the XML-escaped {@code chars} to be used in an XML attribute. The specified {@code quote} refers to the character to be
+   * used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -210,15 +195,13 @@ public final class CharacterDatas {
    *   "  | &quot;}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the escaped contents of
-   *          {@code chars} are to be appended.
+   * @param out The {@link StringBuilder} to which the escaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to escape.
-   * @param quote The quote character to be used to delimit the attribute's
-   *          value in the XML document (either {@code '"'} or {@code '\''}).
-   * @return The provided {@link StringBuilder} with the escaped representation
-   *         of {@code chars}.
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null,
-   *           or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
+   * @return The provided {@link StringBuilder} with the escaped representation of {@code chars}.
+   * @throws IllegalArgumentException If {@code out} or {@code chars} is null, or if {@code quote} is not {@code '"'} or
+   *           {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final StringBuilder out, final char[] chars, final char quote) {
     assertNotNull(out, "out is null");
@@ -228,10 +211,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code str} to be used in an XML attribute. The
-   * specified {@code quote} refers to the character to be used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The escaped characters are:
+   * Returns the XML-escaped {@code str} to be used in an XML attribute. The specified {@code quote} refers to the character to be
+   * used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -245,17 +226,14 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param str The string to escape.
-   * @param quote The quote character to be used to delimit the attribute's
-   *          value in the XML document (either {@code '"'} or {@code '\''}).
+   * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
    * @param off Start index from which to escape characters.
    * @param len Number of characters to escape.
-   * @return A new {@link StringBuilder} with the escaped representation of
-   *         {@code str}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return A new {@link StringBuilder} with the escaped representation of {@code str}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code str} is null, or if
-   *           {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws IllegalArgumentException If {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final CharSequence str, final char quote, final int off, final int len) {
     assertRange(off, len, str);
@@ -264,10 +242,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code str} to be used in an XML attribute. The
-   * specified {@code quote} refers to the character to be used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The escaped characters are:
+   * Returns the XML-escaped {@code str} to be used in an XML attribute. The specified {@code quote} refers to the character to be
+   * used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -280,20 +256,16 @@ public final class CharacterDatas {
    *   "  | &quot;}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the escaped contents of
-   *          {@code str} are to be appended.
+   * @param out The {@link StringBuilder} to which the escaped contents of {@code str} are to be appended.
    * @param str The string to escape.
-   * @param quote The quote character to be used to delimit the attribute's
-   *          value in the XML document (either {@code '"'} or {@code '\''}).
+   * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
    * @param off Start index from which to escape characters.
    * @param len Number of characters to escape.
-   * @return The provided {@link StringBuilder} with the escaped representation
-   *         of {@code str}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return The provided {@link StringBuilder} with the escaped representation of {@code str}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or
-   *           if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final StringBuilder out, final CharSequence str, final char quote, final int off, final int len) {
     assertNotNull(out, "out is null");
@@ -303,10 +275,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code chars} to be used in an XML attribute. The
-   * specified {@code quote} refers to the character to be used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The escaped characters are:
+   * Returns the XML-escaped {@code chars} to be used in an XML attribute. The specified {@code quote} refers to the character to be
+   * used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -320,17 +290,14 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param chars The {@code char[]} to escape.
-   * @param quote The quote character to be used to delimit the attribute's
-   *          value in the XML document (either {@code '"'} or {@code '\''}).
+   * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
    * @param off Start index from which to escape characters.
    * @param len Number of characters to escape.
-   * @return A new {@link StringBuilder} with the escaped representation of
-   *         {@code chars}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return A new {@link StringBuilder} with the escaped representation of {@code chars}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code chars} is null, or if
-   *           {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws IllegalArgumentException If {@code chars} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final char[] chars, final char quote, final int off, final int len) {
     assertRange(off, len, chars);
@@ -339,10 +306,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code chars} to be used in an XML attribute. The
-   * specified {@code quote} refers to the character to be used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The escaped characters are:
+   * Returns the XML-escaped {@code chars} to be used in an XML attribute. The specified {@code quote} refers to the character to be
+   * used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -355,20 +320,17 @@ public final class CharacterDatas {
    *   "  | &quot;}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the escaped contents of
-   *          {@code chars} are to be appended.
+   * @param out The {@link StringBuilder} to which the escaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to escape.
-   * @param quote The quote character to be used to delimit the attribute's
-   *          value in the XML document (either {@code '"'} or {@code '\''}).
+   * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
    * @param off Start index from which to escape characters.
    * @param len Number of characters to escape.
-   * @return The provided {@link StringBuilder} with the escaped representation
-   *         of {@code chars}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return The provided {@link StringBuilder} with the escaped representation of {@code chars}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null,
-   *           or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws IllegalArgumentException If {@code out} or {@code chars} is null, or if {@code quote} is not {@code '"'} or
+   *           {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final StringBuilder out, final char[] chars, final char quote, final int off, final int len) {
     assertNotNull(out, "out is null");
@@ -378,8 +340,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code str} to be used in an XML element. The
-   * escaped characters are:
+   * Returns the XML-escaped {@code str} to be used in an XML element. The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -390,8 +351,7 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param str The string to escape.
-   * @return A new {@link StringBuilder} with the escaped representation of
-   *         {@code str}.
+   * @return A new {@link StringBuilder} with the escaped representation of {@code str}.
    * @throws IllegalArgumentException If {@code str} is null.
    */
   public static StringBuilder escapeForElem(final CharSequence str) {
@@ -400,8 +360,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code str} to be used in an XML element. The
-   * escaped characters are:
+   * Returns the XML-escaped {@code str} to be used in an XML element. The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -411,11 +370,9 @@ public final class CharacterDatas {
    *   <  | &lt;}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the escaped contents of
-   *          {@code str} are to be appended.
+   * @param out The {@link StringBuilder} to which the escaped contents of {@code str} are to be appended.
    * @param str The string to escape.
-   * @return The provided {@link StringBuilder} with the escaped representation
-   *         of {@code str}.
+   * @return The provided {@link StringBuilder} with the escaped representation of {@code str}.
    * @throws IllegalArgumentException If {@code out} or {@code str} is null.
    */
   public static StringBuilder escapeForElem(final StringBuilder out, final CharSequence str) {
@@ -425,8 +382,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code chars} to be used in an XML element. The
-   * escaped characters are:
+   * Returns the XML-escaped {@code chars} to be used in an XML element. The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -437,8 +393,7 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param chars The {@code char[]} to escape.
-   * @return A new {@link StringBuilder} with the escaped representation of
-   *         {@code chars}.
+   * @return A new {@link StringBuilder} with the escaped representation of {@code chars}.
    * @throws IllegalArgumentException If {@code chars} is null.
    */
   public static StringBuilder escapeForElem(final char[] chars) {
@@ -447,8 +402,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code chars} to be used in an XML element. The
-   * escaped characters are:
+   * Returns the XML-escaped {@code chars} to be used in an XML element. The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -458,11 +412,9 @@ public final class CharacterDatas {
    *   <  | &lt;}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the escaped contents of
-   *          {@code chars} are to be appended.
+   * @param out The {@link StringBuilder} to which the escaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to escape.
-   * @return The provided {@link StringBuilder} with the escaped representation
-   *         of {@code chars}.
+   * @return The provided {@link StringBuilder} with the escaped representation of {@code chars}.
    * @throws IllegalArgumentException If {@code out} or {@code chars} is null.
    */
   public static StringBuilder escapeForElem(final StringBuilder out, final char[] chars) {
@@ -472,8 +424,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code str} to be used in an XML element. The
-   * escaped characters are:
+   * Returns the XML-escaped {@code str} to be used in an XML element. The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -486,10 +437,8 @@ public final class CharacterDatas {
    * @param str The string to escape.
    * @param off Start index from which to escape characters.
    * @param len Number of characters to escape.
-   * @return A new {@link StringBuilder} with the escaped representation of
-   *         {@code str}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return A new {@link StringBuilder} with the escaped representation of {@code str}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
    * @throws IllegalArgumentException If {@code str} is null.
    */
@@ -499,8 +448,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code str} to be used in an XML element. The
-   * escaped characters are:
+   * Returns the XML-escaped {@code str} to be used in an XML element. The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -510,15 +458,12 @@ public final class CharacterDatas {
    *   <  | &lt;}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the escaped contents of
-   *          {@code str} are to be appended.
+   * @param out The {@link StringBuilder} to which the escaped contents of {@code str} are to be appended.
    * @param str The string to escape.
    * @param off Start index from which to escape characters.
    * @param len Number of characters to escape.
-   * @return The provided {@link StringBuilder} with the escaped representation
-   *         of {@code str}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return The provided {@link StringBuilder} with the escaped representation of {@code str}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
    * @throws IllegalArgumentException If {@code out} or {@code str} is null.
    */
@@ -529,8 +474,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code chars} to be used in an XML element. The
-   * escaped characters are:
+   * Returns the XML-escaped {@code chars} to be used in an XML element. The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -543,10 +487,8 @@ public final class CharacterDatas {
    * @param chars The {@code char[]} to escape.
    * @param off Start index from which to escape characters.
    * @param len Number of characters to escape.
-   * @return A new {@link StringBuilder} with the escaped representation of
-   *         {@code chars}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return A new {@link StringBuilder} with the escaped representation of {@code chars}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
    * @throws IllegalArgumentException If {@code chars} is null.
    */
@@ -556,8 +498,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-escaped {@code chars} to be used in an XML element. The
-   * escaped characters are:
+   * Returns the XML-escaped {@code chars} to be used in an XML element. The escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -567,15 +508,12 @@ public final class CharacterDatas {
    *   <  | &lt;}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the escaped contents of
-   *          {@code chars} are to be appended.
+   * @param out The {@link StringBuilder} to which the escaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to escape.
    * @param off Start index from which to escape characters.
    * @param len Number of characters to escape.
-   * @return The provided {@link StringBuilder} with the escaped representation
-   *         of {@code chars}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return The provided {@link StringBuilder} with the escaped representation of {@code chars}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
    * @throws IllegalArgumentException If {@code out} or {@code chars} is null.
    */
@@ -759,10 +697,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code str} as from an XML attribute. The
-   * specified {@code quote} refers to the character used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The unescaped characters are:
+   * Returns the XML-unescaped {@code str} as from an XML attribute. The specified {@code quote} refers to the character used to
+   * delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -776,12 +712,10 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param str The string to unescape.
-   * @param quote The quote character used to delimit the attribute's value in
-   *          the XML document (either {@code '"'} or {@code '\''}).
-   * @return A new {@link StringBuilder} with the unescaped representation of
-   *         {@code str}.
-   * @throws IllegalArgumentException If {@code str} is null, or if
-   *           {@code quote} is not {@code '"'} or {@code '\''}.
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
+   * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
+   * @throws IllegalArgumentException If {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final CharSequence str, final char quote) {
     assertNotNull(str, "str is null");
@@ -790,10 +724,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code str} as from an XML attribute. The
-   * specified {@code quote} refers to the character used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The unescaped characters are:
+   * Returns the XML-unescaped {@code str} as from an XML attribute. The specified {@code quote} refers to the character used to
+   * delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -806,15 +738,12 @@ public final class CharacterDatas {
    * &quot; | "}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the unescaped contents of
-   *          {@code str} are to be appended.
+   * @param out The {@link StringBuilder} to which the unescaped contents of {@code str} are to be appended.
    * @param str The string to unescape.
-   * @param quote The quote character used to delimit the attribute's value in
-   *          the XML document (either {@code '"'} or {@code '\''}).
-   * @return The provided {@link StringBuilder} with the unescaped
-   *         representation of {@code str}.
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or
-   *           if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
+   * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
+   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final StringBuilder out, final CharSequence str, final char quote) {
     assertNotNull(out, "out is null");
@@ -824,10 +753,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code chars} as from an XML attribute. The
-   * specified {@code quote} refers to the character used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The unescaped characters are:
+   * Returns the XML-unescaped {@code chars} as from an XML attribute. The specified {@code quote} refers to the character used to
+   * delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -841,12 +768,10 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param chars The {@code char[]} to unescape.
-   * @param quote The quote character used to delimit the attribute's value in
-   *          the XML document (either {@code '"'} or {@code '\''}).
-   * @return A new {@link StringBuilder} with the unescaped representation of
-   *         {@code chars}.
-   * @throws IllegalArgumentException If {@code chars} is null, or if
-   *           {@code quote} is not {@code '"'} or {@code '\''}.
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
+   * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
+   * @throws IllegalArgumentException If {@code chars} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final char[] chars, final char quote) {
     assertNotNull(chars, "chars is null");
@@ -855,10 +780,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code chars} as from an XML attribute. The
-   * specified {@code quote} refers to the character used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The unescaped characters are:
+   * Returns the XML-unescaped {@code chars} as from an XML attribute. The specified {@code quote} refers to the character used to
+   * delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -871,15 +794,13 @@ public final class CharacterDatas {
    * &quot; | "}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the unescaped contents of
-   *          {@code chars} are to be appended.
+   * @param out The {@link StringBuilder} to which the unescaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to unescape.
-   * @param quote The quote character used to delimit the attribute's value in
-   *          the XML document (either {@code '"'} or {@code '\''}).
-   * @return The provided {@link StringBuilder} with the unescaped
-   *         representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null,
-   *           or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
+   * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
+   * @throws IllegalArgumentException If {@code out} or {@code chars} is null, or if {@code quote} is not {@code '"'} or
+   *           {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final StringBuilder out, final char[] chars, final char quote) {
     assertNotNull(out, "out is null");
@@ -889,10 +810,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code str} as from an XML attribute. The
-   * specified {@code quote} refers to the character used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The unescaped characters are:
+   * Returns the XML-unescaped {@code str} as from an XML attribute. The specified {@code quote} refers to the character used to
+   * delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -906,17 +825,14 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param str The string to unescape.
-   * @param quote The quote character used to delimit the attribute's value in
-   *          the XML document (either {@code '"'} or {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
-   * @return A new {@link StringBuilder} with the unescaped representation of
-   *         {@code str}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code str} is null, or if
-   *           {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws IllegalArgumentException If {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final CharSequence str, final char quote, final int off, final int len) {
     assertRange(off, len, str);
@@ -924,10 +840,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code str} as from an XML attribute. The
-   * specified {@code quote} refers to the character used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The unescaped characters are:
+   * Returns the XML-unescaped {@code str} as from an XML attribute. The specified {@code quote} refers to the character used to
+   * delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -940,20 +854,16 @@ public final class CharacterDatas {
    * &quot; | "}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the unescaped contents of
-   *          {@code str} are to be appended.
+   * @param out The {@link StringBuilder} to which the unescaped contents of {@code str} are to be appended.
    * @param str The string to unescape.
-   * @param quote The quote character used to delimit the attribute's value in
-   *          the XML document (either {@code '"'} or {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
-   * @return The provided {@link StringBuilder} with the unescaped
-   *         representation of {@code str}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or
-   *           if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final StringBuilder out, final CharSequence str, final char quote, final int off, final int len) {
     assertNotNull(out, "out is null");
@@ -963,10 +873,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code chars} as from an XML attribute. The
-   * specified {@code quote} refers to the character used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The unescaped characters are:
+   * Returns the XML-unescaped {@code chars} as from an XML attribute. The specified {@code quote} refers to the character used to
+   * delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -980,17 +888,14 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param chars The {@code char[]} to unescape.
-   * @param quote The quote character used to delimit the attribute's value in
-   *          the XML document (either {@code '"'} or {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
-   * @return A new {@link StringBuilder} with the unescaped representation of
-   *         {@code chars}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code chars} is null, or if
-   *           {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws IllegalArgumentException If {@code chars} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final char[] chars, final char quote, final int off, final int len) {
     assertRange(off, len, chars);
@@ -999,10 +904,8 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code chars} as from an XML attribute. The
-   * specified {@code quote} refers to the character used to delimit the
-   * attribute's value in the XML document (either {@code '"'} or {@code '\''}).
-   * The unescaped characters are:
+   * Returns the XML-unescaped {@code chars} as from an XML attribute. The specified {@code quote} refers to the character used to
+   * delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}). The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1015,20 +918,17 @@ public final class CharacterDatas {
    * &quot; | "}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the unescaped contents of
-   *          {@code chars} are to be appended.
+   * @param out The {@link StringBuilder} to which the unescaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to unescape.
-   * @param quote The quote character used to delimit the attribute's value in
-   *          the XML document (either {@code '"'} or {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
+   *          {@code '\''}).
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
-   * @return The provided {@link StringBuilder} with the unescaped
-   *         representation of {@code chars}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null,
-   *           or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws IllegalArgumentException If {@code out} or {@code chars} is null, or if {@code quote} is not {@code '"'} or
+   *           {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final StringBuilder out, final char[] chars, final char quote, final int off, final int len) {
     assertNotNull(out, "out is null");
@@ -1038,8 +938,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code str} as from an XML element. The unescaped
-   * characters are:
+   * Returns the XML-unescaped {@code str} as from an XML element. The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1050,8 +949,7 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param str The string to unescape.
-   * @return A new {@link StringBuilder} with the unescaped representation of
-   *         {@code str}.
+   * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
    * @throws IllegalArgumentException If {@code str} is null.
    */
   public static StringBuilder unescapeFromElem(final CharSequence str) {
@@ -1060,8 +958,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code str} as from an XML element. The unescaped
-   * characters are:
+   * Returns the XML-unescaped {@code str} as from an XML element. The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1071,11 +968,9 @@ public final class CharacterDatas {
    * &lt;   | <}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the unescaped contents of
-   *          {@code str} are to be appended.
+   * @param out The {@link StringBuilder} to which the unescaped contents of {@code str} are to be appended.
    * @param str The string to unescape.
-   * @return The provided {@link StringBuilder} with the unescaped
-   *         representation of {@code str}.
+   * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
    * @throws IllegalArgumentException If {@code out} or {@code str} is null.
    */
   public static StringBuilder unescapeFromElem(final StringBuilder out, final CharSequence str) {
@@ -1085,8 +980,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code chars} as from an XML element. The
-   * unescaped characters are:
+   * Returns the XML-unescaped {@code chars} as from an XML element. The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1097,8 +991,7 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param chars The {@code char[]} to unescape.
-   * @return A new {@link StringBuilder} with the unescaped representation of
-   *         {@code chars}.
+   * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
    * @throws IllegalArgumentException If {@code chars} is null.
    */
   public static StringBuilder unescapeFromElem(final char[] chars) {
@@ -1107,8 +1000,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code chars} as from an XML element. The
-   * unescaped characters are:
+   * Returns the XML-unescaped {@code chars} as from an XML element. The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1118,11 +1010,9 @@ public final class CharacterDatas {
    * &lt;   | <}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the unescaped contents of
-   *          {@code chars} are to be appended.
+   * @param out The {@link StringBuilder} to which the unescaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to unescape.
-   * @return The provided {@link StringBuilder} with the unescaped
-   *         representation of {@code chars}.
+   * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
    * @throws IllegalArgumentException If {@code out} or {@code chars} is null.
    */
   public static StringBuilder unescapeFromElem(final StringBuilder out, final char[] chars) {
@@ -1132,8 +1022,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code str} as from an XML element. The unescaped
-   * characters are:
+   * Returns the XML-unescaped {@code str} as from an XML element. The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1146,10 +1035,8 @@ public final class CharacterDatas {
    * @param str The string to unescape.
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
-   * @return A new {@link StringBuilder} with the unescaped representation of
-   *         {@code str}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
    * @throws IllegalArgumentException If {@code str} is null.
    */
@@ -1159,8 +1046,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code str} as from an XML element. The unescaped
-   * characters are:
+   * Returns the XML-unescaped {@code str} as from an XML element. The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1170,15 +1056,12 @@ public final class CharacterDatas {
    * &lt;   | <}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the unescaped contents of
-   *          {@code str} are to be appended.
+   * @param out The {@link StringBuilder} to which the unescaped contents of {@code str} are to be appended.
    * @param str The string to unescape.
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
-   * @return The provided {@link StringBuilder} with the unescaped
-   *         representation of {@code str}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
    * @throws IllegalArgumentException If {@code out} or {@code str} is null.
    */
@@ -1189,8 +1072,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code chars} as from an XML element. The
-   * unescaped characters are:
+   * Returns the XML-unescaped {@code chars} as from an XML element. The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1203,10 +1085,8 @@ public final class CharacterDatas {
    * @param chars The {@code char[]} to unescape.
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
-   * @return A new {@link StringBuilder} with the unescaped representation of
-   *         {@code chars}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
    * @throws IllegalArgumentException If {@code chars} is null.
    */
@@ -1216,8 +1096,7 @@ public final class CharacterDatas {
   }
 
   /**
-   * Returns the XML-unescaped {@code chars} as from an XML element. The
-   * unescaped characters are:
+   * Returns the XML-unescaped {@code chars} as from an XML element. The unescaped characters are:
    *
    * <pre>
    * {@code From   | To
@@ -1227,15 +1106,12 @@ public final class CharacterDatas {
    * &lt;   | <}
    * </pre>
    *
-   * @param out The {@link StringBuilder} to which the unescaped contents of
-   *          {@code chars} are to be appended.
+   * @param out The {@link StringBuilder} to which the unescaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to unescape.
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
-   * @return The provided {@link StringBuilder} with the unescaped
-   *         representation of {@code chars}.
-   * @throws IndexOutOfBoundsException For range parameters that are
-   *           out-of-bounds ({@code off < 0 || len < 0 ||
+   * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
+   * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
    * @throws IllegalArgumentException If {@code out} or {@code chars} is null.
    */
