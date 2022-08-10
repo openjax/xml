@@ -42,7 +42,7 @@ public class ValidatorMojo extends XmlMojo {
     recordDir.mkdirs();
 
     try {
-      for (final URI uri : uris) {
+      for (final URI uri : uris) { // [S]
         final File recordFile = new File(recordDir, URIs.getName(uri));
         final String filePath = URIs.isLocalFile(uri) ? CWD.relativize(new File(uri).getAbsoluteFile().toPath()).toString() : uri.toString();
         long lastModified = -1;
@@ -61,7 +61,7 @@ public class ValidatorMojo extends XmlMojo {
             final String message = e instanceof FileNotFoundException ? e.getClass().getSimpleName() + e.getMessage() : e.getMessage();
             final StringBuilder builder = new StringBuilder("\nURL: ").append(uri.toString());
             builder.append("\nReason: ").append(message).append('\n');
-            for (final Throwable t : e.getSuppressed())
+            for (final Throwable t : e.getSuppressed()) // [A]
               builder.append("        ").append(t.getMessage()).append('\n');
 
             final MojoFailureException exception = new MojoFailureException("Failed to validate xml.", "", builder.toString());

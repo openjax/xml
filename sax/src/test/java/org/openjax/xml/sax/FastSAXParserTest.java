@@ -142,7 +142,7 @@ public class FastSAXParserTest {
 
   private static void assertEvent(final Iterator<Event> iterator, final Reader in, final Type type, final int ... indices) throws IOException {
     final String[] fields = new String[indices.length];
-    for (int i = 0; i < indices.length; ++i) {
+    for (int i = 0; i < indices.length; ++i) { // [A]
       assertTrue(String.valueOf(indices[i]), indices[i] > -1);
       fields[i] = read(in, indices[i]);
     }
@@ -151,7 +151,7 @@ public class FastSAXParserTest {
     final Event event = iterator.next();
     assertEquals(event.toString(), event.type, type);
     assertEquals(event.fields.length, indices.length);
-    for (int i = 0; i < indices.length; ++i)
+    for (int i = 0; i < indices.length; ++i) // [A]
       assertEquals(event.fields[i], fields[i]);
   }
 

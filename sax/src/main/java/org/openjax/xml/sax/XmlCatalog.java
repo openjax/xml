@@ -27,26 +27,22 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * The {@link XmlCatalog} class represents a catalog for XML entities as defined
- * by <a href=
- * "https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html">
- * XML Catalogs, OASIS Standard V1.1, 7 October 2005</a>.
+ * The {@link XmlCatalog} class represents a catalog for XML entities as defined by
+ * <a href= "https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html"> XML Catalogs, OASIS Standard V1.1, 7
+ * October 2005</a>.
  * <p>
- * The {@link XmlCatalog} contains identifier-to-location mappings, and can be
- * presented in <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
- * format</a>.
+ * The {@link XmlCatalog} contains identifier-to-location mappings, and can be presented in
+ * <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401 format</a>.
  */
 public class XmlCatalog extends XmlEntity {
   private LinkedHashMap<String,XmlEntity> uriToEntity;
 
   /**
-   * Creates a new {@link XmlCatalog} with the specified {@link URL} and
-   * {@link CachedInputSource}.
+   * Creates a new {@link XmlCatalog} with the specified {@link URL} and {@link CachedInputSource}.
    *
    * @param location The {@link URL}.
    * @param inputSource The {@link CachedInputSource}.
-   * @throws IllegalArgumentException If the specified {@link URL} or
-   *           {@link CachedInputSource} is null.
+   * @throws IllegalArgumentException If the specified {@link URL} or {@link CachedInputSource} is null.
    */
   public XmlCatalog(final URL location, final CachedInputSource inputSource) {
     super(location, assertNotNull(inputSource));
@@ -61,8 +57,7 @@ public class XmlCatalog extends XmlEntity {
    *
    * @param uri The URI key.
    * @param entity The schema location value.
-   * @return The previous value associated with key, or {@code null} if there
-   *         was no mapping for key.
+   * @return The previous value associated with key, or {@code null} if there was no mapping for key.
    * @throws IllegalArgumentException If the specified {@link XmlEntity} is null.
    */
   public XmlEntity putEntity(final String uri, final XmlEntity entity) {
@@ -87,7 +82,7 @@ public class XmlCatalog extends XmlEntity {
     if (entity != null)
       return entity;
 
-    for (final XmlEntity catalog : uriToEntity.values()) {
+    for (final XmlEntity catalog : uriToEntity.values()) { // [C]
       if (catalog instanceof XmlCatalog && catalog != this) {
         entity = ((XmlCatalog)catalog).getEntity(uri);
         if (entity != null)
@@ -108,11 +103,10 @@ public class XmlCatalog extends XmlEntity {
   }
 
   /**
-   * Returns a string representation of this {@link XmlCatalog} in
-   * <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401 format</a>.
+   * Returns a string representation of this {@link XmlCatalog} in <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
+   * format</a>.
    *
-   * @return A string representation of this {@link XmlCatalog} in
-   *         <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
+   * @return A string representation of this {@link XmlCatalog} in <a href="https://www.oasis-open.org/specs/tr9401.html">TR9401
    *         format</a>.
    */
   public String toTR9401() {
@@ -126,7 +120,7 @@ public class XmlCatalog extends XmlEntity {
     if (uriToEntity == null)
       return;
 
-    for (final Map.Entry<String,XmlEntity> entry : uriToEntity.entrySet()) {
+    for (final Map.Entry<String,XmlEntity> entry : uriToEntity.entrySet()) { // [S]
       if (uris.contains(entry.getKey()))
         continue;
 
@@ -146,8 +140,8 @@ public class XmlCatalog extends XmlEntity {
   }
 
   /**
-   * Closes this {@link XmlCatalog}. This method calls {@link XmlEntity#close()}
-   * on each {@link XmlEntity} instance referenced in this {@link XmlCatalog}.
+   * Closes this {@link XmlCatalog}. This method calls {@link XmlEntity#close()} on each {@link XmlEntity} instance referenced in
+   * this {@link XmlCatalog}.
    *
    * @throws IOException If an I/O error has occurred.
    */
@@ -155,7 +149,7 @@ public class XmlCatalog extends XmlEntity {
   public void close() throws IOException {
     super.close();
     if (uriToEntity != null)
-      for (final XmlEntity entity : uriToEntity.values())
+      for (final XmlEntity entity : uriToEntity.values()) // [C]
         if (entity != this)
           entity.close();
   }

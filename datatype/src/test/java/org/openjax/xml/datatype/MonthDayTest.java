@@ -151,8 +151,8 @@ public class MonthDayTest {
     catch (final IllegalArgumentException e) {
     }
 
-    final String[] monthDays = new String[] {"--12-31Z", "--04-30Z", "--03-31Z", "--02-29Z", "--01-31Z", "--01-12Z", "--07-02+01:00", "--09-12-01:00", "--10-11Z", "--11-15+12:00", "--12-17-12:30"};
-    for (final String monthDay : monthDays)
+    final String[] monthDays = {"--12-31Z", "--04-30Z", "--03-31Z", "--02-29Z", "--01-31Z", "--01-12Z", "--07-02+01:00", "--09-12-01:00", "--10-11Z", "--11-15+12:00", "--12-17-12:30"};
+    for (final String monthDay : monthDays) // [A]
       assertEquals(monthDay, MonthDay.parse(monthDay).toString());
   }
 }

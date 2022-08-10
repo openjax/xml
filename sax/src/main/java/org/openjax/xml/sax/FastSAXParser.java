@@ -25,8 +25,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Fast SAX parser for XML data.
  * <p>
- * This parser performs as few operations as necessary to parse well-formed XML
- * documents.
+ * This parser performs as few operations as necessary to parse well-formed XML documents.
  *
  * @implNote This parser does not perform any validation.
  * @see FasterSAXHandler
@@ -39,18 +38,14 @@ public final class FastSAXParser {
   }
 
   /**
-   * Parse the data provided by the input stream, and handle parse events with
-   * the specified {@link FasterSAXHandler}.
+   * Parse the data provided by the input stream, and handle parse events with the specified {@link FasterSAXHandler}.
    *
    * @implNote The provided input stream must support {@link Reader#mark(int)}.
    * @param in The {@link Reader} input stream.
    * @param handler The {@link FasterSAXHandler}.
-   * @throws IOException If the input stream does not support
-   *           {@link Reader#mark(int)}, or if some other I/O error has
-   *           occurred.
+   * @throws IOException If the input stream does not support {@link Reader#mark(int)}, or if some other I/O error has occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
-   * @throws IllegalArgumentException If the specified {@link Reader} or
-   *           {@link FasterSAXHandler} is null.
+   * @throws IllegalArgumentException If the specified {@link Reader} or {@link FasterSAXHandler} is null.
    * @see java.io.BufferedInputStream
    * @see org.libj.io.ReplayReader
    */
@@ -70,7 +65,7 @@ public final class FastSAXParser {
     handler.startDocument();
     int row = 1;
     int col = 1;
-    for (int ch0, ch1 = '\0', ch2 = '\0', i = 0; (ch0 = in.read()) != -1; ++i, ++col) {
+    for (int ch0, ch1 = '\0', ch2 = '\0', i = 0; (ch0 = in.read()) != -1; ++i, ++col) { // [X]
       if (ch0 == '\n' || ch0 == '\r' && ch1 != '\n') {
         col = 1;
         ++row;

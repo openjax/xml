@@ -28,17 +28,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Utility functions for operations pertaining to classes in the
- * {@code org.w3c.dom} package.
+ * Utility functions for operations pertaining to classes in the {@code org.w3c.dom} package.
  */
 public final class DOMs {
   /**
-   * Returns a string representation of a {@link Node}, or an empty string if
-   * {@code node} is null. This method handles all child nodes recursively.
+   * Returns a string representation of a {@link Node}, or an empty string if {@code node} is null. This method handles all child
+   * nodes recursively.
    *
-   * @implNote Only elements, attributes and text nodes and considered. Other
-   *           facets like processing instructions, comments and CDATA are not
-   *           considered.
+   * @implNote Only elements, attributes and text nodes and considered. Other facets like processing instructions, comments and
+   *           CDATA are not considered.
    * @param node The {@link Node} to convert.
    * @param styles An array of {@link DOMStyle} style preferences.
    * @return A string representation of a {@link Node}.
@@ -48,12 +46,11 @@ public final class DOMs {
   }
 
   /**
-   * Returns a string representation of a {@link Node}, or an empty string if
-   * {@code node} is null. This method handles all child nodes recursively.
+   * Returns a string representation of a {@link Node}, or an empty string if {@code node} is null. This method handles all child
+   * nodes recursively.
    *
-   * @implNote Only elements, attributes and text nodes and considered. Other
-   *           facets like processing instructions, comments and CDATA are not
-   *           considered.
+   * @implNote Only elements, attributes and text nodes and considered. Other facets like processing instructions, comments and
+   *           CDATA are not considered.
    * @param node The {@link Node} to convert.
    * @param namespaceToPrefix Map of namespace-to-prefix assignments.
    * @param schemaLocations Map of namespace-to-schemaLocation assignments.
@@ -70,7 +67,7 @@ public final class DOMs {
       return builder.toString();
 
     final StringBuilder locations = new StringBuilder();
-    for (final String namespace : namespaces) {
+    for (final String namespace : namespaces) { // [S]
       final String location = schemaLocations.get(namespace);
       if (location != null)
         locations.append(namespace).append(' ').append(location);
@@ -119,7 +116,7 @@ public final class DOMs {
     if (type == Node.ELEMENT_NODE) {
       if (DOMStyle.isIndent(styles) && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
         builder.append('\n');
-        for (int i = 0; i < depth; ++i)
+        for (int i = 0; i < depth; ++i) // [N]
           builder.append("  ");
       }
 
@@ -129,12 +126,12 @@ public final class DOMs {
       if (node.hasChildNodes()) {
         builder.append('>');
         final NodeList nodeList = node.getChildNodes();
-        for (int i = 0, len = nodeList.getLength(); i < len; ++i)
+        for (int i = 0, len = nodeList.getLength(); i < len; ++i) // [N]
           domToString(builder, namespaces, namespaceToPrefix, nodeList.item(i), depth + 1, styles);
 
         if (DOMStyle.isIndent(styles) && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
           builder.append('\n');
-          for (int i = 0; i < depth; ++i)
+          for (int i = 0; i < depth; ++i) // [N]
             builder.append("  ");
         }
 
@@ -158,7 +155,7 @@ public final class DOMs {
   private static StringBuilder attributeToString(final StringBuilder builder, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Attr attribute, final int depth, final DOMStyle[] styles) {
     if (DOMStyle.isIndentAttributes(styles)) {
       builder.append('\n');
-      for (int i = 0; i < depth; ++i)
+      for (int i = 0; i < depth; ++i) // [N]
         builder.append("  ");
     }
     else {
@@ -219,7 +216,7 @@ public final class DOMs {
     if (attributes == null)
       return builder;
 
-    for (int i = 0, len = attributes.getLength(); i < len; ++i) {
+    for (int i = 0, i$ = attributes.getLength(); i < i$; ++i) { // [RA]
       final Attr attribute = (Attr)attributes.item(i);
       if (!DOMStyle.isOmitNamespaces(styles) || !attribute.getNodeName().startsWith("xmlns"))
         attributeToString(builder, namespaces, namespaceToPrefix, attribute, depth, styles);
@@ -229,8 +226,8 @@ public final class DOMs {
   }
 
   /**
-   * Append the specified {@code text} string to {@code builder}, ensuring
-   * characters are properly escaped. The escaped characters are:
+   * Append the specified {@code text} string to {@code builder}, ensuring characters are properly escaped. The escaped characters
+   * are:
    *
    * <pre>
    * {@code From |  To
@@ -242,17 +239,15 @@ public final class DOMs {
    *   <  | &lt;}
    * </pre>
    *
-   * Note: This method removes any leading and trailing whitespace from
-   * {@code text}.
+   * Note: This method removes any leading and trailing whitespace from {@code text}.
    *
    * @param builder The {@link StringBuilder} to which to append.
    * @param text The text string to append.
-   * @throws IllegalArgumentException If {@code builder} or {@code text} is
-   *           null.
+   * @throws IllegalArgumentException If {@code builder} or {@code text} is null.
    */
   private static void appendText(final StringBuilder builder, String text) {
     text = text.trim();
-    for (int i = 0; i < text.length(); ++i) {
+    for (int i = 0; i < text.length(); ++i) { // [N]
       final char ch = text.charAt(i);
       if (ch == '&')
         builder.append("&amp;");

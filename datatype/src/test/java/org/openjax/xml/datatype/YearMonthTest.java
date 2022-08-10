@@ -109,8 +109,8 @@ public class YearMonthTest {
     catch (final IllegalArgumentException e) {
     }
 
-    final String[] yearMonths = new String[] {"2500-01Z", "1400-02Z", "0003-03Z", "0020-04Z", "0310-05Z", "1001-06Z", "2007-07+01:00", "3017-08-01:00", "4027-09Z", "1302-10+12:00", "1112-11-12:30"};
-    for (final String yearMonth : yearMonths)
+    final String[] yearMonths = {"2500-01Z", "1400-02Z", "0003-03Z", "0020-04Z", "0310-05Z", "1001-06Z", "2007-07+01:00", "3017-08-01:00", "4027-09Z", "1302-10+12:00", "1112-11-12:30"};
+    for (final String yearMonth : yearMonths) // [A]
       assertEquals(yearMonth, YearMonth.parse(yearMonth).toString());
   }
 }

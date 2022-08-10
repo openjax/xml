@@ -54,7 +54,7 @@ public final class CharacterDatas {
   }
 
   private static StringBuilder escape(final StringBuilder out, final CharSequence str, final char quote, final int off, final int len) {
-    for (int i = off, length = off + len; i < length; ++i) {
+    for (int i = off, length = off + len; i < length; ++i) { // [N]
       final char ch = str.charAt(i);
       if (ch == '&')
         out.append("&amp;");
@@ -76,7 +76,7 @@ public final class CharacterDatas {
   }
 
   private static StringBuilder escape(final StringBuilder out, final char[] chars, final char quote, final int off, final int len) {
-    for (int i = off, length = off + len; i < length; ++i) {
+    for (int i = off, length = off + len; i < length; ++i) { // [A]
       final char ch = chars[i];
       if (ch == '&')
         out.append("&amp;");
@@ -683,14 +683,14 @@ public final class CharacterDatas {
   }
 
   private static StringBuilder unescape(final StringBuilder out, final CharSequence str, final char quote, final int off, final int len) {
-    for (int i = off, length = off + len; i < length; ++i)
+    for (int i = off, length = off + len; i < length; ++i) // [N]
       i = unescape(out, str, i, '\0', '\0', '\0', '\0', 0, quote, length);
 
     return out;
   }
 
   private static StringBuilder unescape(final StringBuilder out, final char[] chars, final char quote, final int off, final int len) {
-    for (int i = off, length = off + len; i < length; ++i)
+    for (int i = off, length = off + len; i < length; ++i) // [N]
       i = unescape(out, chars, i, '\0', '\0', '\0', '\0', 0, quote, length);
 
     return out;

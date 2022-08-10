@@ -102,8 +102,8 @@ public class MonthTest {
     catch (final IllegalArgumentException e) {
     }
 
-    final String[] months = new String[] {"--12Z", "--04Z", "--03Z", "--02Z", "--01Z", "--07+01:00", "--09-01:00", "--10Z", "--11+12:00", "--12-12:30"};
-    for (final String month : months)
+    final String[] months = {"--12Z", "--04Z", "--03Z", "--02Z", "--01Z", "--07+01:00", "--09-01:00", "--10Z", "--11+12:00", "--12-12:30"};
+    for (final String month : months) // [A]
       assertEquals(month, Month.parse(month).toString());
   }
 }

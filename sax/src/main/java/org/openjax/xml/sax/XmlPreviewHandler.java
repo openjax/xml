@@ -37,14 +37,12 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 /**
- * A {@link FastSAXHandler} that collects catalog information and metadata from
- * an XML document.
+ * A {@link FastSAXHandler} that collects catalog information and metadata from an XML document.
  * <p>
- * This handler dereferences external references to imported or included
- * documents and schemas, in order to comprise a complete catalog.
+ * This handler dereferences external references to imported or included documents and schemas, in order to comprise a complete
+ * catalog.
  * <p>
- * One {@link XmlPreviewHandler} instance is created for <b>all</b> XML
- * documents.
+ * One {@link XmlPreviewHandler} instance is created for <b>all</b> XML documents.
  * <p>
  * One {@link XmlCatalog} instance is created for <b>all</b> XML documents.
  */
@@ -52,11 +50,12 @@ class XmlPreviewHandler extends FastSAXHandler {
   private static final Logger logger = LoggerFactory.getLogger(XmlPreviewHandler.class);
 
   /**
-   * Returns a string encoding of the specified {@code attributes}. The encoding
-   * is of the form:
+   * Returns a string encoding of the specified {@code attributes}. The encoding is of the form:
    *
    * <pre>
-   * {@code name = "value"}
+   * {@code
+   * name = "value"
+   * }
    * </pre>
    *
    * @param attributes The map of attributes.
@@ -71,7 +70,7 @@ class XmlPreviewHandler extends FastSAXHandler {
 
     final StringBuilder builder = new StringBuilder();
     final Iterator<Map.Entry<QName,String>> iterator = attributes.entrySet().iterator();
-    for (int i = 0; iterator.hasNext(); ++i) {
+    for (int i = 0; iterator.hasNext(); ++i) { // [I]
       if (i > 0)
         builder.append(' ');
 
@@ -96,13 +95,11 @@ class XmlPreviewHandler extends FastSAXHandler {
   private String targetNamespace;
 
   /**
-   * Creates a new {@link XmlPreviewHandler} to be initialized with the
-   * specified {@link XmlCatalog}.
+   * Creates a new {@link XmlPreviewHandler} to be initialized with the specified {@link XmlCatalog}.
    *
    * @param catalog The {@link XmlCatalog}.
    * @throws IllegalArgumentException If the specified {@link XmlCatalog} is null.
-   * @throws IllegalArgumentException If the {@link InputSource} in the
-   *           specified {@link XmlCatalog} does not have a byte stream or
+   * @throws IllegalArgumentException If the {@link InputSource} in the specified {@link XmlCatalog} does not have a byte stream or
    *           character stream.
    */
   XmlPreviewHandler(final XmlCatalog catalog) {
@@ -110,13 +107,11 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Initializes the specified {@link XmlCatalog} in this
-   * {@link XmlPreviewHandler}.
+   * Initializes the specified {@link XmlCatalog} in this {@link XmlPreviewHandler}.
    *
    * @param catalog The {@link XmlCatalog}.
    * @throws IllegalArgumentException If the specified {@link XmlCatalog} is null.
-   * @throws IllegalArgumentException If the {@link InputSource} in the
-   *           specified {@link XmlCatalog} does not have a byte stream or
+   * @throws IllegalArgumentException If the {@link InputSource} in the specified {@link XmlCatalog} does not have a byte stream or
    *           character stream.
    */
   private void init(final XmlCatalog catalog) {
@@ -126,8 +121,7 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Resets the local variables in this handler and initializes it for the
-   * specified {@link XmlCatalog}.
+   * Resets the local variables in this handler and initializes it for the specified {@link XmlCatalog}.
    *
    * @param catalog The {@link XmlCatalog}.
    * @see #reset()
@@ -157,22 +151,18 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Returns a set of the URIs visited throughout the lifecycle of this
-   * {@link XmlPreviewHandler} instance.
+   * Returns a set of the URIs visited throughout the lifecycle of this {@link XmlPreviewHandler} instance.
    *
-   * @return A set of the URIs visited throughout the lifecycle of this
-   *         {@link XmlPreviewHandler} instance.
+   * @return A set of the URIs visited throughout the lifecycle of this {@link XmlPreviewHandler} instance.
    */
   Set<String> getVisitedURIs() {
     return visitedURIs;
   }
 
   /**
-   * Returns a set of the URLs visited throughout the lifecycle of this
-   * {@link XmlPreviewHandler} instance.
+   * Returns a set of the URLs visited throughout the lifecycle of this {@link XmlPreviewHandler} instance.
    *
-   * @return A set of the URLs visited throughout the lifecycle of this
-   *         {@link XmlPreviewHandler} instance.
+   * @return A set of the URLs visited throughout the lifecycle of this {@link XmlPreviewHandler} instance.
    */
   Set<URL> getVisitedURLs() {
     return visitedURLs;
@@ -181,13 +171,12 @@ class XmlPreviewHandler extends FastSAXHandler {
   private boolean isSchema;
 
   /**
-   * Specifies whether the XML document represented by the {@link XmlCatalog} in
-   * this {@link XmlPreviewHandler} instance is an XML Schema Document.
+   * Specifies whether the XML document represented by the {@link XmlCatalog} in this {@link XmlPreviewHandler} instance is an XML
+   * Schema Document.
    *
-   * @return Whether the XML document represented by the {@link XmlCatalog} in
-   *         this {@link XmlPreviewHandler} instance is an XML Schema Document.
-   * @throws IllegalStateException If this method is called before the XML
-   *           document represented by the {@link XmlCatalog} in this
+   * @return Whether the XML document represented by the {@link XmlCatalog} in this {@link XmlPreviewHandler} instance is an XML
+   *         Schema Document.
+   * @throws IllegalStateException If this method is called before the XML document represented by the {@link XmlCatalog} in this
    *           {@link XmlPreviewHandler} instance is parsed.
    */
   boolean isSchema() {
@@ -200,15 +189,12 @@ class XmlPreviewHandler extends FastSAXHandler {
   private QName rootElement;
 
   /**
-   * Returns the {@link QName} of the root element of the XML document
-   * represented by the {@link XmlCatalog} in this {@link XmlPreviewHandler}
-   * instance.
+   * Returns the {@link QName} of the root element of the XML document represented by the {@link XmlCatalog} in this
+   * {@link XmlPreviewHandler} instance.
    *
-   * @return The {@link QName} of the root element of the XML document
-   *         represented by the {@link XmlCatalog} in this
+   * @return The {@link QName} of the root element of the XML document represented by the {@link XmlCatalog} in this
    *         {@link XmlPreviewHandler} instance.
-   * @throws IllegalStateException If this method is called before the XML
-   *           document represented by the {@link XmlCatalog} in this
+   * @throws IllegalStateException If this method is called before the XML document represented by the {@link XmlCatalog} in this
    *           {@link XmlPreviewHandler} instance is parsed.
    */
   QName getRootElement() {
@@ -219,13 +205,12 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Returns the "targetNamespace" attribute of the XML document represented by
-   * the {@link XmlCatalog} in this {@link XmlPreviewHandler} instance. This
-   * method is only useful for XML Schema Documents (i.e. when
-   * {@link #isSchema()} is {@code true}).
+   * Returns the "targetNamespace" attribute of the XML document represented by the {@link XmlCatalog} in this
+   * {@link XmlPreviewHandler} instance. This method is only useful for XML Schema Documents (i.e. when {@link #isSchema()} is
+   * {@code true}).
    *
-   * @return The "targetNamespace" attribute of the XML document represented by
-   *         the {@link XmlCatalog} in this {@link XmlPreviewHandler} instance.
+   * @return The "targetNamespace" attribute of the XML document represented by the {@link XmlCatalog} in this
+   *         {@link XmlPreviewHandler} instance.
    */
   String getTargetNamespace() {
     return this.targetNamespace;
@@ -244,19 +229,17 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Returns the map of namespace-to-URL entries of "import" references for the
-   * XML document represented by the {@link XmlCatalog} in this
-   * {@link XmlPreviewHandler} instance.
+   * Returns the map of namespace-to-URL entries of "import" references for the XML document represented by the {@link XmlCatalog}
+   * in this {@link XmlPreviewHandler} instance.
    * <ul>
-   * <li>If {@link #isSchema()} is {@code true}, this method represents the
-   * {@code <xs:import/>} elements of an XML Schema Document.</li>
-   * <li>If {@link #isSchema()} is {@code false}, this method represents the
-   * {@code xsi:schemaLocation} attribute of an XML Document.</li>
+   * <li>If {@link #isSchema()} is {@code true}, this method represents the {@code <xs:import/>} elements of an XML Schema
+   * Document.</li>
+   * <li>If {@link #isSchema()} is {@code false}, this method represents the {@code xsi:schemaLocation} attribute of an XML
+   * Document.</li>
    * </ul>
    *
-   * @return The map of namespace-to-URL entries of "import" references for the
-   *         XML document represented by the {@link XmlCatalog} in this
-   *         {@link XmlPreviewHandler} instance.
+   * @return The map of namespace-to-URL entries of "import" references for the XML document represented by the {@link XmlCatalog}
+   *         in this {@link XmlPreviewHandler} instance.
    */
   Map<String,URL> getImports() {
     return imports;
@@ -276,20 +259,17 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Returns the map of {@link String}-to-{@link URL} entries of "include"
-   * references for the XML document represented by the {@link XmlCatalog} in
-   * this {@link XmlPreviewHandler} instance. The key and value of each entry in
-   * this map represents the same logical string, differing only in class type.
+   * Returns the map of {@link String}-to-{@link URL} entries of "include" references for the XML document represented by the
+   * {@link XmlCatalog} in this {@link XmlPreviewHandler} instance. The key and value of each entry in this map represents the same
+   * logical string, differing only in class type.
    * <ul>
-   * <li>If {@link #isSchema()} is {@code true}, this method represents the
-   * {@code <xs:include/>} elements of an XML Schema Document.</li>
-   * <li>If {@link #isSchema()} is {@code false}, this method represents the
-   * {@code xsi:noNamespaceSchemaLocation} and {@code <xi:include href>}
-   * attributes in an XML Document.</li>
+   * <li>If {@link #isSchema()} is {@code true}, this method represents the {@code <xs:include/>} elements of an XML Schema
+   * Document.</li>
+   * <li>If {@link #isSchema()} is {@code false}, this method represents the {@code xsi:noNamespaceSchemaLocation} and
+   * {@code <xi:include href>} attributes in an XML Document.</li>
    * </ul>
    *
-   * @return The map of {@link String}-to-{@link URL} entries of "include"
-   *         references for the XML document represented by the
+   * @return The map of {@link String}-to-{@link URL} entries of "include" references for the XML document represented by the
    *         {@link XmlCatalog} in this {@link XmlPreviewHandler} instance.
    */
   Map<String,URL> getIncludes() {
@@ -320,7 +300,7 @@ class XmlPreviewHandler extends FastSAXHandler {
 
     if (isSchema) {
       if ("schema".equals(name.getLocalPart())) {
-        for (final Map.Entry<QName,String> entry : attributes.entrySet()) {
+        for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
           final String attributeName = entry.getKey().getLocalPart();
           if ("targetNamespace".equals(attributeName)) {
             targetNamespace = entry.getValue();
@@ -331,7 +311,7 @@ class XmlPreviewHandler extends FastSAXHandler {
       else if ("import".equals(name.getLocalPart())) {
         String namespace = null;
         String schemaLocation = null;
-        for (final Map.Entry<QName,String> entry : attributes.entrySet()) {
+        for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
           final String attributeName = entry.getKey().getLocalPart();
           if ("namespace".equals(attributeName)) {
             namespace = entry.getValue();
@@ -352,7 +332,7 @@ class XmlPreviewHandler extends FastSAXHandler {
           imports.put(namespace, URLs.create(path));
       }
       else if ("include".equals(name.getLocalPart())) {
-        for (final Map.Entry<QName,String> entry : attributes.entrySet()) {
+        for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
           if ("schemaLocation".equals(entry.getKey().getLocalPart())) {
             addInclude(entry.getValue());
           }
@@ -364,7 +344,7 @@ class XmlPreviewHandler extends FastSAXHandler {
     }
     else {
       if ("include".equals(name.getLocalPart())) {
-        for (final Map.Entry<QName,String> entry : attributes.entrySet()) {
+        for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
           final String namespaceURI = entry.getKey().getNamespaceURI();
           if ("http://www.w3.org/2001/XInclude".equals(namespaceURI) && "href".equals(entry.getKey().getLocalPart())) {
             addInclude(entry.getValue());
@@ -373,7 +353,7 @@ class XmlPreviewHandler extends FastSAXHandler {
       }
       else {
         if (attributes != null) {
-          for (final Map.Entry<QName,String> entry : attributes.entrySet()) {
+          for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
             final String namespaceURI = entry.getKey().getNamespaceURI();
             if (XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI.equals(namespaceURI)) {
               if ("noNamespaceSchemaLocation".equals(entry.getKey().getLocalPart())) {
@@ -406,8 +386,7 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Resets the local variables in this handler, so it can be used in another
-   * parsing invocation.
+   * Resets the local variables in this handler, so it can be used in another parsing invocation.
    */
   @Override
   public void reset() {
@@ -424,11 +403,9 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Returns an {@link XmlPreview} representation of this
-   * {@link XmlPreviewHandler}.
+   * Returns an {@link XmlPreview} representation of this {@link XmlPreviewHandler}.
    *
-   * @return An {@link XmlPreview} representation of this
-   *         {@link XmlPreviewHandler}.
+   * @return An {@link XmlPreview} representation of this {@link XmlPreviewHandler}.
    */
   public XmlPreview toXmlPreview() {
     return new XmlPreview(catalog, isLocal, isSchema, rootElement, targetNamespace, imports == null ? null : new HashMap<>(imports), includes == null ? null : new HashMap<>(includes));

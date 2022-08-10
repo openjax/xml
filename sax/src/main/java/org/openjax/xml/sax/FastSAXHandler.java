@@ -22,13 +22,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 /**
- * Fast handler for parsing events from {@link FastSAXParser}, which declares
- * callback methods that provide actual string names and values.
+ * Fast handler for parsing events from {@link FastSAXParser}, which declares callback methods that provide actual string names and
+ * values.
  *
  * @see FastSAXParser
  * @see FasterSAXHandler
@@ -96,7 +97,7 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
 
   private String lookupNamespace(final String prefix) {
     if (stack != null) {
-      for (int i = stack.size() - 1; i >= 0; --i) {
+      for (int i = stack.size() - 1; i >= 0; --i) { // [RA]
         final Element element = stack.get(i);
         final String namespace;
         if (element.prefixToNamespace != null && (namespace = element.prefixToNamespace.get(prefix)) != null)
@@ -174,20 +175,22 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
     if (element.namespace == null)
       element.namespace = lookupNamespace(element.prefix);
 
-    final Map<QName,String> attributes;
+    final Map<QName,String> nameToAttribute;
     if (element.attributes == null) {
-      attributes = null;
+      nameToAttribute = null;
     }
     else {
-      attributes = new HashMap<>();
-      for (final String[] attribute : element.attributes) {
+      nameToAttribute = new HashMap<>();
+      final List<String[]> attributes = element.attributes;
+      for (int i = 0, i$ = attributes.size(); i < i$; ++i) { // [RA]
+        final String[] attribute = attributes.get(i);
         final QName key = new QName(lookupNamespace(attribute[0]), attribute[1], attribute[0]);
-        attributes.put(key, attribute[2]);
+        nameToAttribute.put(key, attribute[2]);
       }
     }
 
     element.name = new QName(element.namespace, element.localName, element.prefix);
-    return startElement(element.name, attributes);
+    return startElement(element.name, nameToAttribute);
   }
 
   @Override
@@ -199,8 +202,7 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
    * Callback method for element start tags.
    *
    * @param name The qualified name of the element.
-   * @param attributes A map of the attribute names to values, or {@code null}
-   *          if the element does not have attributes.
+   * @param attributes A map of the attribute names to values, or {@code null} if the element does not have attributes.
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
@@ -218,13 +220,12 @@ public abstract class FastSAXHandler implements FasterSAXHandler {
   }
 
   /**
-   * Resets the local variables in this handler, so it can be used in another
-   * parsing invocation.
+   * Resets the local variables in this handler, so it can be used in another parsing invocation.
    */
   public void reset() {
-    if (this.stack != null)
-      this.stack.clear();
+    if (stack != null)
+      stack.clear();
 
-    this.inDeclaration = false;
+    inDeclaration = false;
   }
 }

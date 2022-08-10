@@ -151,8 +151,8 @@ public class DateTest {
     catch (final IllegalArgumentException e) {
     }
 
-    final String[] dates = new String[] {"2500-01-01Z", "1400-02-02Z", "0003-03-03Z", "0020-04-04Z", "0310-05-05Z", "1001-06-06Z", "2007-07-07+01:00", "3017-08-08-01:00", "4027-09-09Z", "1302-10-10+12:00", "1112-11-11-12:30"};
-    for (final String date : dates)
+    final String[] dates = {"2500-01-01Z", "1400-02-02Z", "0003-03-03Z", "0020-04-04Z", "0310-05-05Z", "1001-06-06Z", "2007-07-07+01:00", "3017-08-08-01:00", "4027-09-09Z", "1302-10-10+12:00", "1112-11-11-12:30"};
+    for (final String date : dates) // [A]
       assertEquals(date, Date.parse(date).toString());
   }
 }

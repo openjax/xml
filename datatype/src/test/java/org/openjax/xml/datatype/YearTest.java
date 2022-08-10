@@ -88,8 +88,8 @@ public class YearTest {
     catch (final IllegalArgumentException e) {
     }
 
-    final String[] years = new String[] {"2500Z", "1400Z", "0003Z", "0020Z", "0310Z", "1001Z", "2007+01:00", "3017-01:00", "4027Z", "1302+12:00", "1112-12:30"};
-    for (final String year : years)
+    final String[] years = {"2500Z", "1400Z", "0003Z", "0020Z", "0310Z", "1001Z", "2007+01:00", "3017-01:00", "4027Z", "1302+12:00", "1112-12:30"};
+    for (final String year : years) // [A]
       assertEquals(year, Year.parse(year).toString());
   }
 }

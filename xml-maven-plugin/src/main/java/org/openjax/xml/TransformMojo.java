@@ -53,7 +53,7 @@ public class TransformMojo extends XmlMojo {
   @Override
   public void execute(final LinkedHashSet<URI> uris) throws MojoExecutionException, MojoFailureException {
     try {
-      for (final URI uri : uris) {
+      for (final URI uri : uris) { // [S]
         final String outFileName = MojoUtil.getRenamedFileName(uri.toString(), rename);
         final File destFile = new File(destDir, outFileName);
         final String inFilePath = URIs.isLocalFile(uri) ? CWD.relativize(new File(uri).getAbsoluteFile().toPath()).toString() : uri.toString();

@@ -131,7 +131,7 @@ public final class Transformer {
       final StreamSource streamSource = new StreamSource(stylesheetIn, stylesheet.toString());
       final javax.xml.transform.Transformer transformer = factory.newTransformer(streamSource);
       if (parameters != null)
-        for (final Map.Entry<String,String> entry : parameters.entrySet())
+        for (final Map.Entry<String,String> entry : parameters.entrySet()) // [S]
           transformer.setParameter(entry.getKey(), entry.getValue());
 
       transformer.transform(in, out);

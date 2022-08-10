@@ -77,11 +77,11 @@ public abstract class XmlMojo extends PatternSetMojo {
     setHttpProxy();
     final LinkedHashSet<URI> fileSets = new LinkedHashSet<>(configuration.getFileSets());
     if (resources != null && !resources.isEmpty())
-      for (final String resource : new LinkedHashSet<>(resources))
+      for (final String resource : new LinkedHashSet<>(resources)) // [S]
         fileSets.add(URI.create(resource));
 
     if (files != null && !files.isEmpty())
-      for (final File file : new LinkedHashSet<>(files))
+      for (final File file : new LinkedHashSet<>(files)) // [S]
         fileSets.add(file.toURI());
 
     if (fileSets.isEmpty()) {

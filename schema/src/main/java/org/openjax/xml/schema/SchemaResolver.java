@@ -21,8 +21,7 @@ import java.net.URL;
 import javax.xml.XMLConstants;
 
 /**
- * Utility class that resolves the schema location of schemas identified by the
- * following {@code publicId} and {@code systemId}:
+ * Utility class that resolves the schema location of schemas identified by the following {@code publicId} and {@code systemId}:
  *
  * <pre>
  * http://www.w3.org/2001/XMLSchema
@@ -54,9 +53,8 @@ public final class SchemaResolver {
   }
 
   /**
-   * Returns the schema location {@link URL} for the specified {@code publicId}
-   * and {@code systemId}, or {@code null} if the provided {@code publicId} and
-   * {@code systemId} do not match one of:
+   * Returns the schema location {@link URL} for the specified {@code publicId} and {@code systemId}, or {@code null} if the
+   * provided {@code publicId} and {@code systemId} do not match one of:
    *
    * <pre>
    * http://www.w3.org/2001/XMLSchema
@@ -65,14 +63,13 @@ public final class SchemaResolver {
    *
    * @param publicId The Public ID.
    * @param systemId The System ID.
-   * @return The schema location {@link URL} for the specified {@code publicId}
-   *         and {@code systemId}.
+   * @return The schema location {@link URL} for the specified {@code publicId} and {@code systemId}.
    */
   public static URL resolve(final String publicId, final String systemId) {
     if (publicId == null)
       return null;
 
-    for (final Schema schema : schemas) {
+    for (final Schema schema : schemas) { // [A]
       if (publicId.equals(schema.publicId) && (systemId == null || systemId.equals(schema.systemId))) {
         if (schema.url != null)
           return schema.url;

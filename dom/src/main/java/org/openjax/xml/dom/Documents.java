@@ -28,15 +28,13 @@ import org.w3c.dom.NodeList;
  */
 public final class Documents {
   /**
-   * Set the specified namespace URI to each node of the provided document,
-   * which includes all child elements, and conditionally their attributes if
-   * {@code attributeFormQualified} is {@code true}.
+   * Set the specified namespace URI to each node of the provided document, which includes all child elements, and conditionally
+   * their attributes if {@code attributeFormQualified} is {@code true}.
    *
    * @param document The {@link Document}.
    * @param namespaceURI The namespace URI.
-   * @param attributeFormQualified If {@code true}, the {@code namespaceURI}
-   *          will be set for attribute nodes; otherwise attribute nodes will be
-   *          left as is.
+   * @param attributeFormQualified If {@code true}, the {@code namespaceURI} will be set for attribute nodes; otherwise attribute
+   *          nodes will be left as is.
    */
   public static void setNamespaceURI(final Document document, final String namespaceURI, final boolean attributeFormQualified) {
     final LinkedList<Node> nodes = new LinkedList<>();
@@ -62,7 +60,7 @@ public final class Documents {
         // for attributes of this node
         final NamedNodeMap attributes = node.getAttributes();
         if (attributes != null && attributes.getLength() != 0) {
-          for (int i = 0, count = attributes.getLength(); i < count; ++i) {
+          for (int i = 0, i$ = attributes.getLength(); i < i$; ++i) { // [RA]
             final Node attribute = attributes.item(i);
             if (attribute != null)
               nodes.push(attribute);
@@ -73,7 +71,7 @@ public final class Documents {
       // for child nodes of this node
       final NodeList childNodes = node.getChildNodes();
       if (childNodes != null && childNodes.getLength() != 0) {
-        for (int i = 0, count = childNodes.getLength(); i < count; ++i) {
+        for (int i = 0, i$ = childNodes.getLength(); i < i$; ++i) { // [RA]
           final Node childNode = childNodes.item(i);
           if (childNode != null)
             nodes.push(childNode);

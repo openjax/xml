@@ -116,8 +116,8 @@ public class DayTest {
     catch (final IllegalArgumentException e) {
     }
 
-    final String[] days = new String[] {"---25Z", "---14Z", "---03Z", "---02Z", "---31Z", "---01Z", "---07+01:00", "---17-01:00", "---27Z", "---02+12:00", "---12-12:30"};
-    for (final String day : days)
+    final String[] days = {"---25Z", "---14Z", "---03Z", "---02Z", "---31Z", "---01Z", "---07+01:00", "---17-01:00", "---27Z", "---02+12:00", "---12-12:30"};
+    for (final String day : days) // [A]
       assertEquals(day, Day.parse(day).toString());
   }
 }

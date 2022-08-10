@@ -36,12 +36,9 @@ public final class XmlPreviewParser {
    * Parses an XML document at the specified {@link URL}.
    *
    * @param url The {@link URL}.
-   * @return A {@link XmlPreview} containing the {@link XmlCatalog} and
-   *         manifest information for the XML document represented by the
+   * @return A {@link XmlPreview} containing the {@link XmlCatalog} and manifest information for the XML document represented by the
    *         specified {@link URL}.
-   * @throws IOException If the stream does not support
-   *           {@link Reader#mark(int)}, or if some other I/O error has
-   *           occurred.
+   * @throws IOException If the stream does not support {@link Reader#mark(int)}, or if some other I/O error has occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
    * @throws IllegalArgumentException If {@code url} is null.
    */
@@ -56,12 +53,9 @@ public final class XmlPreviewParser {
    *
    * @param url The {@link URL}.
    * @param inputSource The {@link InputSource}.
-   * @return A {@link XmlPreview} containing the {@link XmlCatalog} and manifest
-   *         information for the XML document represented by the specified
-   *         {@link InputSource}.
-   * @throws IOException If the stream does not support
-   *           {@link Reader#mark(int)}, or if some other I/O error has
-   *           occurred.
+   * @return A {@link XmlPreview} containing the {@link XmlCatalog} and manifest information for the XML document represented by the
+   *         specified {@link InputSource}.
+   * @throws IOException If the stream does not support {@link Reader#mark(int)}, or if some other I/O error has occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
    * @throws IllegalArgumentException If {@code inputSource} is null.
    */
@@ -98,7 +92,7 @@ public final class XmlPreviewParser {
   }
 
   private static void traverse(final XmlPreviewHandler previewHandler, final Map<String,URL> schemaLocations, final boolean isImport) throws IOException, SAXParseException {
-    for (final Map.Entry<String,URL> entry : schemaLocations.entrySet()) {
+    for (final Map.Entry<String,URL> entry : schemaLocations.entrySet()) { // [S]
       final URL location = entry.getValue();
       if (!previewHandler.getVisitedURLs().add(location))
         continue;
