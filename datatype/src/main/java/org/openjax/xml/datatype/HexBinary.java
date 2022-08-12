@@ -36,7 +36,7 @@ public class HexBinary implements Serializable {
       throw new IllegalArgumentException("Odd length of hex string: " + string.length());
 
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    for (int i = 0; i < string.length(); i += 2) { // [N]
+    for (int i = 0, i$ = string.length(); i < i$; i += 2) { // [N]
       final char c1 = string.charAt(i);
       if (i + 1 >= string.length())
         throw new IllegalArgumentException();
@@ -113,7 +113,7 @@ public class HexBinary implements Serializable {
       return encoded;
 
     final StringBuilder builder = new StringBuilder(bytes.length * 2);
-    for (int i = 0; i < bytes.length; ++i) { // [A]
+    for (int i = 0, i$ = bytes.length; i < i$; ++i) { // [A]
       builder.append(convertDigit(bytes[i] >> 4));
       builder.append(convertDigit(bytes[i] & 0x0f));
     }

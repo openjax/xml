@@ -126,7 +126,7 @@ public final class DOMs {
       if (node.hasChildNodes()) {
         builder.append('>');
         final NodeList nodeList = node.getChildNodes();
-        for (int i = 0, len = nodeList.getLength(); i < len; ++i) // [N]
+        for (int i = 0, i$ = nodeList.getLength(); i < i$; ++i) // [RA]
           domToString(builder, namespaces, namespaceToPrefix, nodeList.item(i), depth + 1, styles);
 
         if (DOMStyle.isIndent(styles) && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
@@ -247,7 +247,7 @@ public final class DOMs {
    */
   private static void appendText(final StringBuilder builder, String text) {
     text = text.trim();
-    for (int i = 0; i < text.length(); ++i) { // [N]
+    for (int i = 0, i$ = text.length(); i < i$; ++i) { // [N]
       final char ch = text.charAt(i);
       if (ch == '&')
         builder.append("&amp;");

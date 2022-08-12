@@ -50,7 +50,7 @@ public enum DOMStyle {
     if (styles == null)
       return false;
 
-    for (int i = 0; i < styles.length; ++i) // [A]
+    for (int i = 0, i$ = styles.length; i < i$; ++i) // [A]
       if (styles[i].isIndentAttributes())
         return true;
 
@@ -61,7 +61,7 @@ public enum DOMStyle {
     if (styles == null)
       return false;
 
-    for (int i = 0; i < styles.length; ++i) // [A]
+    for (int i = 0, i$ = styles.length; i < i$; ++i) // [A]
       if (styles[i].isIndent())
         return true;
 
@@ -72,7 +72,7 @@ public enum DOMStyle {
     if (styles == null)
       return false;
 
-    for (int i = 0; i < styles.length; ++i) // [A]
+    for (int i = 0, i$ = styles.length; i < i$; ++i) // [A]
       if (styles[i].isOmitNamespaces())
         return true;
 

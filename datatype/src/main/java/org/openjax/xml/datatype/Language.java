@@ -60,7 +60,7 @@ public class Language implements CharSequence, Serializable {
     if (!firstPattern.matcher(language[0]).matches())
       throw new IllegalArgumentException(language[0]);
 
-    for (int i = 1; i < language.length; ++i) // [A]
+    for (int i = 1, i$ = language.length; i < i$; ++i) // [A]
       if (!otherPattern.matcher(language[i]).matches())
         throw new IllegalArgumentException(language[i]);
 
@@ -116,7 +116,7 @@ public class Language implements CharSequence, Serializable {
       return encoded = "";
 
     final StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < language.length; ++i) { // [A]
+    for (int i = 0, i$ = language.length; i < i$; ++i) { // [A]
       if (i > 0)
         builder.append('-');
 

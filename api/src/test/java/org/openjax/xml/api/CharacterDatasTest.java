@@ -46,7 +46,7 @@ public class CharacterDatasTest {
 
   @Test
   public void testEscape() {
-    for (int i = 0; i < escaped.length; ++i) // [A]
+    for (int i = 0, i$ = escaped.length; i < i$; ++i) // [A]
       testEscapeElem(i, escaped[i], unescaped[i]);
 
     testEscapeAttr("&quot;foo &lt; ' &gt; &amp; bar&quot;", "\"foo < ' > & bar\"", '"');
@@ -55,7 +55,7 @@ public class CharacterDatasTest {
 
   @Test
   public void testUnescape() {
-    for (int i = 0; i < unescaped.length; ++i) // [A]
+    for (int i = 0, i$ = unescaped.length; i < i$; ++i) // [A]
       testUnescapeElem(i, unescaped[i], escaped[i]);
 
     testUnescapeAttr("\"foo < &apos; > & bar\"", "&quot;foo &lt; &apos; &gt; &amp; bar&quot;", '"');
