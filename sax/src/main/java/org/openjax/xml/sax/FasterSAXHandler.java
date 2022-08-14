@@ -19,15 +19,12 @@ package org.openjax.xml.sax;
 import java.io.IOException;
 
 /**
- * Faster handler for parsing events from {@link FastSAXParser}, which declares
- * callback methods that provide data lengths (to be manually dereferenced to
- * actual names and values).
+ * Faster handler for parsing events from {@link FastSAXParser}, which declares callback methods that provide data lengths (to be
+ * manually dereferenced to actual names and values).
  * <p>
- * The callback methods in this handler are length values, which are to be
- * re-read from the source {@link java.io.Reader} providing the stream of data
- * that is being parsed. Implementations of this interface are expected to
- * possess a reference to the source {@link java.io.Reader} to be able to
- * re-read the contents.
+ * The callback methods in this handler are length values, which are to be re-read from the source {@link java.io.Reader} providing
+ * the stream of data that is being parsed. Implementations of this interface are expected to possess a reference to the source
+ * {@link java.io.Reader} to be able to re-read the contents.
  *
  * @see FastSAXParser
  * @see FastSAXHandler
@@ -56,8 +53,7 @@ public interface FasterSAXHandler {
   /**
    * Called when a declaration element is encountered (i.e. {@code '<?xml'}).
    *
-   * @param nameLen The length of the name of the element, sans {@code <?} and
-   *          {@code ?>} (i.e. {@code 'xml'}).
+   * @param nameLen The length of the name of the element, sans {@code <?} and {@code ?>} (i.e. {@code 'xml'}).
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
@@ -78,8 +74,7 @@ public interface FasterSAXHandler {
   /**
    * Callback method for DOCTYPE blocks (i.e. {@code <!DOCTYPE [ ]>}).
    *
-   * @param doctypeLen The length of the {@code DOCTYPE [ ]} string, sans
-   *          {@code <!} and {@code >}.
+   * @param doctypeLen The length of the {@code DOCTYPE [ ]} string, sans {@code <!} and {@code >}.
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
@@ -90,8 +85,7 @@ public interface FasterSAXHandler {
   /**
    * Callback method for comment blocks (i.e. {@code <!-- COMMENT -->}).
    *
-   * @param commentLen The length of the {@code COMMENT} string, sans
-   *          {@code <!--} and {@code -->}.
+   * @param commentLen The length of the {@code COMMENT} string, sans {@code <!--} and {@code -->}.
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
@@ -102,15 +96,11 @@ public interface FasterSAXHandler {
   /**
    * Callback method for attribute occurrences.
    *
-   * @param prefixLen The length of the prefix part of the attribute name, which
-   *          is {@code == 0} if the attribute name does not have a prefix, and
-   *          {@code >= 2} if the attribute name does not has a prefix, as this
-   *          includes the {@code ':'} character.
+   * @param prefixLen The length of the prefix part of the attribute name, which is {@code == 0} if the attribute name does not have
+   *          a prefix, and {@code >= 2} if the attribute name does not has a prefix, as this includes the {@code ':'} character.
    * @param localPartLen The length of the local part of the attribute name.
-   * @param skip The length of the data to skip, which matches the regex:
-   *          {@code "[ \n\r\t]*=[ \n\r\t]*\""}.
-   * @param valueLen The length of the attribute value (does not include the
-   *          surrounding quotes).
+   * @param skip The length of the data to skip, which matches the regex: {@code "[ \n\r\t]*=[ \n\r\t]*\""}.
+   * @param valueLen The length of the attribute value (does not include the surrounding quotes).
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
    */
@@ -121,8 +111,7 @@ public interface FasterSAXHandler {
   /**
    * Called when an element's "start tag" is opened with a {@code '<'} character.
    *
-   * @param prefixLen The length of the prefix part of the element name
-   *          (including the {@code ':'} character).
+   * @param prefixLen The length of the prefix part of the element name (including the {@code ':'} character).
    * @param localPartLen The length of the local part of the element name.
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.
@@ -144,9 +133,8 @@ public interface FasterSAXHandler {
   /**
    * Called when an element's "end tag" is encountered.
    * <p>
-   * The "end tag" is either a dedicated tag that resembles {@code "</ELEMENT>"}
-   * for elements that may have child elements, or can be the "start tag" that
-   * ends with {@code "/>"} for elements that have no child elements.
+   * The "end tag" is either a dedicated tag that resembles {@code "</ELEMENT>"} for elements that may have child elements, or can
+   * be the "start tag" that ends with {@code "/>"} for elements that have no child elements.
    *
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.

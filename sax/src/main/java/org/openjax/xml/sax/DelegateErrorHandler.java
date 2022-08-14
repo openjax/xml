@@ -23,25 +23,20 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * A {@link DelegateErrorHandler} contains some other {@link ErrorHandler}, to
- * which it delegates its method calls, possibly transforming the data along the
- * way or providing additional functionality. The class
- * {@link DelegateErrorHandler} itself simply implements all methods of
- * {@link ErrorHandler} with versions that pass all requests to the target
- * {@link ErrorHandler}. Subclasses of {@link DelegateErrorHandler} may further
- * override some of these methods and may also provide additional methods and
+ * A {@link DelegateErrorHandler} contains some other {@link ErrorHandler}, to which it delegates its method calls, possibly
+ * transforming the data along the way or providing additional functionality. The class {@link DelegateErrorHandler} itself simply
+ * implements all methods of {@link ErrorHandler} with versions that pass all requests to the target {@link ErrorHandler}.
+ * Subclasses of {@link DelegateErrorHandler} may further override some of these methods and may also provide additional methods and
  * fields.
  * <p>
- * If the target {@link ErrorHandler} is null, the methods in
- * {@link DelegateErrorHandler} are no-op.
+ * If the target {@link ErrorHandler} is null, the methods in {@link DelegateErrorHandler} are no-op.
  */
 public abstract class DelegateErrorHandler implements ErrorHandler {
   /** The target {@link ErrorHandler}. */
   protected volatile ErrorHandler target;
 
   /**
-   * Creates a new {@link DelegateErrorHandler} with the specified target
-   * {@link ErrorHandler}.
+   * Creates a new {@link DelegateErrorHandler} with the specified target {@link ErrorHandler}.
    *
    * @param target The target {@link ErrorHandler}.
    */

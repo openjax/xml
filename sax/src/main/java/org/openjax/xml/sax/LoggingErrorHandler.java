@@ -22,9 +22,8 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 
 /**
- * Implementation of the {@link ErrorHandler} interface that submits log events
- * to a SLF4J {@link Logger} corresponding to the {@link LoggingErrorHandler}
- * class.
+ * Implementation of the {@link ErrorHandler} interface that submits log events to a SLF4J {@link Logger} corresponding to the
+ * {@link LoggingErrorHandler} class.
  */
 public class LoggingErrorHandler implements ErrorHandler {
   private static final Logger logger = LoggerFactory.getLogger(LoggingErrorHandler.class);

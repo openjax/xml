@@ -73,11 +73,9 @@ public final class SAXParsers {
   /**
    * Creates a new {@link SAXParser} instance that supports:
    * <ol>
-   * <li>Validation, if the specified {@code validating} argument is
-   * {@code true}.</li>
+   * <li>Validation, if the specified {@code validating} argument is {@code true}.</li>
    * <li>Namespace prefixes.</li>
-   * <li>Schema full checking, if the specified {@code validating} argument is
-   * {@code true}.</li>
+   * <li>Schema full checking, if the specified {@code validating} argument is {@code true}.</li>
    * <li>Honor all schemaLocation(s).</li>
    * <li>Continue after fatal error.</li>
    * </ol>

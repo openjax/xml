@@ -23,21 +23,18 @@ import java.io.Serializable;
 import java.net.URL;
 
 /**
- * The {@link XmlEntity} represents an XML entity, which associates a
- * {@link CachedInputSource} to an {@link URL}.
+ * The {@link XmlEntity} represents an XML entity, which associates a {@link CachedInputSource} to an {@link URL}.
  */
 public class XmlEntity implements AutoCloseable, Serializable {
   protected final URL location;
   protected final CachedInputSource inputSource;
 
   /**
-   * Creates a new {@link XmlEntity} with the specified {@link URL} and
-   * {@link CachedInputSource}.
+   * Creates a new {@link XmlEntity} with the specified {@link URL} and {@link CachedInputSource}.
    *
    * @param location The {@link URL}.
    * @param inputSource The {@link CachedInputSource}.
-   * @throws IllegalArgumentException If the specified {@link URL} or
-   *           {@link CachedInputSource} is null.
+   * @throws IllegalArgumentException If the specified {@link URL} or {@link CachedInputSource} is null.
    */
   public XmlEntity(final URL location, final CachedInputSource inputSource) {
     this.location = assertNotNull(location);
@@ -63,8 +60,7 @@ public class XmlEntity implements AutoCloseable, Serializable {
   }
 
   /**
-   * Closes this {@link XmlEntity}. This method calls
-   * {@link CachedInputSource#close() close()} on the underlying
+   * Closes this {@link XmlEntity}. This method calls {@link CachedInputSource#close() close()} on the underlying
    * {@link CachedInputSource}.
    *
    * @throws IOException If an I/O error has occurred.

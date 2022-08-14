@@ -45,9 +45,8 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 
 /**
- * A SAX-based validator for XML documents and XML Schema Definition documents
- * that conform to the <a href="https://www.w3.org/TR/xmlschema11-1/">XML Schema
- * v1.1</a> standard.
+ * A SAX-based validator for XML documents and XML Schema Definition documents that conform to the
+ * <a href="https://www.w3.org/TR/xmlschema11-1/">XML Schema v1.1</a> standard.
  */
 public final class Validator {
   private static final ErrorHandler DEFAULT_ERROR_HANDLER = new LoggingErrorHandler();
@@ -112,10 +111,8 @@ public final class Validator {
    *
    * @param xml The XML document to validate.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
    * @throws IllegalArgumentException If the specified string is null.
    */
   public static void validate(final String xml) throws IOException, SAXException {
@@ -126,13 +123,10 @@ public final class Validator {
    * Validates the XML document contained in the specified string.
    *
    * @param xml The XML document to validate.
-   * @param errorHandler The {@link ErrorHandler} for parsing and validation
-   *          errors.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation errors.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
    * @throws IllegalArgumentException If the specified string is null.
    */
   public static void validate(final String xml, final ErrorHandler errorHandler) throws IOException, SAXException {
@@ -140,16 +134,12 @@ public final class Validator {
   }
 
   /**
-   * Validates the XML document provided by the source in the specified
-   * {@link URL}.
+   * Validates the XML document provided by the source in the specified {@link URL}.
    *
-   * @param url The {@link URL} providing the location for the XML document to
-   *          validate.
+   * @param url The {@link URL} providing the location for the XML document to validate.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
    * @throws IllegalArgumentException If the specified {@link URL} is null.
    */
   public static void validate(final URL url) throws IOException, SAXException {
@@ -157,18 +147,13 @@ public final class Validator {
   }
 
   /**
-   * Validates the XML document provided by the source in the specified
-   * {@link URL}.
+   * Validates the XML document provided by the source in the specified {@link URL}.
    *
-   * @param url The {@link URL} providing the location for the XML document to
-   *          validate.
-   * @param errorHandler The {@link ErrorHandler} for parsing and validation
-   *          errors.
+   * @param url The {@link URL} providing the location for the XML document to validate.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation errors.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
    * @throws IllegalArgumentException If the specified {@link URL} is null.
    */
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
@@ -178,16 +163,12 @@ public final class Validator {
   }
 
   /**
-   * Validates the XML document provided by the source in the specified
-   * {@link InputSource}.
+   * Validates the XML document provided by the source in the specified {@link InputSource}.
    *
-   * @param inputSource The {@link InputSource} providing the source for the XML
-   *          document to validate.
+   * @param inputSource The {@link InputSource} providing the source for the XML document to validate.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
    * @throws IllegalArgumentException If the specified {@link InputSource} is null.
    */
   public static void validate(final InputSource inputSource) throws IOException, SAXException {
@@ -195,18 +176,13 @@ public final class Validator {
   }
 
   /**
-   * Validates the XML document provided by the source in the specified
-   * {@link InputSource}.
+   * Validates the XML document provided by the source in the specified {@link InputSource}.
    *
-   * @param inputSource The {@link InputSource} providing the source for the XML
-   *          document to validate.
-   * @param errorHandler The {@link ErrorHandler} for parsing and validation
-   *          errors.
+   * @param inputSource The {@link InputSource} providing the source for the XML document to validate.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation errors.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
    * @throws IllegalArgumentException If the specified {@link InputSource} is null.
    */
   public static void validate(final InputSource inputSource, final ErrorHandler errorHandler) throws IOException, SAXException {
@@ -235,21 +211,15 @@ public final class Validator {
   }
 
   /**
-   * Validates the XML document provided by the source in the specified
-   * {@link InputSource}.
+   * Validates the XML document provided by the source in the specified {@link InputSource}.
    *
-   * @param inputSource The {@link InputSource} providing the source for the XML
-   *          document to validate.
+   * @param inputSource The {@link InputSource} providing the source for the XML document to validate.
    * @param preview The {@link XmlPreview} for the document to validate.
-   * @param errorHandler The {@link ErrorHandler} for parsing and validation
-   *          errors.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation errors.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
-   * @throws IllegalArgumentException If the specified {@link InputSource} or
-   *           {@link XmlPreview} is null.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
+   * @throws IllegalArgumentException If the specified {@link InputSource} or {@link XmlPreview} is null.
    */
   public static void validate(final InputSource inputSource, final XmlPreview preview, final ErrorHandler errorHandler) throws IOException, SAXException {
     validate(inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource), preview, errorHandler);
@@ -293,21 +263,15 @@ public final class Validator {
   }
 
   /**
-   * Validates the XML document provided by the stream of data in the specified
-   * {@link Reader}.
+   * Validates the XML document provided by the stream of data in the specified {@link Reader}.
    *
-   * @param inputSource The {@link CachedInputSource} providing the source for
-   *          the XML document to validate.
+   * @param inputSource The {@link CachedInputSource} providing the source for the XML document to validate.
    * @param preview The {@link XmlPreview} for the document to validate .
-   * @param errorHandler The {@link ErrorHandler} for parsing and validation
-   *          errors.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation errors.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
-   * @throws IllegalArgumentException If the specified {@link InputSource} or
-   *           {@link XmlPreview} is null.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
+   * @throws IllegalArgumentException If the specified {@link InputSource} or {@link XmlPreview} is null.
    */
   private static void validate(final CachedInputSource inputSource, final XmlPreview preview, final ErrorHandler errorHandler) throws IOException, SAXException {
     try {
@@ -410,12 +374,10 @@ public final class Validator {
   }
 
   /**
-   * Specifies whether the provided exception could be the result of the JVM
-   * being offline.
+   * Specifies whether the provided exception could be the result of the JVM being offline.
    *
    * @param exception The {@link IOException} to test.
-   * @return Whether the provided exception could be the result of the JVM being
-   *         offline.
+   * @return Whether the provided exception could be the result of the JVM being offline.
    * @throws IllegalArgumentException If the provided {@link IOException} is null.
    */
   public static boolean isRemoteAccessException(final IOException exception) {
@@ -424,12 +386,10 @@ public final class Validator {
   }
 
   /**
-   * Specifies whether the provided exception could be the result of the JVM
-   * being offline.
+   * Specifies whether the provided exception could be the result of the JVM being offline.
    *
    * @param exception The {@link SAXException} to test.
-   * @return Whether the provided exception could be the result of the JVM being
-   *         offline.
+   * @return Whether the provided exception could be the result of the JVM being offline.
    * @throws IllegalArgumentException If the provided {@link SAXException} is null.
    */
   public static boolean isRemoteAccessException(final SAXException exception) {

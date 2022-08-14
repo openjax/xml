@@ -71,8 +71,7 @@ public class Base64Binary implements Serializable {
   }
 
   /**
-   * Returns the Base64 string representation of this object's {@code byte[]}
-   * data.
+   * Returns the Base64 string representation of this object's {@code byte[]} data.
    *
    * @return The Base64 string.
    */
