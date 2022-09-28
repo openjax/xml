@@ -116,10 +116,10 @@ public class XmlCatalog extends XmlEntity {
   }
 
   private void toTR9401(final Set<String> uris, final StringBuilder builder) {
-    int i = 0;
-    if (uriToEntity == null)
+    if (uriToEntity == null || uriToEntity.size() == 0)
       return;
 
+    int i = 0;
     for (final Map.Entry<String,XmlEntity> entry : uriToEntity.entrySet()) { // [S]
       if (uris.contains(entry.getKey()))
         continue;
@@ -133,9 +133,8 @@ public class XmlCatalog extends XmlEntity {
       // FIXME: What's going on here?
       builder.append(entry.getKey().equals(entry.getKey()) ? "PUBLIC " : "SYSTEM ").append(line);
       builder.append("\nREWRITE_SYSTEM ").append(line);
-      if (entity instanceof XmlCatalog && entity != this) {
+      if (entity instanceof XmlCatalog && entity != this)
         ((XmlCatalog)entity).toTR9401(uris, builder);
-      }
     }
   }
 

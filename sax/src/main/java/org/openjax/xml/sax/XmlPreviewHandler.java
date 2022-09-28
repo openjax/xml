@@ -300,28 +300,32 @@ class XmlPreviewHandler extends FastSAXHandler {
 
     if (isSchema) {
       if ("schema".equals(name.getLocalPart())) {
-        for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
-          final String attributeName = entry.getKey().getLocalPart();
-          if ("targetNamespace".equals(attributeName)) {
-            targetNamespace = entry.getValue();
-            break;
+        if (attributes.size() > 0) {
+          for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
+            final String attributeName = entry.getKey().getLocalPart();
+            if ("targetNamespace".equals(attributeName)) {
+              targetNamespace = entry.getValue();
+              break;
+            }
           }
         }
       }
       else if ("import".equals(name.getLocalPart())) {
         String namespace = null;
         String schemaLocation = null;
-        for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
-          final String attributeName = entry.getKey().getLocalPart();
-          if ("namespace".equals(attributeName)) {
-            namespace = entry.getValue();
-            if (schemaLocation != null)
-              break;
-          }
-          else if ("schemaLocation".equals(attributeName)) {
-            schemaLocation = entry.getValue();
-            if (namespace != null)
-              break;
+        if (attributes.size() > 0) {
+          for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
+            final String attributeName = entry.getKey().getLocalPart();
+            if ("namespace".equals(attributeName)) {
+              namespace = entry.getValue();
+              if (schemaLocation != null)
+                break;
+            }
+            else if ("schemaLocation".equals(attributeName)) {
+              schemaLocation = entry.getValue();
+              if (namespace != null)
+                break;
+            }
           }
         }
 
@@ -332,9 +336,11 @@ class XmlPreviewHandler extends FastSAXHandler {
           imports.put(namespace, URLs.create(path));
       }
       else if ("include".equals(name.getLocalPart())) {
-        for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
-          if ("schemaLocation".equals(entry.getKey().getLocalPart())) {
-            addInclude(entry.getValue());
+        if (attributes.size() > 0) {
+          for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
+            if ("schemaLocation".equals(entry.getKey().getLocalPart())) {
+              addInclude(entry.getValue());
+            }
           }
         }
       }
@@ -344,15 +350,17 @@ class XmlPreviewHandler extends FastSAXHandler {
     }
     else {
       if ("include".equals(name.getLocalPart())) {
-        for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
-          final String namespaceURI = entry.getKey().getNamespaceURI();
-          if ("http://www.w3.org/2001/XInclude".equals(namespaceURI) && "href".equals(entry.getKey().getLocalPart())) {
-            addInclude(entry.getValue());
+        if (attributes.size() > 0) {
+          for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
+            final String namespaceURI = entry.getKey().getNamespaceURI();
+            if ("http://www.w3.org/2001/XInclude".equals(namespaceURI) && "href".equals(entry.getKey().getLocalPart())) {
+              addInclude(entry.getValue());
+            }
           }
         }
       }
       else {
-        if (attributes != null) {
+        if (attributes != null && attributes.size() > 0) {
           for (final Map.Entry<QName,String> entry : attributes.entrySet()) { // [S]
             final String namespaceURI = entry.getKey().getNamespaceURI();
             if (XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI.equals(namespaceURI)) {

@@ -92,37 +92,39 @@ public final class XmlPreviewParser {
   }
 
   private static void traverse(final XmlPreviewHandler previewHandler, final Map<String,URL> schemaLocations, final boolean isImport) throws IOException, SAXParseException {
-    for (final Map.Entry<String,URL> entry : schemaLocations.entrySet()) { // [S]
-      final URL location = entry.getValue();
-      if (!previewHandler.getVisitedURLs().add(location))
-        continue;
+    if (schemaLocations.size() > 0) {
+      for (final Map.Entry<String,URL> entry : schemaLocations.entrySet()) { // [S]
+        final URL location = entry.getValue();
+        if (!previewHandler.getVisitedURLs().add(location))
+          continue;
 
-      final String uri = entry.getKey();
-      final XmlCatalog catalog = previewHandler.getCatalog();
-      if (catalog.getEntity(uri) == null) {
-        try {
-          final CachedInputSource inputSource = new CachedInputSource(null, location.toString(), previewHandler.getSystemId(), location.openStream());
+        final String uri = entry.getKey();
+        final XmlCatalog catalog = previewHandler.getCatalog();
+        if (catalog.getEntity(uri) == null) {
+          try {
+            final CachedInputSource inputSource = new CachedInputSource(null, location.toString(), previewHandler.getSystemId(), location.openStream());
 
-          final XmlEntity entity;
-          if (isImport) {
-            final XmlCatalog nextCatalog = new XmlCatalog(location, inputSource);
-            previewHandler.reset(nextCatalog);
-            entity = nextCatalog;
+            final XmlEntity entity;
+            if (isImport) {
+              final XmlCatalog nextCatalog = new XmlCatalog(location, inputSource);
+              previewHandler.reset(nextCatalog);
+              entity = nextCatalog;
+            }
+            else {
+              entity = new XmlEntity(location, inputSource);
+            }
+
+            FastSAXParser.parse(inputSource.getCharacterStream(), previewHandler);
+            catalog.putEntity(uri, entity);
           }
-          else {
-            entity = new XmlEntity(location, inputSource);
+          catch (final IOException e) {
+            if (!Validator.isRemoteAccessException(e) || URLs.isLocal(location))
+              throw e;
           }
 
-          FastSAXParser.parse(inputSource.getCharacterStream(), previewHandler);
-          catalog.putEntity(uri, entity);
+          if (!process(previewHandler, uri, isImport))
+            break;
         }
-        catch (final IOException e) {
-          if (!Validator.isRemoteAccessException(e) || URLs.isLocal(location))
-            throw e;
-        }
-
-        if (!process(previewHandler, uri, isImport))
-          break;
       }
     }
   }

@@ -53,19 +53,21 @@ public class TransformMojo extends XmlMojo {
   @Override
   public void execute(final LinkedHashSet<URI> uris) throws MojoExecutionException, MojoFailureException {
     try {
-      for (final URI uri : uris) { // [S]
-        final String outFileName = MojoUtil.getRenamedFileName(uri.toString(), rename);
-        final File destFile = new File(destDir, outFileName);
-        final String inFilePath = URIs.isLocalFile(uri) ? CWD.relativize(new File(uri).getAbsoluteFile().toPath()).toString() : uri.toString();
+      if (uris.size() > 0) {
+        for (final URI uri : uris) { // [S]
+          final String outFileName = MojoUtil.getRenamedFileName(uri.toString(), rename);
+          final File destFile = new File(destDir, outFileName);
+          final String inFilePath = URIs.isLocalFile(uri) ? CWD.relativize(new File(uri).getAbsoluteFile().toPath()).toString() : uri.toString();
 
-        final long lastModified;
-        if (destFile.exists() && (lastModified = uri.toURL().openConnection().getLastModified()) <= destFile.lastModified() && destFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
-          getLog().info("Pre-transformed: " + inFilePath);
-        }
-        else {
-          getLog().info("   Transforming: " + inFilePath + " -> " + CWD.relativize(destFile.getAbsoluteFile().toPath()));
-          destFile.getParentFile().mkdirs();
-          Transformer.transform(stylesheet.toURI().toURL(), uri.toURL(), destFile, parameters);
+          final long lastModified;
+          if (destFile.exists() && (lastModified = uri.toURL().openConnection().getLastModified()) <= destFile.lastModified() && destFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
+            getLog().info("Pre-transformed: " + inFilePath);
+          }
+          else {
+            getLog().info("   Transforming: " + inFilePath + " -> " + CWD.relativize(destFile.getAbsoluteFile().toPath()));
+            destFile.getParentFile().mkdirs();
+            Transformer.transform(stylesheet.toURI().toURL(), uri.toURL(), destFile, parameters);
+          }
         }
       }
     }

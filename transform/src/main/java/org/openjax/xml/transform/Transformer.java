@@ -130,7 +130,7 @@ public final class Transformer {
     try (final InputStream stylesheetIn = stylesheet.openStream()) {
       final StreamSource streamSource = new StreamSource(stylesheetIn, stylesheet.toString());
       final javax.xml.transform.Transformer transformer = factory.newTransformer(streamSource);
-      if (parameters != null)
+      if (parameters != null && parameters.size() > 0)
         for (final Map.Entry<String,String> entry : parameters.entrySet()) // [S]
           transformer.setParameter(entry.getKey(), entry.getValue());
 
