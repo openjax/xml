@@ -65,7 +65,7 @@ public final class FastSAXParser {
     handler.startDocument();
     int row = 1;
     int col = 1;
-    for (int ch0, ch1 = '\0', ch2 = '\0', i = 0; (ch0 = in.read()) != -1; ++i, ++col) { // [X]
+    for (int ch0, ch1 = '\0', ch2 = '\0', i = 0; (ch0 = in.read()) != -1; ++i, ++col) { // [ST]
       if (ch0 == '\n' || ch0 == '\r' && ch1 != '\n') {
         col = 1;
         ++row;
