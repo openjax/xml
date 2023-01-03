@@ -61,8 +61,11 @@ public final class DOMs {
     if (node == null)
       return "";
 
-    final Set<String> namespaces = schemaLocations == null || DOMStyle.isOmitNamespaces(styles) ? null : new HashSet<>();
-    final StringBuilder builder = domToString(new StringBuilder(), namespaces, namespaceToPrefix, node, 0, styles);
+    final boolean indent = DOMStyle.isIndent(styles);
+    final boolean indentAttributes = DOMStyle.isIndentAttributes(styles);
+    final boolean omitNamespaces = DOMStyle.isOmitNamespaces(styles);
+    final Set<String> namespaces = omitNamespaces || schemaLocations == null ? null : new HashSet<>();
+    final StringBuilder builder = domToString(new StringBuilder(), namespaces, namespaceToPrefix, node, 0, indent, indentAttributes, omitNamespaces);
     if (schemaLocations == null || schemaLocations.size() == 0 || namespaces == null || namespaces.size() == 0)
       return builder.toString();
 
@@ -93,18 +96,21 @@ public final class DOMs {
     return namespaceURI != null && !XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI) && !XMLConstants.XML_NS_URI.equals(namespaceURI);
   }
 
-  private static StringBuilder domToString(final StringBuilder builder, final Set<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final DOMStyle[] styles) {
+  private static StringBuilder domToString(final StringBuilder builder, final Set<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final boolean indent, final boolean indentAttributes, final boolean omitNamespaces) {
     if (node == null)
       return builder;
 
     if (node instanceof Attr)
-      return attributeToString(builder, namespaces, namespaceToPrefix, (Attr)node, depth, styles);
+      return attributeToString(builder, namespaces, namespaceToPrefix, (Attr)node, depth, indentAttributes, omitNamespaces);
 
     final String prefix;
-    if (!DOMStyle.isOmitNamespaces(styles) && (namespaces != null || namespaceToPrefix != null) && validNamespaceURI(node.getNamespaceURI())) {
-      prefix = namespaceToPrefix == null ? null : namespaceToPrefix.get(node.getNamespaceURI());
+    final String namespaceURI = node.getNamespaceURI();
+    if (omitNamespaces)
+      prefix = "";
+    else if ((namespaces != null || namespaceToPrefix != null) && validNamespaceURI(namespaceURI)) {
+      prefix = namespaceToPrefix == null ? null : namespaceToPrefix.get(namespaceURI);
       if (namespaces != null)
-        namespaces.add(node.getNamespaceURI());
+        namespaces.add(namespaceURI);
     }
     else {
       prefix = null;
@@ -114,22 +120,22 @@ public final class DOMs {
     final String nodeValue = node.getNodeValue();
     final int type = node.getNodeType();
     if (type == Node.ELEMENT_NODE) {
-      if (DOMStyle.isIndent(styles) && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
+      int length;
+      if (indent && (length = builder.length()) > 1 && builder.charAt(length - 1) == '>') {
         builder.append('\n');
         for (int i = 0; i < depth; ++i) // [N]
           builder.append("  ");
       }
 
-      builder.append('<');
-      builder.append(nodeName);
-      attributesToString(builder, namespaces, namespaceToPrefix, node, depth + 1, styles);
+      builder.append('<').append(nodeName);
+      attributesToString(builder, namespaces, namespaceToPrefix, node, depth + 1, indentAttributes, omitNamespaces);
       if (node.hasChildNodes()) {
         builder.append('>');
         final NodeList nodeList = node.getChildNodes();
         for (int i = 0, i$ = nodeList.getLength(); i < i$; ++i) // [RA]
-          domToString(builder, namespaces, namespaceToPrefix, nodeList.item(i), depth + 1, styles);
+          domToString(builder, namespaces, namespaceToPrefix, nodeList.item(i), depth + 1, indent, indentAttributes, omitNamespaces);
 
-        if (DOMStyle.isIndent(styles) && builder.length() > 1 && builder.charAt(builder.length() - 1) == '>') {
+        if (indent && (length = builder.length()) > 1 && builder.charAt(length - 1) == '>') {
           builder.append('\n');
           for (int i = 0; i < depth; ++i) // [N]
             builder.append("  ");
@@ -142,18 +148,16 @@ public final class DOMs {
       }
     }
     else if (type == Node.TEXT_NODE && nodeValue != null && nodeValue.length() != 0) {
-      // Note: DOM expands entity references to their Unicode equivalent.
-      // '&amp;' becomes simply '&'. Since the string being constructed
-      // here is intended to be used as XML text, we have to reconstruct
-      // the standard entity references
+      // Note: DOM expands entity references to their Unicode equivalent. '&amp;' becomes simply '&'. Since the string being
+      // constructed here is intended to be used as XML text, we have to reconstruct the standard entity references.
       appendText(builder, nodeValue);
     }
 
     return builder;
   }
 
-  private static StringBuilder attributeToString(final StringBuilder builder, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Attr attribute, final int depth, final DOMStyle[] styles) {
-    if (DOMStyle.isIndentAttributes(styles)) {
+  private static StringBuilder attributeToString(final StringBuilder builder, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Attr attribute, final int depth, final boolean indentAttributes, final boolean omitNamespaces) {
+    if (indentAttributes) {
       builder.append('\n');
       for (int i = 0; i < depth; ++i) // [N]
         builder.append("  ");
@@ -164,46 +168,48 @@ public final class DOMs {
 
     final String prefix;
     final String localName;
-    if (!DOMStyle.isOmitNamespaces(styles) && (namespaces != null || namespaceToPrefix != null)) {
-      if (validNamespaceURI(attribute.getNamespaceURI())) {
-        prefix = namespaceToPrefix == null ? null : namespaceToPrefix.get(attribute.getNamespaceURI());
-        localName = attribute.getLocalName();
+    final String attrLocalName = attribute.getLocalName();
+    if (!omitNamespaces && (namespaces != null || namespaceToPrefix != null)) {
+      final String namespaceURI = attribute.getNamespaceURI();
+      if (validNamespaceURI(namespaceURI)) {
+        prefix = namespaceToPrefix == null ? null : namespaceToPrefix.get(namespaceURI);
+        localName = attrLocalName;
         if (namespaces != null)
-          namespaces.add(attribute.getNamespaceURI());
+          namespaces.add(namespaceURI);
       }
       else if (namespaceToPrefix != null && "xmlns".equals(attribute.getPrefix())) {
-        final String localNamespaceURI = attribute.lookupNamespaceURI(attribute.getLocalName());
+        final String localNamespaceURI = attribute.lookupNamespaceURI(attrLocalName);
         final String name = localNamespaceURI == null ? null : namespaceToPrefix.get(localNamespaceURI);
-        localName = name != null ? name : attribute.getLocalName();
+        localName = name != null ? name : attrLocalName;
         prefix = "xmlns";
       }
       else {
         prefix = null;
-        localName = attribute.getLocalName();
+        localName = attrLocalName;
       }
     }
     else {
       prefix = null;
-      localName = attribute.getLocalName();
+      localName = attrLocalName;
     }
 
     final String nodeName = prefix == null ? attribute.getNodeName() : prefix.length() == 0 ? localName : localName.length() > 0 ? prefix + ":" + localName : prefix;
-    builder.append(nodeName);
-    builder.append("=\"");
+    builder.append(nodeName).append("=\"");
     final String value;
+    final String nodeValue = attribute.getNodeValue();
     if (namespaceToPrefix != null && "xsi:type".equals(attribute.getName())) {
-      final int colon = attribute.getNodeValue().indexOf(':');
+      final int colon = nodeValue.indexOf(':');
       if (colon != -1) {
-        final String valueNamespaceURI = attribute.lookupNamespaceURI(attribute.getNodeValue().substring(0, colon));
+        final String valueNamespaceURI = attribute.lookupNamespaceURI(nodeValue.substring(0, colon));
         final String valuePrefix = namespaceToPrefix.get(valueNamespaceURI);
-        value = valuePrefix == null ? attribute.getNodeValue() : valuePrefix.length() > 0 ? valuePrefix + ":" + attribute.getNodeValue().substring(colon + 1) : attribute.getNodeValue().substring(colon + 1);
+        value = valuePrefix == null ? nodeValue : valuePrefix.length() > 0 ? valuePrefix + ":" + nodeValue.substring(colon + 1) : nodeValue.substring(colon + 1);
       }
       else {
-        value = attribute.getNodeValue();
+        value = nodeValue;
       }
     }
     else {
-      value = attribute.getNodeValue();
+      value = nodeValue;
     }
 
     appendText(builder, value);
@@ -211,15 +217,15 @@ public final class DOMs {
     return builder;
   }
 
-  private static StringBuilder attributesToString(final StringBuilder builder, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final DOMStyle[] styles) {
+  private static StringBuilder attributesToString(final StringBuilder builder, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final boolean indentAttributes, final boolean omitNamespaces) {
     final NamedNodeMap attributes = node.getAttributes();
     if (attributes == null)
       return builder;
 
     for (int i = 0, i$ = attributes.getLength(); i < i$; ++i) { // [RA]
       final Attr attribute = (Attr)attributes.item(i);
-      if (!DOMStyle.isOmitNamespaces(styles) || !attribute.getNodeName().startsWith("xmlns"))
-        attributeToString(builder, namespaces, namespaceToPrefix, attribute, depth, styles);
+      if (!omitNamespaces || !attribute.getNodeName().startsWith("xmlns"))
+        attributeToString(builder, namespaces, namespaceToPrefix, attribute, depth, indentAttributes, omitNamespaces);
     }
 
     return builder;
@@ -243,10 +249,9 @@ public final class DOMs {
    *
    * @param builder The {@link StringBuilder} to which to append.
    * @param text The text string to append.
-   * @throws IllegalArgumentException If {@code builder} or {@code text} is null.
+   * @throws NullPointerException If {@code builder} or {@code text} is null.
    */
-  private static void appendText(final StringBuilder builder, String text) {
-    text = text.trim();
+  private static void appendText(final StringBuilder builder, final String text) {
     for (int i = 0, i$ = text.length(); i < i$; ++i) { // [N]
       final char ch = text.charAt(i);
       if (ch == '&')

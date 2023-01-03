@@ -21,7 +21,7 @@ public enum DOMStyle {
   INDENT(true, false, false),
   /** Indent each attribute with a newline. */
   INDENT_ATTRS(false, true, false),
-  /** Omit namespace declaration. */
+  /** Omit namespaces. */
   OMIT_NAMESPACES(false, false, true);
 
   private final boolean indentElements;
