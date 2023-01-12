@@ -41,7 +41,7 @@ public final class SAXParsers {
     }
     catch (final FactoryConfigurationError e) {
       factory = SAXParserFactory.newInstance();
-      logger.warn("Unable to create SAXParserFactory of type org.apache.xerces.jaxp.SAXParserFactoryImpl. Factory of " + factory.getClass().getName() + " created instead.", e);
+      if (logger.isWarnEnabled()) logger.warn("Unable to create SAXParserFactory of type org.apache.xerces.jaxp.SAXParserFactoryImpl. Factory of " + factory.getClass().getName() + " created instead.", e);
     }
 
     factory.setNamespaceAware(true);

@@ -37,8 +37,7 @@ public final class DOMParsers {
     // treat validation errors as fatal
     @Override
     public void error(final SAXParseException e) throws SAXParseException {
-      final String systemId = e.getSystemId() != null ? " systemId=\"" + e.getSystemId() + "\"" : "";
-      logger.error("[" + e.getLineNumber() + "," + e.getColumnNumber() + "]" + systemId);
+      if (logger.isErrorEnabled()) logger.error("[" + e.getLineNumber() + "," + e.getColumnNumber() + "]" + (e.getSystemId() != null ? " systemId=\"" + e.getSystemId() + "\"" : ""));
       throw e;
     }
 
@@ -46,7 +45,7 @@ public final class DOMParsers {
     @Override
     public void warning(final SAXParseException e) {
       final String message = e.getMessage() != null ? " " + e.getMessage() : "";
-      logger.warn("[" + e.getLineNumber() + "," + e.getColumnNumber() + "] systemId=\"" + e.getSystemId() + "\"" + message);
+      if (logger.isWarnEnabled()) logger.warn("[" + e.getLineNumber() + "," + e.getColumnNumber() + "] systemId=\"" + e.getSystemId() + "\"" + message);
     }
   };
 
