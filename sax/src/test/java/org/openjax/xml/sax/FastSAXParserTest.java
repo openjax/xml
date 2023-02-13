@@ -147,7 +147,7 @@ public class FastSAXParserTest {
       fields[i] = read(in, indices[i]);
     }
 
-    assertTrue("Expected " + type.toString() + ": " + Arrays.toString(fields), iterator.hasNext());
+    assertTrue("Expected " + type + ": " + Arrays.toString(fields), iterator.hasNext());
     final Event event = iterator.next();
     assertEquals(event.toString(), event.type, type);
     assertEquals(event.fields.length, indices.length);

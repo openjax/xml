@@ -161,7 +161,7 @@ public class Time extends TemporalType {
     offset = Math.abs(offset);
     final int hourTZ = offset / 60;
     final int minsTZ = offset - hourTZ * 60;
-    return (negative ? "-" : "+") + (hourTZ < 10 ? "0" + hourTZ : String.valueOf(hourTZ)) + ":" + (minsTZ < 10 ? "0" + minsTZ : String.valueOf(minsTZ));
+    return (negative ? "-" : "+") + (hourTZ < 10 ? "0" + hourTZ : hourTZ) + ":" + (minsTZ < 10 ? "0" + minsTZ : minsTZ);
   }
 
   protected static final int HOUR_FRAG_MIN_LENGTH = 2;
