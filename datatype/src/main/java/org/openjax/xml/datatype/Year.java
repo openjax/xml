@@ -112,17 +112,17 @@ public class Year extends TemporalType {
 
   @Override
   protected String toEmbeddedString() {
-    final StringBuilder builder = new StringBuilder();
+    final StringBuilder b = new StringBuilder();
     if (year < 10)
-      builder.append("000").append(year);
+      b.append("000").append(year);
     else if (year < 100)
-      builder.append("00").append(year);
+      b.append("00").append(year);
     else if (year < 1000)
-      builder.append('0').append(year);
+      b.append('0').append(year);
     else
-      builder.append(year);
+      b.append(year);
 
-    return builder.toString();
+    return b.toString();
   }
 
   @Override

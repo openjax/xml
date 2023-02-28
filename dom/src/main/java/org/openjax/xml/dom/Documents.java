@@ -59,8 +59,9 @@ public final class Documents {
       if (attributeFormQualified) {
         // for attributes of this node
         final NamedNodeMap attributes = node.getAttributes();
-        if (attributes != null && attributes.getLength() != 0) {
-          for (int i = 0, i$ = attributes.getLength(); i < i$; ++i) { // [RA]
+        final int i$;
+        if (attributes != null && (i$ = attributes.getLength()) != 0) {
+          for (int i = 0; i < i$; ++i) { // [RA]
             final Node attribute = attributes.item(i);
             if (attribute != null)
               nodes.push(attribute);
@@ -70,8 +71,9 @@ public final class Documents {
 
       // for child nodes of this node
       final NodeList childNodes = node.getChildNodes();
-      if (childNodes != null && childNodes.getLength() != 0) {
-        for (int i = 0, i$ = childNodes.getLength(); i < i$; ++i) { // [RA]
+      final int i$;
+      if (childNodes != null && (i$ = childNodes.getLength()) != 0) {
+        for (int i = 0; i < i$; ++i) { // [RA]
           final Node childNode = childNodes.item(i);
           if (childNode != null)
             nodes.push(childNode);

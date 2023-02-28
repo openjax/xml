@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class XmlElement implements Cloneable, Serializable {
+  // FIXME: Implement more performant alternative.
   private static final Pattern qName = Pattern.compile("^[a-zA-Z_][\\w.-]*(:[a-zA-Z_][\\w.-]*)?$");
 
   /**
@@ -43,12 +44,12 @@ public class XmlElement implements Cloneable, Serializable {
    *
    * @param name The string.
    * @return The specified string.
-   * @throws IllegalArgumentException If {@code name} is null, or if {@code name} is not a valid
+   * @throws NullPointerException If {@code name} is null.
+   * @throws IllegalArgumentException If {@code name} is not a valid
    *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   private static String requireQName(final Object name) {
-    CharacterDatas.assertNotNull(name, "name is null");
-    final String string = String.valueOf(name);
+    final String string = name.toString();
     if (string.length() == 0 || !qName.matcher(string).matches())
       throw new IllegalArgumentException(string + " is not a valid xs:QName");
 
@@ -65,7 +66,8 @@ public class XmlElement implements Cloneable, Serializable {
    * @param name The name.
    * @param attributes The attributes.
    * @param elements The child elements.
-   * @throws IllegalArgumentException If {@code name} is null, or if {@code name} is not a valid
+   * @throws NullPointerException If {@code name} is null.
+   * @throws IllegalArgumentException If {@code name} is not a valid
    *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   public XmlElement(final String name, final Map attributes, final Collection elements) {
@@ -79,7 +81,8 @@ public class XmlElement implements Cloneable, Serializable {
    *
    * @param name The name.
    * @param attributes The attributes.
-   * @throws IllegalArgumentException If {@code name} is null, or if {@code name} is not a valid
+   * @throws NullPointerException If {@code name} is null.
+   * @throws IllegalArgumentException If {@code name} is not a valid
    *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   public XmlElement(final String name, final Map attributes) {
@@ -91,7 +94,8 @@ public class XmlElement implements Cloneable, Serializable {
    *
    * @param name The name.
    * @param elements The child elements.
-   * @throws IllegalArgumentException If {@code name} is null, or if {@code name} is not a valid
+   * @throws NullPointerException If {@code name} is null.
+   * @throws IllegalArgumentException If {@code name} is not a valid
    *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   public XmlElement(final String name, final Collection elements) {
@@ -102,7 +106,8 @@ public class XmlElement implements Cloneable, Serializable {
    * Creates a new {@link XmlElement} with the specified name.
    *
    * @param name The name.
-   * @throws IllegalArgumentException If {@code name} is null., or if {@code name} is not a valid
+   * @throws NullPointerException If {@code name} is null.
+   * @throws IllegalArgumentException If {@code name} is not a valid
    *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    */
   public XmlElement(final String name) {
@@ -202,36 +207,37 @@ public class XmlElement implements Cloneable, Serializable {
    *          elements are indented and placed on a new line. If the indent value is {@code 0}, child elements are not indented, nor
    *          placed on a new line.
    * @return An XML string representation of this element.
-   * @throws IllegalArgumentException If a child element is null, or the name or value of an attribute is null, or if the name of an
-   *           attribute is not a valid <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>, or if
-   *           {@code indent} is negative.
+   * @throws NullPointerException If a child element is null, or the name or value of an attribute is null.
+   * @throws IllegalArgumentException If the name of an attribute is not a valid
+   *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>, or if {@code indent} is
+   *           negative.
    * @throws StackOverflowError If the graph of child elements has cycles.
    */
   public String toString(final int indent) {
     if (indent < 0)
       throw new IllegalArgumentException("indent (" + indent + ") must be non-negative");
 
-    final StringBuilder builder = new StringBuilder("<");
-    builder.append(name);
+    final StringBuilder b = new StringBuilder("<");
+    b.append(name);
     if (attributes != null && attributes.size() > 0) {
       final StringBuilder value = new StringBuilder();
       for (final Map.Entry entry : (Set<Map.Entry>)attributes.entrySet()) { // [S]
         final String name = requireQName(entry.getKey());
-        value.append(CharacterDatas.assertNotNull(entry.getValue(), "name is null"));
-        builder.append(' ').append(name).append("=\"");
-        CharacterDatas.escapeForAttr(builder, value, '"');
+        value.append(Objects.requireNonNull(entry.getValue(), "name is null"));
+        b.append(' ').append(name).append("=\"");
+        CharacterDatas.escapeForAttr(b, value, '"');
         value.setLength(0);
-        builder.append('"');
+        b.append('"');
       }
     }
 
     if (elements == null || elements.size() == 0)
-      return builder.append("/>").toString();
+      return b.append("/>").toString();
 
-    builder.append('>');
+    b.append('>');
     if (indent == 0) {
       for (final Object element : elements) { // [C]
-        builder.append(element.toString());
+        b.append(element.toString());
       }
     }
     else {
@@ -241,20 +247,21 @@ public class XmlElement implements Cloneable, Serializable {
       final String delim = new String(chars);
       for (final Object element : elements) { // [C]
         final String string = element instanceof XmlElement ? ((XmlElement)element).toString(indent) : element.toString();
-        builder.append(chars).append(string.replace("\n", delim));
+        b.append(chars).append(string.replace("\n", delim));
       }
 
-      builder.append('\n');
+      b.append('\n');
     }
 
-    return builder.append("</").append(name).append('>').toString();
+    return b.append("</").append(name).append('>').toString();
   }
 
   /**
    * Returns an XML string representation of this element with no indentation.
    *
    * @return An XML string representation of this element.
-   * @throws IllegalArgumentException If the name of an attribute is null, or if the name of an attribute is not a valid
+   * @throws NullPointerException If the name of an attribute is null.
+   * @throws IllegalArgumentException If the name of an attribute is not a valid
    *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>.
    * @throws StackOverflowError If the graph of child elements has cycles.
    */

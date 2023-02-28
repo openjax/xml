@@ -33,7 +33,7 @@ import org.xml.sax.SAXParseException;
  */
 public abstract class DelegateErrorHandler implements ErrorHandler {
   /** The target {@link ErrorHandler}. */
-  protected volatile ErrorHandler target;
+  protected ErrorHandler target;
 
   /**
    * Creates a new {@link DelegateErrorHandler} with the specified target {@link ErrorHandler}.

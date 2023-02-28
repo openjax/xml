@@ -57,8 +57,9 @@ public class Language implements CharSequence, Serializable {
     if (language.length == 0)
       throw new IllegalArgumentException("language.length == 0");
 
-    if (!firstPattern.matcher(language[0]).matches())
-      throw new IllegalArgumentException(language[0]);
+    final String langudage0 = language[0];
+    if (!firstPattern.matcher(langudage0).matches())
+      throw new IllegalArgumentException(langudage0);
 
     for (int i = 1, i$ = language.length; i < i$; ++i) // [A]
       if (!otherPattern.matcher(language[i]).matches())
@@ -115,14 +116,14 @@ public class Language implements CharSequence, Serializable {
     if (language.length == 0)
       return encoded = "";
 
-    final StringBuilder builder = new StringBuilder();
+    final StringBuilder b = new StringBuilder();
     for (int i = 0, i$ = language.length; i < i$; ++i) { // [A]
       if (i > 0)
-        builder.append('-');
+        b.append('-');
 
-      builder.append(language[i]);
+      b.append(language[i]);
     }
 
-    return encoded = builder.toString();
+    return encoded = b.toString();
   }
 }

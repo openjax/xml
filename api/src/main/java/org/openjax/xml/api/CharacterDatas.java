@@ -20,25 +20,16 @@ package org.openjax.xml.api;
  * Utility functions for operations pertaining to XML character data.
  */
 public final class CharacterDatas {
-  static <T>T assertNotNull(final T obj, final String message) {
-    if (obj == null)
-      throw new IllegalArgumentException(message);
-
-    return obj;
-  }
-
   private static void assertQuote(final char quote) {
     if (quote != '"' && quote != '\'')
       throw new IllegalArgumentException("Illegal quote character: " + quote);
   }
 
   private static void assertRange(final int off, final int len, final CharSequence str) {
-    assertNotNull(str, "str is null");
     assertRange(off, len, str.length(), "str.length()");
   }
 
   private static void assertRange(final int off, final int len, final char[] chars) {
-    assertNotNull(chars, "chars is null");
     assertRange(off, len, chars.length, "chars.length");
   }
 
@@ -116,10 +107,10 @@ public final class CharacterDatas {
    * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
    *          {@code '\''}).
    * @return A new {@link StringBuilder} with the escaped representation of {@code str}.
-   * @throws IllegalArgumentException If {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code str} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final CharSequence str, final char quote) {
-    assertNotNull(str, "str is null");
     assertQuote(quote);
     return escape(new StringBuilder(), str, quote, 0, str.length());
   }
@@ -144,11 +135,10 @@ public final class CharacterDatas {
    * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
    *          {@code '\''}).
    * @return The provided {@link StringBuilder} with the escaped representation of {@code str}.
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code out} or {@code str} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final StringBuilder out, final CharSequence str, final char quote) {
-    assertNotNull(out, "out is null");
-    assertNotNull(str, "str is null");
     assertQuote(quote);
     return escape(out, str, quote, 0, str.length());
   }
@@ -172,10 +162,10 @@ public final class CharacterDatas {
    * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
    *          {@code '\''}).
    * @return A new {@link StringBuilder} with the escaped representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code chars} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code chars} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final char[] chars, final char quote) {
-    assertNotNull(chars, "chars is null");
     assertQuote(quote);
     return escape(new StringBuilder(), chars, quote, 0, chars.length);
   }
@@ -200,12 +190,10 @@ public final class CharacterDatas {
    * @param quote The quote character to be used to delimit the attribute's value in the XML document (either {@code '"'} or
    *          {@code '\''}).
    * @return The provided {@link StringBuilder} with the escaped representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null, or if {@code quote} is not {@code '"'} or
-   *           {@code '\''}.
+   * @throws NullPointerException If {@code out} or {@code chars} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final StringBuilder out, final char[] chars, final char quote) {
-    assertNotNull(out, "out is null");
-    assertNotNull(chars, "chars is null");
     assertQuote(quote);
     return escape(out, chars, quote, 0, chars.length);
   }
@@ -233,7 +221,8 @@ public final class CharacterDatas {
    * @return A new {@link StringBuilder} with the escaped representation of {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code str} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final CharSequence str, final char quote, final int off, final int len) {
     assertRange(off, len, str);
@@ -265,10 +254,10 @@ public final class CharacterDatas {
    * @return The provided {@link StringBuilder} with the escaped representation of {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code out} or {@code str} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final StringBuilder out, final CharSequence str, final char quote, final int off, final int len) {
-    assertNotNull(out, "out is null");
     assertRange(off, len, str);
     assertQuote(quote);
     return escape(out, str, quote, off, len);
@@ -297,7 +286,8 @@ public final class CharacterDatas {
    * @return A new {@link StringBuilder} with the escaped representation of {@code chars}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code chars} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code chars} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final char[] chars, final char quote, final int off, final int len) {
     assertRange(off, len, chars);
@@ -329,11 +319,10 @@ public final class CharacterDatas {
    * @return The provided {@link StringBuilder} with the escaped representation of {@code chars}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null, or if {@code quote} is not {@code '"'} or
-   *           {@code '\''}.
+   * @throws NullPointerException If {@code out} or {@code chars} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder escapeForAttr(final StringBuilder out, final char[] chars, final char quote, final int off, final int len) {
-    assertNotNull(out, "out is null");
     assertRange(off, len, chars);
     assertQuote(quote);
     return escape(out, chars, quote, off, len);
@@ -352,10 +341,9 @@ public final class CharacterDatas {
    *
    * @param str The string to escape.
    * @return A new {@link StringBuilder} with the escaped representation of {@code str}.
-   * @throws IllegalArgumentException If {@code str} is null.
+   * @throws NullPointerException If {@code str} is null.
    */
   public static StringBuilder escapeForElem(final CharSequence str) {
-    assertNotNull(str, "str is null");
     return escape(new StringBuilder(), str, '\0', 0, str.length());
   }
 
@@ -373,11 +361,9 @@ public final class CharacterDatas {
    * @param out The {@link StringBuilder} to which the escaped contents of {@code str} are to be appended.
    * @param str The string to escape.
    * @return The provided {@link StringBuilder} with the escaped representation of {@code str}.
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null.
+   * @throws NullPointerException If {@code out} or {@code str} is null.
    */
   public static StringBuilder escapeForElem(final StringBuilder out, final CharSequence str) {
-    assertNotNull(out, "out is null");
-    assertNotNull(str, "str is null");
     return escape(out, str, '\0', 0, str.length());
   }
 
@@ -394,10 +380,9 @@ public final class CharacterDatas {
    *
    * @param chars The {@code char[]} to escape.
    * @return A new {@link StringBuilder} with the escaped representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code chars} is null.
+   * @throws NullPointerException If {@code chars} is null.
    */
   public static StringBuilder escapeForElem(final char[] chars) {
-    assertNotNull(chars, "chars is null");
     return escape(new StringBuilder(), chars, '\0', 0, chars.length);
   }
 
@@ -415,11 +400,9 @@ public final class CharacterDatas {
    * @param out The {@link StringBuilder} to which the escaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to escape.
    * @return The provided {@link StringBuilder} with the escaped representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null.
+   * @throws NullPointerException If {@code out} or {@code chars} is null.
    */
   public static StringBuilder escapeForElem(final StringBuilder out, final char[] chars) {
-    assertNotNull(out, "out is null");
-    assertNotNull(chars, "chars is null");
     return escape(out, chars, '\0', 0, chars.length);
   }
 
@@ -440,7 +423,7 @@ public final class CharacterDatas {
    * @return A new {@link StringBuilder} with the escaped representation of {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code str} is null.
+   * @throws NullPointerException If {@code str} is null.
    */
   public static StringBuilder escapeForElem(final CharSequence str, final int off, final int len) {
     assertRange(off, len, str);
@@ -465,10 +448,9 @@ public final class CharacterDatas {
    * @return The provided {@link StringBuilder} with the escaped representation of {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null.
+   * @throws NullPointerException If {@code out} or {@code str} is null.
    */
   public static StringBuilder escapeForElem(final StringBuilder out, final CharSequence str, final int off, final int len) {
-    assertNotNull(out, "out is null");
     assertRange(off, len, str);
     return escape(out, str, '\0', off, len);
   }
@@ -490,7 +472,7 @@ public final class CharacterDatas {
    * @return A new {@link StringBuilder} with the escaped representation of {@code chars}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code chars} is null.
+   * @throws NullPointerException If {@code chars} is null.
    */
   public static StringBuilder escapeForElem(final char[] chars, final int off, final int len) {
     assertRange(off, len, chars);
@@ -515,10 +497,9 @@ public final class CharacterDatas {
    * @return The provided {@link StringBuilder} with the escaped representation of {@code chars}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null.
+   * @throws NullPointerException If {@code out} or {@code chars} is null.
    */
   public static StringBuilder escapeForElem(final StringBuilder out, final char[] chars, final int off, final int len) {
-    assertNotNull(out, "out is null");
     assertRange(off, len, chars);
     return escape(out, chars, '\0', off, len);
   }
@@ -715,10 +696,10 @@ public final class CharacterDatas {
    * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
    *          {@code '\''}).
    * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
-   * @throws IllegalArgumentException If {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code str} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final CharSequence str, final char quote) {
-    assertNotNull(str, "str is null");
     assertQuote(quote);
     return unescape(new StringBuilder(), str, quote, 0, str.length());
   }
@@ -743,11 +724,10 @@ public final class CharacterDatas {
    * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
    *          {@code '\''}).
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code out} or {@code str} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final StringBuilder out, final CharSequence str, final char quote) {
-    assertNotNull(out, "out is null");
-    assertNotNull(str, "str is null");
     assertQuote(quote);
     return unescape(out, str, quote, 0, str.length());
   }
@@ -771,10 +751,10 @@ public final class CharacterDatas {
    * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
    *          {@code '\''}).
    * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code chars} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code chars} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final char[] chars, final char quote) {
-    assertNotNull(chars, "chars is null");
     assertQuote(quote);
     return unescape(new StringBuilder(), chars, quote, 0, chars.length);
   }
@@ -799,12 +779,10 @@ public final class CharacterDatas {
    * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
    *          {@code '\''}).
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null, or if {@code quote} is not {@code '"'} or
-   *           {@code '\''}.
+   * @throws NullPointerException If {@code out} or {@code chars} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final StringBuilder out, final char[] chars, final char quote) {
-    assertNotNull(out, "out is null");
-    assertNotNull(chars, "chars is null");
     assertQuote(quote);
     return unescape(out, chars, quote, 0, chars.length);
   }
@@ -832,7 +810,8 @@ public final class CharacterDatas {
    * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code str} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final CharSequence str, final char quote, final int off, final int len) {
     assertRange(off, len, str);
@@ -863,10 +842,10 @@ public final class CharacterDatas {
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code out} or {@code str} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final StringBuilder out, final CharSequence str, final char quote, final int off, final int len) {
-    assertNotNull(out, "out is null");
     assertRange(off, len, str);
     assertQuote(quote);
     return unescape(out, str, quote, off, len);
@@ -895,7 +874,8 @@ public final class CharacterDatas {
    * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code chars} is null, or if {@code quote} is not {@code '"'} or {@code '\''}.
+   * @throws NullPointerException If {@code chars} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final char[] chars, final char quote, final int off, final int len) {
     assertRange(off, len, chars);
@@ -927,11 +907,10 @@ public final class CharacterDatas {
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null, or if {@code quote} is not {@code '"'} or
-   *           {@code '\''}.
+   * @throws NullPointerException If {@code out} or {@code chars} is null.
+   * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
    */
   public static StringBuilder unescapeFromAttr(final StringBuilder out, final char[] chars, final char quote, final int off, final int len) {
-    assertNotNull(out, "out is null");
     assertRange(off, len, chars);
     assertQuote(quote);
     return unescape(out, chars, quote, off, len);
@@ -950,10 +929,9 @@ public final class CharacterDatas {
    *
    * @param str The string to unescape.
    * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
-   * @throws IllegalArgumentException If {@code str} is null.
+   * @throws NullPointerException If {@code str} is null.
    */
   public static StringBuilder unescapeFromElem(final CharSequence str) {
-    assertNotNull(str, "str is null");
     return unescape(new StringBuilder(), str, '\0', 0, str.length());
   }
 
@@ -971,11 +949,9 @@ public final class CharacterDatas {
    * @param out The {@link StringBuilder} to which the unescaped contents of {@code str} are to be appended.
    * @param str The string to unescape.
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null.
+   * @throws NullPointerException If {@code out} or {@code str} is null.
    */
   public static StringBuilder unescapeFromElem(final StringBuilder out, final CharSequence str) {
-    assertNotNull(out, "out is null");
-    assertNotNull(str, "str is null");
     return unescape(out, str, '\0', 0, str.length());
   }
 
@@ -992,10 +968,9 @@ public final class CharacterDatas {
    *
    * @param chars The {@code char[]} to unescape.
    * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code chars} is null.
+   * @throws NullPointerException If {@code chars} is null.
    */
   public static StringBuilder unescapeFromElem(final char[] chars) {
-    assertNotNull(chars, "chars is null");
     return unescape(new StringBuilder(), chars, '\0', 0, chars.length);
   }
 
@@ -1013,11 +988,9 @@ public final class CharacterDatas {
    * @param out The {@link StringBuilder} to which the unescaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to unescape.
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null.
+   * @throws NullPointerException If {@code out} or {@code chars} is null.
    */
   public static StringBuilder unescapeFromElem(final StringBuilder out, final char[] chars) {
-    assertNotNull(out, "out is null");
-    assertNotNull(chars, "chars is null");
     return unescape(out, chars, '\0', 0, chars.length);
   }
 
@@ -1038,7 +1011,7 @@ public final class CharacterDatas {
    * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code str} is null.
+   * @throws NullPointerException If {@code str} is null.
    */
   public static StringBuilder unescapeFromElem(final CharSequence str, final int off, final int len) {
     assertRange(off, len, str);
@@ -1063,10 +1036,9 @@ public final class CharacterDatas {
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code str} is null.
+   * @throws NullPointerException If {@code out} or {@code str} is null.
    */
   public static StringBuilder unescapeFromElem(final StringBuilder out, final CharSequence str, final int off, final int len) {
-    assertNotNull(out, "out is null");
     assertRange(off, len, str);
     return unescape(out, str, '\0', off, len);
   }
@@ -1088,7 +1060,7 @@ public final class CharacterDatas {
    * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code chars} is null.
+   * @throws NullPointerException If {@code chars} is null.
    */
   public static StringBuilder unescapeFromElem(final char[] chars, final int off, final int len) {
     assertRange(off, len, chars);
@@ -1113,10 +1085,9 @@ public final class CharacterDatas {
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
    * @throws IndexOutOfBoundsException For range parameters that are out-of-bounds ({@code off < 0 || len < 0 ||
    *         off + len >= str.length()}).
-   * @throws IllegalArgumentException If {@code out} or {@code chars} is null.
+   * @throws NullPointerException If {@code out} or {@code chars} is null.
    */
   public static StringBuilder unescapeFromElem(final StringBuilder out, final char[] chars, final int off, final int len) {
-    assertNotNull(out, "out is null");
     assertRange(off, len, chars);
     return unescape(out, chars, '\0', off, len);
   }

@@ -102,13 +102,13 @@ public class MonthDay extends TemporalType {
 
   @Override
   protected String toEmbeddedString() {
-    final StringBuilder builder = new StringBuilder();
-    builder.append(month.toEmbeddedString()).append('-');
+    final StringBuilder b = new StringBuilder();
+    b.append(month.toEmbeddedString()).append('-');
     if (getDay() < 10)
-      builder.append('0');
+      b.append('0');
 
-    builder.append(getDay());
-    return builder.toString();
+    b.append(getDay());
+    return b.toString();
   }
 
   @Override

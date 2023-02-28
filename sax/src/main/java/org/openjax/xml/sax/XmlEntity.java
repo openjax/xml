@@ -56,7 +56,7 @@ public class XmlEntity implements AutoCloseable, Serializable {
    * @return The {@link CachedInputSource}.
    */
   public CachedInputSource getInputSource() {
-    return this.inputSource;
+    return inputSource;
   }
 
   /**
@@ -67,6 +67,6 @@ public class XmlEntity implements AutoCloseable, Serializable {
    */
   @Override
   public void close() throws IOException {
-    this.inputSource.close();
+    inputSource.close();
   }
 }

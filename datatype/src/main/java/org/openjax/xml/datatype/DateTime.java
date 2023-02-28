@@ -106,15 +106,15 @@ public class DateTime extends TemporalType {
 
   @Override
   protected String toEmbeddedString() {
-    final StringBuilder builder = new StringBuilder();
+    final StringBuilder b = new StringBuilder();
     if (date != null)
-      builder.append(date.toEmbeddedString());
+      b.append(date.toEmbeddedString());
 
-    builder.append('T');
+    b.append('T');
     if (time != null)
-      builder.append(time.toEmbeddedString());
+      b.append(time.toEmbeddedString());
 
-    return builder.toString();
+    return b.toString();
   }
 
   @Override

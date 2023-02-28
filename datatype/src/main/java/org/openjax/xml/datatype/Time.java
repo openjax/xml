@@ -226,37 +226,37 @@ public class Time extends TemporalType {
 
   @Override
   protected String toEmbeddedString() {
-    final StringBuilder builder = new StringBuilder();
+    final StringBuilder b = new StringBuilder();
     if (hour < 10)
-      builder.append('0');
+      b.append('0');
 
-    builder.append(hour).append(':');
+    b.append(hour).append(':');
     if (minute < 10)
-      builder.append('0');
+      b.append('0');
 
-    builder.append(minute).append(':');
+    b.append(minute).append(':');
     if (second >= 10f) {
-      builder.append(second);
+      b.append(second);
     }
     else if (second != 0f) {
-      builder.append('0').append(second);
-      while (builder.charAt(builder.length() - 1) == '0')
-        builder.deleteCharAt(builder.length() - 1);
+      b.append('0').append(second);
+      while (b.charAt(b.length() - 1) == '0')
+        b.deleteCharAt(b.length() - 1);
     }
     else {
-      builder.append("00");
+      b.append("00");
     }
 
     // Add trailing ".?00" to conform to XML millisecond standard
-    final int lastDotIndex = builder.lastIndexOf(".");
+    final int lastDotIndex = b.lastIndexOf(".");
     if (lastDotIndex != -1) {
-      if (builder.length() - lastDotIndex == 2)
-        builder.append("00");
-      else if (builder.length() - lastDotIndex == 3)
-        builder.append('0');
+      if (b.length() - lastDotIndex == 2)
+        b.append("00");
+      else if (b.length() - lastDotIndex == 3)
+        b.append('0');
     }
 
-    return builder.toString();
+    return b.toString();
   }
 
   @Override

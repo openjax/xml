@@ -97,13 +97,13 @@ public class YearMonth extends TemporalType {
 
   @Override
   protected String toEmbeddedString() {
-    final StringBuilder builder = new StringBuilder();
-    builder.append(year.toEmbeddedString()).append('-');
+    final StringBuilder b = new StringBuilder();
+    b.append(year.toEmbeddedString()).append('-');
     if (getMonth() < 10)
-      builder.append('0');
+      b.append('0');
 
-    builder.append(getMonth());
-    return builder.toString();
+    b.append(getMonth());
+    return b.toString();
   }
 
   @Override

@@ -16,7 +16,6 @@
 
 package org.openjax.xml.datatype;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -32,39 +31,38 @@ public class HexBinary implements Serializable {
     if (string == null)
       return null;
 
-    if (string.length() % 2 != 0)
+    final int i$ = string.length();
+    if (i$ % 2 != 0)
       throw new IllegalArgumentException("Odd length of hex string: " + string.length());
 
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    for (int i = 0, i$ = string.length(); i < i$; i += 2) { // [N]
-      final char c1 = string.charAt(i);
-      if (i + 1 >= string.length())
-        throw new IllegalArgumentException();
-
-      final char c2 = string.charAt(i + 1);
+    final int j$ = i$ / 2;
+    final byte[] bytes = new byte[j$];
+    for (int i = 0, j = 0; j < j$; ++j) { // [N]
+      final char c0 = string.charAt(i++);
+      final char c1 = string.charAt(i++);
       byte b = 0;
+      if ('0' <= c0 && c0 <= '9')
+        b += (c0 - '0') * 16;
+      else if ('a' <= c0 && c0 <= 'f')
+        b += (c0 - 'a' + 10) * 16;
+      else if ('A' <= c0 && c0 <= 'F')
+        b += (c0 - 'A' + 10) * 16;
+      else
+        throw new IllegalArgumentException("Bad character in hex string: " + c0);
+
       if ('0' <= c1 && c1 <= '9')
-        b += (c1 - '0') * 16;
+        b += c1 - '0';
       else if ('a' <= c1 && c1 <= 'f')
-        b += (c1 - 'a' + 10) * 16;
+        b += c1 - 'a' + 10;
       else if ('A' <= c1 && c1 <= 'F')
-        b += (c1 - 'A' + 10) * 16;
+        b += c1 - 'A' + 10;
       else
         throw new IllegalArgumentException("Bad character in hex string: " + c1);
 
-      if ('0' <= c2 && c2 <= '9')
-        b += c2 - '0';
-      else if ('a' <= c2 && c2 <= 'f')
-        b += c2 - 'a' + 10;
-      else if ('A' <= c2 && c2 <= 'F')
-        b += c2 - 'A' + 10;
-      else
-        throw new IllegalArgumentException("Bad character in hex string: " + c2);
-
-      out.write(b);
+      bytes[j] = b;
     }
 
-    return new HexBinary(out.toByteArray());
+    return new HexBinary(bytes);
   }
 
   private static char convertDigit(int value) {
@@ -112,12 +110,12 @@ public class HexBinary implements Serializable {
     if (encoded != null)
       return encoded;
 
-    final StringBuilder builder = new StringBuilder(bytes.length * 2);
+    final StringBuilder str = new StringBuilder(bytes.length * 2);
     for (int i = 0, i$ = bytes.length; i < i$; ++i) { // [A]
-      builder.append(convertDigit(bytes[i] >> 4));
-      builder.append(convertDigit(bytes[i] & 0x0f));
+      final byte b = bytes[i];
+      str.append(convertDigit(b >> 4)).append(convertDigit(b & 0x0f));
     }
 
-    return encoded = builder.toString();
+    return encoded = str.toString();
   }
 }

@@ -56,7 +56,6 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
    * @throws IllegalArgumentException If the specified {@link InputSource} is null.
    * @throws IllegalArgumentException If the specified {@link InputSource} does not have a byte stream or character stream.
    */
-  @SuppressWarnings("resource")
   private static ReplayReader getReader(final InputSource inputSource) {
     if (inputSource.getCharacterStream() instanceof ReplayReader)
       return (ReplayReader)inputSource.getCharacterStream();
@@ -64,9 +63,10 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
     if (inputSource.getCharacterStream() != null)
       return new ReplayReader(inputSource.getCharacterStream());
 
-    if (inputSource.getByteStream() != null)
+    final InputStream byteStream = inputSource.getByteStream();
+    if (byteStream != null)
       // FIXME: Determine the encoding from the element declaration
-      return new ReplayReader(new InputStreamReader(inputSource.getByteStream()));
+      return new ReplayReader(new InputStreamReader(byteStream));
 
     throw new IllegalArgumentException("InputSource has null CharacterStream and ByteStream");
   }

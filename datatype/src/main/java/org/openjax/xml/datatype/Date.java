@@ -111,14 +111,15 @@ public class Date extends TemporalType {
 
   @Override
   protected String toEmbeddedString() {
-    final StringBuilder builder = new StringBuilder();
-    builder.append(yearMonth.toEmbeddedString()).append('-');
-    if (getDay() < 10)
-      builder.append('0').append(getDay());
+    final StringBuilder b = new StringBuilder();
+    b.append(yearMonth.toEmbeddedString()).append('-');
+    final int day = getDay();
+    if (day < 10)
+      b.append('0').append(day);
     else
-      builder.append(getDay());
+      b.append(day);
 
-    return builder.toString();
+    return b.toString();
   }
 
   @Override
