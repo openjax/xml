@@ -16,8 +16,6 @@
 
 package org.openjax.xml.sax;
 
-import static org.libj.lang.Assertions.*;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
@@ -42,10 +40,10 @@ public class XmlCatalog extends XmlEntity {
    *
    * @param location The {@link URL}.
    * @param inputSource The {@link CachedInputSource}.
-   * @throws IllegalArgumentException If the specified {@link URL} or {@link CachedInputSource} is null.
+   * @throws NullPointerException If the specified {@link URL} or {@link CachedInputSource} is null.
    */
   public XmlCatalog(final URL location, final CachedInputSource inputSource) {
-    super(location, assertNotNull(inputSource));
+    super(location, Objects.requireNonNull(inputSource));
   }
 
   private Map<String,XmlEntity> uriToSystemId() {
@@ -58,10 +56,10 @@ public class XmlCatalog extends XmlEntity {
    * @param uri The URI key.
    * @param entity The schema location value.
    * @return The previous value associated with key, or {@code null} if there was no mapping for key.
-   * @throws IllegalArgumentException If the specified {@link XmlEntity} is null.
+   * @throws NullPointerException If the specified {@link XmlEntity} is null.
    */
   public XmlEntity putEntity(final String uri, final XmlEntity entity) {
-    return uriToSystemId().put(uri, assertNotNull(entity));
+    return uriToSystemId().put(uri, Objects.requireNonNull(entity));
   }
 
   /**

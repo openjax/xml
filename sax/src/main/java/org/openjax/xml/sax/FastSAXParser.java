@@ -45,7 +45,7 @@ public final class FastSAXParser {
    * @param handler The {@link FasterSAXHandler}.
    * @throws IOException If the input stream does not support {@link Reader#mark(int)}, or if some other I/O error has occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
-   * @throws IllegalArgumentException If the specified {@link Reader} or {@link FasterSAXHandler} is null.
+   * @throws NullPointerException If the specified {@link Reader} or {@link FasterSAXHandler} is null.
    * @see java.io.BufferedInputStream
    * @see org.libj.io.ReplayReader
    */

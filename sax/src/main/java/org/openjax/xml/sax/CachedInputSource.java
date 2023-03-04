@@ -53,7 +53,7 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
    * @param inputSource The {@link InputSource} containing the byte data as an {@link InputStream} or character data as a
    *          {@link java.io.Reader}.
    * @return A {@link ReplayReader} for the byte or character data in the specified {@link InputSource}.
-   * @throws IllegalArgumentException If the specified {@link InputSource} is null.
+   * @throws NullPointerException If the specified {@link InputSource} is null.
    * @throws IllegalArgumentException If the specified {@link InputSource} does not have a byte stream or character stream.
    */
   private static ReplayReader getReader(final InputSource inputSource) {
@@ -79,7 +79,7 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
    * @param systemId The system identifier (URI reference).
    * @param baseURI The base URI to be used for resolving a relative {@code systemId} to an absolute URI.
    * @param in A byte stream containing an XML document or other entity.
-   * @throws IllegalArgumentException If the specified {@link InputStream} is null.
+   * @throws NullPointerException If the specified {@link InputStream} is null.
    * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">IETF RFC 2396</a>
    */
   public CachedInputSource(final String publicId, final String systemId, final String baseURI, final InputStream in) {
@@ -95,7 +95,7 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
    * @param systemId The system identifier (URI reference).
    * @param baseURI The base URI to be used for resolving a relative {@code systemId} to an absolute URI.
    * @param reader The the character stream.
-   * @throws IllegalArgumentException If the specified {@link Reader} is null.
+   * @throws NullPointerException If the specified {@link Reader} is null.
    * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">IETF RFC 2396</a>
    */
   public CachedInputSource(final String publicId, final String systemId, final String baseURI, final Reader reader) {
@@ -123,7 +123,7 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
    *
    * @param inputSource The {@link InputSource} from which the {@code publicId}, {@code systemId}, and character streams are to be
    *          copied.
-   * @throws IllegalArgumentException If the specified {@link InputSource} is null.
+   * @throws NullPointerException If the specified {@link InputSource} is null.
    * @throws IllegalArgumentException If the specified {@link InputSource} does not have a byte stream or character stream.
    */
   public CachedInputSource(final InputSource inputSource) {

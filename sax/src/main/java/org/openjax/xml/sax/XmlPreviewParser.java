@@ -16,8 +16,6 @@
 
 package org.openjax.xml.sax;
 
-import static org.libj.lang.Assertions.*;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
@@ -40,10 +38,10 @@ public final class XmlPreviewParser {
    *         specified {@link URL}.
    * @throws IOException If the stream does not support {@link Reader#mark(int)}, or if some other I/O error has occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
-   * @throws IllegalArgumentException If {@code url} is null.
+   * @throws NullPointerException If {@code url} is null.
    */
   public static XmlPreview parse(final URL url) throws IOException, SAXParseException {
-    try (final CachedInputSource inputSource = new CachedInputSource(null, assertNotNull(url).toString(), null, url.openStream())) {
+    try (final CachedInputSource inputSource = new CachedInputSource(null, url.toString(), null, url.openStream())) {
       return parse(url, inputSource);
     }
   }
@@ -57,7 +55,7 @@ public final class XmlPreviewParser {
    *         specified {@link InputSource}.
    * @throws IOException If the stream does not support {@link Reader#mark(int)}, or if some other I/O error has occurred.
    * @throws SAXParseException If provided XML document cannot be parsed.
-   * @throws IllegalArgumentException If {@code inputSource} is null.
+   * @throws NullPointerException If {@code inputSource} is null.
    */
   static XmlPreview parse(final URL url, final CachedInputSource inputSource) throws IOException, SAXParseException {
     final XmlPreviewHandler previewHandler = new XmlPreviewHandler(new XmlCatalog(url, inputSource));

@@ -88,9 +88,9 @@ class XmlPreviewHandler extends FastSAXHandler {
 
   private String systemId;
   private XmlCatalog catalog;
-  private final Set<String> visitedURIs = new HashSet<>();
-  private final Set<URL> visitedURLs = new HashSet<>();
-  private final Map<String,URL> absoluteIncludes = new LinkedHashMap<>();
+  private final HashSet<String> visitedURIs = new HashSet<>();
+  private final HashSet<URL> visitedURLs = new HashSet<>();
+  private final LinkedHashMap<String,URL> absoluteIncludes = new LinkedHashMap<>();
   private boolean isLocal = true;
   private String targetNamespace;
 
@@ -98,7 +98,7 @@ class XmlPreviewHandler extends FastSAXHandler {
    * Creates a new {@link XmlPreviewHandler} to be initialized with the specified {@link XmlCatalog}.
    *
    * @param catalog The {@link XmlCatalog}.
-   * @throws IllegalArgumentException If the specified {@link XmlCatalog} is null.
+   * @throws NullPointerException If the specified {@link XmlCatalog} is null.
    * @throws IllegalArgumentException If the {@link InputSource} in the specified {@link XmlCatalog} does not have a byte stream or
    *           character stream.
    */
@@ -110,7 +110,7 @@ class XmlPreviewHandler extends FastSAXHandler {
    * Initializes the specified {@link XmlCatalog} in this {@link XmlPreviewHandler}.
    *
    * @param catalog The {@link XmlCatalog}.
-   * @throws IllegalArgumentException If the specified {@link XmlCatalog} is null.
+   * @throws NullPointerException If the specified {@link XmlCatalog} is null.
    * @throws IllegalArgumentException If the {@link InputSource} in the specified {@link XmlCatalog} does not have a byte stream or
    *           character stream.
    */
