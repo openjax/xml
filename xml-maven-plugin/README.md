@@ -12,6 +12,11 @@ The `xml-maven-plugin` plugin is for general tasks related to XML, XSD, and XSLT
 
 This plugin supports [XML Schema 1.1][xml11].
 
+## Note
+
+> **Note**
+> This plugin is not related to [`xml-maven-plugin` from CodeHaus](http://www.mojohaus.org/xml-maven-plugin/).
+
 ## Goals Overview
 
 * [`xml:validate`](#xmlvalidate) validates XML or XSD documents against schema(s) specified in the `xsi:schemaLocation` attribute.
