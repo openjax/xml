@@ -30,6 +30,12 @@
   <description>
     Maven Plugin for general XML-related tasks, specializing in validation and transformation of XML documents.
   </description>
+  <properties>
+    <maven.version>3.0</maven.version>
+  </properties>
+  <prerequisites>
+    <maven>${maven.version}</maven>
+  </prerequisites>
   <build>
     <plugins>
       <plugin>
@@ -127,6 +133,23 @@
       <groupId>org.openjax.maven</groupId>
       <artifactId>mojo</artifactId>
       <version>0.4.3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>${maven.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.maven</groupId>
+          <artifactId>maven-artifact</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>
