@@ -37,6 +37,6 @@ public class TransformerTest {
 
     Transformer.transform(ClassLoader.getSystemClassLoader().getResource("test.xsl"), ClassLoader.getSystemClassLoader().getResource("test.xml"), destFile);
     final String string = new String(Files.readAllBytes(destFile.toPath()));
-    assertEquals("<!DOCTYPE HTML><HTML>\n   <HEAD>\n      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n      <TITLE></TITLE>\n   </HEAD>\n   <BODY>\n      <H1>Hello, World!</H1>\n      <DIV>from <I>An XSLT Programmer</I></DIV>\n   </BODY>\n</HTML>", string);
+    assertEquals("<!DOCTYPE HTML>\n<HTML>\n   <HEAD>\n      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n      <TITLE></TITLE>\n   </HEAD>\n   <BODY>\n      <H1>Hello, World!</H1>\n      <DIV>from <I>An XSLT Programmer</I></DIV>\n   </BODY>\n</HTML>", string);
   }
 }
