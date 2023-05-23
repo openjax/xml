@@ -30,9 +30,10 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.libj.lang.Strings;
 import org.libj.net.URIs;
 import org.libj.util.Dates;
-import org.openjax.maven.mojo.MojoUtil;
+import org.libj.util.StringPaths;
 import org.openjax.xml.transform.Transformer;
 
 @Mojo(name="transform", defaultPhase=LifecyclePhase.COMPILE)
@@ -55,7 +56,7 @@ public class TransformMojo extends XmlMojo {
     try {
       if (uris.size() > 0) {
         for (final URI uri : uris) { // [S]
-          final String outFileName = MojoUtil.getRenamedFileName(uri.toString(), rename);
+          final String outFileName = Strings.searchReplace(StringPaths.getName(uri.toString()), rename);
           final File destFile = new File(destDir, outFileName);
           final String inFilePath = URIs.isLocalFile(uri) ? CWD.relativize(new File(uri).getAbsoluteFile().toPath()).toString() : uri.toString();
 
