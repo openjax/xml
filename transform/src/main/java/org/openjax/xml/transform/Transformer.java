@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 
 import javax.xml.transform.TransformerException;
@@ -116,12 +117,32 @@ public final class Transformer {
     }
   }
 
+  public static void transform(final URL stylesheet, final URLConnection in, final File out) throws IOException, TransformerException {
+    transform(stylesheet, in, out, (Map<String,String>)null);
+  }
+
+  public static void transform(final URL stylesheet, final URLConnection in, final File out, final Map<String,String> parameters) throws IOException, TransformerException {
+    try (final InputStream input = in.getInputStream()) {
+      transform(stylesheet, new StreamSource(input, in.toString()), new StreamResult(out), parameters);
+    }
+  }
+
   public static void transform(final URL stylesheet, final URL in, final OutputStream out) throws IOException, TransformerException {
     transform(stylesheet, in, out, (Map<String,String>)null);
   }
 
   public static void transform(final URL stylesheet, final URL in, final OutputStream out, final Map<String,String> parameters) throws IOException, TransformerException {
     try (final InputStream input = in.openStream()) {
+      transform(stylesheet, new StreamSource(input, in.toString()), new StreamResult(out), parameters);
+    }
+  }
+
+  public static void transform(final URL stylesheet, final URLConnection in, final OutputStream out) throws IOException, TransformerException {
+    transform(stylesheet, in, out, (Map<String,String>)null);
+  }
+
+  public static void transform(final URL stylesheet, final URLConnection in, final OutputStream out, final Map<String,String> parameters) throws IOException, TransformerException {
+    try (final InputStream input = in.getInputStream()) {
       transform(stylesheet, new StreamSource(input, in.toString()), new StreamResult(out), parameters);
     }
   }

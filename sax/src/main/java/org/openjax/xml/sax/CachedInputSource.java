@@ -21,8 +21,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
+import java.net.URLConnection;
 
 import org.libj.io.ReplayReader;
+import org.libj.net.URLConnections;
 import org.w3c.dom.ls.LSInput;
 import org.xml.sax.InputSource;
 
@@ -78,13 +80,14 @@ public class CachedInputSource extends InputSource implements AutoCloseable, LSI
    * @param publicId The public identifier.
    * @param systemId The system identifier (URI reference).
    * @param baseURI The base URI to be used for resolving a relative {@code systemId} to an absolute URI.
-   * @param in A byte stream containing an XML document or other entity.
+   * @param connection An {@link URLConnection} pointing to the byte stream containing an XML document or other entity.
+   * @throws IOException If an I/O error has occurred.
    * @throws NullPointerException If the specified {@link InputStream} is null.
    * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">IETF RFC 2396</a>
    */
-  public CachedInputSource(final String publicId, final String systemId, final String baseURI, final InputStream in) {
+  public CachedInputSource(final String publicId, final String systemId, final String baseURI, final URLConnection connection) throws IOException {
     this(publicId, systemId, baseURI);
-    setByteStream(in);
+    setByteStream(URLConnections.checkFollowRedirect(connection).getInputStream());
   }
 
   /**

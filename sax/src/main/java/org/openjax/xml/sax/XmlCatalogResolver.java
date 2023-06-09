@@ -42,7 +42,7 @@ class XmlCatalogResolver implements LSResourceResolver {
         throw new IllegalStateException("Unable to find resource for namespace=\"" + namespaceURI + "\"");
 
       // FIXME: Why can't I cache this?
-      return new XmlEntity(resource, new CachedInputSource(null, namespaceURI, null, resource.openStream()));
+      return new XmlEntity(resource, new CachedInputSource(null, namespaceURI, null, resource.openConnection()));
     }
 
     private final String namespaceURI;
@@ -80,7 +80,7 @@ class XmlCatalogResolver implements LSResourceResolver {
       }
 
       if (entity == null)
-        return null;
+        return new CachedInputSource(publicId, systemId, baseURI, new URL(systemId).openConnection());
 
       final CachedInputSource inputSource = entity.getInputSource();
       inputSource.getCharacterStream().close();

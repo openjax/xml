@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.LinkedHashSet;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -29,7 +30,9 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.libj.net.URIs;
+import org.libj.net.URLConnections;
 import org.libj.util.Dates;
+import org.openjax.xml.sax.CachedInputSource;
 import org.openjax.xml.sax.Validator;
 import org.xml.sax.SAXException;
 
@@ -46,16 +49,18 @@ public class ValidatorMojo extends XmlMojo {
         for (final URI uri : uris) { // [S]
           final File recordFile = new File(recordDir, URIs.getName(uri));
           final String filePath = URIs.isLocalFile(uri) ? CWD.relativize(new File(uri).getAbsoluteFile().toPath()).toString() : uri.toString();
-          long lastModified = -1;
+          long lastModifiedSource = -1;
+          final long lastModifiedTarget;
           final URL url = uri.toURL();
-          if (recordFile.exists() && (lastModified = url.openConnection().getLastModified()) <= recordFile.lastModified() && recordFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
+          final URLConnection connection = URLConnections.checkFollowRedirect(url.openConnection());
+          if (recordFile.exists() && (lastModifiedSource = connection.getLastModified()) <= (lastModifiedTarget = recordFile.lastModified()) && lastModifiedTarget < lastModifiedSource + Dates.MILLISECONDS_IN_DAY) {
             getLog().info("Pre-validated: " + filePath);
             continue;
           }
 
           try {
             getLog().info("   Validating: " + filePath);
-            Validator.validate(url);
+            Validator.validate(url, new CachedInputSource(null, url.toString(), null, connection));
           }
           catch (final FileNotFoundException | SAXException e) {
             if (!offline || !(e instanceof SAXException) || !Validator.isRemoteAccessException((SAXException)e)) {
@@ -72,7 +77,7 @@ public class ValidatorMojo extends XmlMojo {
           }
 
           if (!recordFile.createNewFile()) {
-            recordFile.setLastModified(lastModified > 0 ? lastModified : System.currentTimeMillis());
+            recordFile.setLastModified(lastModifiedSource > 0 ? lastModifiedSource : System.currentTimeMillis());
           }
         }
       }

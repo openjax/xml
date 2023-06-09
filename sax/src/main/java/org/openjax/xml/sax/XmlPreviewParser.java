@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.libj.net.URLs;
 import org.xml.sax.InputSource;
@@ -41,7 +42,7 @@ public final class XmlPreviewParser {
    * @throws NullPointerException If {@code url} is null.
    */
   public static XmlPreview parse(final URL url) throws IOException, SAXParseException {
-    try (final CachedInputSource inputSource = new CachedInputSource(null, url.toString(), null, url.openStream())) {
+    try (final CachedInputSource inputSource = new CachedInputSource(null, url.toString(), null, url.openConnection())) {
       return parse(url, inputSource);
     }
   }
@@ -66,24 +67,31 @@ public final class XmlPreviewParser {
     return preview;
   }
 
-  private static boolean process(final XmlPreviewHandler previewHandler, final String uri, final boolean isImport) throws IOException, SAXParseException {
-    final HashMap<String,URL> includes = previewHandler.getIncludes() == null ? null : new HashMap<>(previewHandler.getIncludes());
-    final HashMap<String,URL> imports = previewHandler.getImports() == null ? null : new HashMap<>(previewHandler.getImports());
+  private static HashMap<String,URL> clone(final Map<String,URL> map) {
+    return map == null ? null : new HashMap<>(map);
+  }
 
-    if (imports != null && imports.size() > 0)
-      previewHandler.getVisitedURIs().addAll(imports.keySet());
+  @SuppressWarnings("null")
+  private static boolean process(final XmlPreviewHandler previewHandler, final String uri, final boolean isImport) throws IOException, SAXParseException {
+    final HashMap<String,URL> includes = clone(previewHandler.getIncludes());
+    final HashMap<String,URL> imports = clone(previewHandler.getImports());
+
+    final Set<String> visitedURIs = previewHandler.getVisitedURIs();
+    final boolean hasImports = imports != null && imports.size() > 0;
+    if (hasImports)
+      visitedURIs.addAll(imports.keySet());
 
     if (includes != null && includes.size() > 0)
       traverse(previewHandler, includes, false);
 
     if (isImport) {
-      previewHandler.getVisitedURIs().remove(uri);
-      if (previewHandler.getVisitedURIs().isEmpty()) {
+      visitedURIs.remove(uri);
+      if (visitedURIs.isEmpty()) {
         return false;
       }
     }
 
-    if (imports != null && imports.size() > 0)
+    if (hasImports)
       traverse(previewHandler, imports, true);
 
     return true;
@@ -100,8 +108,7 @@ public final class XmlPreviewParser {
         final XmlCatalog catalog = previewHandler.getCatalog();
         if (catalog.getEntity(uri) == null) {
           try {
-            final CachedInputSource inputSource = new CachedInputSource(null, location.toString(), previewHandler.getSystemId(), location.openStream());
-
+            final CachedInputSource inputSource = new CachedInputSource(null, location.toString(), previewHandler.getSystemId(), location.openConnection());
             final XmlEntity entity;
             if (isImport) {
               final XmlCatalog nextCatalog = new XmlCatalog(location, inputSource);

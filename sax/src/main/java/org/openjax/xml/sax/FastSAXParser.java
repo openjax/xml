@@ -202,8 +202,6 @@ public final class FastSAXParser {
       ch1 = ch0;
       if (!inComment && q(inDeclaration, ch0))
         inQuote = !inQuote;
-
-//      System.err.print((char)ch0);
     }
 
     handler.endDocument();

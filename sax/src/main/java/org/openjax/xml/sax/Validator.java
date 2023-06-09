@@ -19,7 +19,6 @@ package org.openjax.xml.sax;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -156,8 +155,8 @@ public final class Validator {
    * @throws NullPointerException If the specified {@link URL} is null.
    */
   public static void validate(final URL url, final ErrorHandler errorHandler) throws IOException, SAXException {
-    try (final InputStream in = url.openStream()) {
-      validate(url, new CachedInputSource(null, url.toString(), null, in), null, errorHandler);
+    try (final CachedInputSource cachedInputSource = new CachedInputSource(null, url.toString(), null, url.openConnection())) {
+      validate(url, cachedInputSource, null, errorHandler);
     }
   }
 
@@ -189,20 +188,14 @@ public final class Validator {
   }
 
   /**
-   * Validates the XML document provided by the source in the specified
-   * {@link InputSource}.
+   * Validates the XML document provided by the source in the specified {@link InputSource}.
    *
-   * @param inputSource The {@link InputSource} providing the source for the XML
-   *          document to validate.
-   * @param previewHandler The {@link XmlPreviewHandler} for the document to
-   *          validate (can be {@code null}).
-   * @param errorHandler The {@link ErrorHandler} for parsing and validation
-   *          errors.
+   * @param inputSource The {@link InputSource} providing the source for the XML document to validate.
+   * @param previewHandler The {@link XmlPreviewHandler} for the document to validate (can be {@code null}).
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation errors.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
    * @throws NullPointerException If the specified {@link InputSource} is null.
    */
   public static void validate(final InputSource inputSource, final XmlPreviewHandler previewHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
@@ -225,22 +218,48 @@ public final class Validator {
   }
 
   /**
-   * Validates the XML document provided by the stream of data in the specified
-   * {@link Reader}.
+   * Validates the XML document provided by the stream of data in the specified {@link Reader}.
    *
-   * @param url The {@link URL} specifying the location of the document to
-   *          validate.
-   * @param inputSource The {@link InputSource} providing the source for the XML
-   *          document to validate.
-   * @param previewHandler The {@link XmlPreviewHandler} for the document to
-   *          validate (can be {@code null}).
-   * @param errorHandler The {@link ErrorHandler} for parsing and validation
-   *          errors.
+   * @param url The {@link URL} specifying the location of the document to validate.
+   * @param inputSource The {@link InputSource} providing the source for the XML document to validate.
    * @throws IOException If an I/O error has occurred.
-   * @throws SAXException If the {@link ErrorHandler} throws a
-   *           {@link SAXException}, if a fatal error is found and the
-   *           {@link ErrorHandler} returns normally, or if any SAX errors occur
-   *           during processing.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
+   * @throws NullPointerException If the specified {@link Reader} is null.
+   */
+  public static void validate(final URL url, final InputSource inputSource) throws IOException, SAXException {
+    final CachedInputSource cachedInputSource = inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource);
+    final XmlPreview preview = initInputSource(url, cachedInputSource, null);
+    validate(cachedInputSource, preview, DEFAULT_ERROR_HANDLER);
+  }
+
+  /**
+   * Validates the XML document provided by the stream of data in the specified {@link Reader}.
+   *
+   * @param url The {@link URL} specifying the location of the document to validate.
+   * @param inputSource The {@link InputSource} providing the source for the XML document to validate.
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
+   * @throws NullPointerException If the specified {@link Reader} is null.
+   */
+  public static void validate(final URL url, final InputSource inputSource, final ErrorHandler errorHandler) throws IOException, SAXException {
+    final CachedInputSource cachedInputSource = inputSource instanceof CachedInputSource ? (CachedInputSource)inputSource : new CachedInputSource(inputSource);
+    final XmlPreview preview = initInputSource(url, cachedInputSource, null);
+    validate(cachedInputSource, preview, errorHandler);
+  }
+
+  /**
+   * Validates the XML document provided by the stream of data in the specified {@link Reader}.
+   *
+   * @param url The {@link URL} specifying the location of the document to validate.
+   * @param inputSource The {@link InputSource} providing the source for the XML document to validate.
+   * @param previewHandler The {@link XmlPreviewHandler} for the document to validate (can be {@code null}).
+   * @param errorHandler The {@link ErrorHandler} for parsing and validation errors.
+   * @throws IOException If an I/O error has occurred.
+   * @throws SAXException If the {@link ErrorHandler} throws a {@link SAXException}, if a fatal error is found and the
+   *           {@link ErrorHandler} returns normally, or if any SAX errors occur during processing.
    * @throws NullPointerException If the specified {@link Reader} is null.
    */
   private static void validate(final URL url, final InputSource inputSource, final XmlPreviewHandler previewHandler, final ErrorHandler errorHandler) throws IOException, SAXException {
@@ -275,32 +294,35 @@ public final class Validator {
   private static void validate(final CachedInputSource inputSource, final XmlPreview preview, final ErrorHandler errorHandler) throws IOException, SAXException {
     try {
       final SAXParser parser = SAXParsers.newParser(false);
+      final String systemId = inputSource.getSystemId();
+      final boolean isSchema = preview.isSchema();
       final SAXSource saxSource;
-      if (preview.isSchema()) {
+      if (isSchema) {
         final StringBuilder xml = new StringBuilder();
         xml.append('<').append(dynamicXmlRoot);
         xml.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-        if (preview.getTargetNamespace() != null && preview.getTargetNamespace().length() > 0) {
-          xml.append(" xmlns=\"").append(preview.getTargetNamespace()).append('"');
-          xml.append(" xsi:schemaLocation=\"").append(preview.getTargetNamespace()).append(' ').append(inputSource.getSystemId()).append('"');
+        final String targetNamespace = preview.getTargetNamespace();
+        if (targetNamespace != null && targetNamespace.length() > 0) {
+          xml.append(" xmlns=\"").append(targetNamespace).append('"');
+          xml.append(" xsi:schemaLocation=\"").append(targetNamespace).append(' ').append(systemId).append('"');
         }
         else {
-          xml.append(" xsi:noNamespaceSchemaLocation=\"").append(inputSource.getSystemId()).append('"');
+          xml.append(" xsi:noNamespaceSchemaLocation=\"").append(systemId).append('"');
         }
 
         xml.append("/>");
         saxSource = new SAXSource(parser.getXMLReader(), new InputSource(new ByteArrayInputStream(xml.toString().getBytes())));
-        saxSource.setSystemId("dynamic:" + inputSource.getSystemId());
+        saxSource.setSystemId("dynamic:" + systemId);
       }
       else {
         saxSource = new SAXSource(parser.getXMLReader(), inputSource);
-        saxSource.setSystemId(inputSource.getSystemId());
+        saxSource.setSystemId(systemId);
       }
 
       final javax.xml.validation.Validator validator = factory.newSchema().newValidator();
       validator.setResourceResolver(new XmlCatalogResolver(preview.getCatalog()));
 
-      final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, inputSource, preview.isSchema() || preview.getImports() != null || preview.getIncludes() != null);
+      final ValidatorErrorHandler validatorErrorHandler = new ValidatorErrorHandler(errorHandler, inputSource, isSchema || preview.getImports() != null || preview.getIncludes() != null);
       validator.setErrorHandler(validatorErrorHandler);
 
       try {
@@ -319,7 +341,7 @@ public final class Validator {
   }
 
   @SuppressWarnings("unchecked")
-  private static <E extends Exception>void checkException(final ValidatorErrorHandler validatorErrorHandler, final Throwable suppressor) throws E, SAXParseException {
+  private static <E extends Exception> void checkException(final ValidatorErrorHandler validatorErrorHandler, final Throwable suppressor) throws E, SAXParseException {
     if (validatorErrorHandler.errors != null) {
       final Iterator<SAXParseException> iterator = validatorErrorHandler.errors.iterator();
       final SAXParseException exception = iterator.next();
@@ -356,10 +378,11 @@ public final class Validator {
 
     @Override
     public void error(final SAXParseException e) throws SAXException {
-      if (dynamicXmlError.equals(e.getMessage()))
+      final String message = e.getMessage();
+      if (dynamicXmlError.equals(message))
         return;
 
-      if (e.getMessage().startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && !hasSchema) {
+      if (message.startsWith("cvc-elt.1.a: Cannot find the declaration of element ") && !hasSchema) {
         warning(new SAXParseException("There is no schema or DTD associated with the document", inputSource.getPublicId(), inputSource.getSystemId(), 0, 0));
       }
       else {

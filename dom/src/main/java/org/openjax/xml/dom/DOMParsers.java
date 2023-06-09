@@ -16,13 +16,20 @@
 
 package org.openjax.xml.dom;
 
+import java.io.IOException;
+import java.net.URL;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.libj.net.URLConnections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public final class DOMParsers {
@@ -59,6 +66,12 @@ public final class DOMParsers {
     try {
       final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
       documentBuilder.setErrorHandler(errorHandler);
+      documentBuilder.setEntityResolver(new EntityResolver() {
+        @Override
+        public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
+          return systemId == null ? null : new InputSource(URLConnections.checkFollowRedirect(new URL(systemId).openConnection()).getInputStream());
+        }
+      });
       return documentBuilder;
     }
     catch (final ParserConfigurationException e) {

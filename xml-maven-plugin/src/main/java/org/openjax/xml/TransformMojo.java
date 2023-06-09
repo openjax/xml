@@ -19,6 +19,8 @@ package org.openjax.xml;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
@@ -32,6 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.libj.lang.Strings;
 import org.libj.net.URIs;
+import org.libj.net.URLConnections;
 import org.libj.util.Dates;
 import org.libj.util.StringPaths;
 import org.openjax.xml.transform.Transformer;
@@ -60,14 +63,17 @@ public class TransformMojo extends XmlMojo {
           final File destFile = new File(destDir, outFileName);
           final String inFilePath = URIs.isLocalFile(uri) ? CWD.relativize(new File(uri).getAbsoluteFile().toPath()).toString() : uri.toString();
 
-          final long lastModified;
-          if (destFile.exists() && (lastModified = uri.toURL().openConnection().getLastModified()) <= destFile.lastModified() && destFile.lastModified() < lastModified + Dates.MILLISECONDS_IN_DAY) {
+          final URL url = uri.toURL();
+          final URLConnection connection = URLConnections.checkFollowRedirect(url.openConnection());
+          final long lastModifiedSource;
+          final long lastModifiedTarget;
+          if (destFile.exists() && (lastModifiedSource = connection.getLastModified()) <= (lastModifiedTarget = destFile.lastModified()) && lastModifiedTarget < lastModifiedSource + Dates.MILLISECONDS_IN_DAY) {
             getLog().info("Pre-transformed: " + inFilePath);
           }
           else {
             getLog().info("   Transforming: " + inFilePath + " -> " + CWD.relativize(destFile.getAbsoluteFile().toPath()));
             destFile.getParentFile().mkdirs();
-            Transformer.transform(stylesheet.toURI().toURL(), uri.toURL(), destFile, parameters);
+            Transformer.transform(stylesheet.toURI().toURL(), connection, destFile, parameters);
           }
         }
       }
