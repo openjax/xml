@@ -31,7 +31,7 @@ import javax.xml.XMLConstants;
  * ´
  */
 public final class SchemaResolver {
-  private static final Schema[] schemas = new Schema[] {
+  private static final Schema[] schemas = {
     new Schema(XMLConstants.W3C_XML_SCHEMA_NS_URI, null, "xmlschema/XMLSchema.xsd"),
     new Schema(XMLConstants.XML_NS_URI, "http://www.w3.org/2001/xml.xsd", "xmlschema/xml.xsd")
   };
