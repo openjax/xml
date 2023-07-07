@@ -164,7 +164,7 @@ Execution with `includes` directive.
 
 | Name                              | Type             | Use      | Description                                                                                                                       |
 |:----------------------------------|:-----------------|:---------|:----------------------------------------------------------------------------------------------------------------------------------|
-| <samp>/skip¹</samp>               | Boolean          | Optional | Skip executioin. **Default:** `false`.                                                                                            |
+| <samp>/skip¹</samp>               | Boolean          | Optional | Skip execution. **Default:** `false`.                                                                                            |
 | <samp>/destDir¹</samp>            | String           | Required | Destination directory of transformed files.                                                                                       |
 | <samp>/rename¹</samp><br>&nbsp;   | String<br>&nbsp; | Optional<br>&nbsp; | Regex pattern to rename input file to output file:<br>&nbsp;&nbsp;&nbsp;&nbsp;`/<input>/<output>/` **Default:** `null`. |
 | <samp>/includes¹</samp>           | List             | Optional | List of `include` directives. **Default:** `null`.                                                                                |

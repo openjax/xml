@@ -17,6 +17,7 @@
 package org.openjax.xml.api;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -120,7 +121,7 @@ public class XmlElement implements Cloneable, Serializable {
    * @return The name of this element.
    */
   public String getName() {
-    return this.name;
+    return name;
   }
 
   /**
@@ -138,7 +139,7 @@ public class XmlElement implements Cloneable, Serializable {
    * @return The attributes of this element.
    */
   public Map getAttributes() {
-    return this.attributes;
+    return attributes;
   }
 
   /**
@@ -156,7 +157,49 @@ public class XmlElement implements Cloneable, Serializable {
    * @return The child elements of this element.
    */
   public Collection getElements() {
-    return this.elements;
+    return elements;
+  }
+
+  private Map cloneAttributes() {
+    if (attributes instanceof Cloneable) {
+      try {
+        return (Map)attributes.getClass().getMethod("clone").invoke(attributes);
+      }
+      catch (final Exception e) {
+      }
+    }
+
+    try {
+      final Constructor constructor = attributes.getClass().getConstructor();
+      final Map clone = (Map)constructor.newInstance();
+      clone.putAll(attributes);
+      return clone;
+    }
+    catch (final Exception e) {
+    }
+
+    return new HashMap(attributes);
+  }
+
+  private Collection cloneElements() {
+    if (elements instanceof Cloneable) {
+      try {
+        return (Collection)elements.getClass().getMethod("clone").invoke(elements);
+      }
+      catch (final Exception e) {
+      }
+    }
+
+    try {
+      final Constructor constructor = elements.getClass().getConstructor();
+      final Collection clone = (Collection)constructor.newInstance();
+      clone.addAll(elements);
+      return clone;
+    }
+    catch (final Exception e) {
+    }
+
+    return new ArrayList(elements);
   }
 
   @Override
@@ -164,10 +207,10 @@ public class XmlElement implements Cloneable, Serializable {
     try {
       final XmlElement clone = (XmlElement)super.clone();
       if (attributes != null)
-        clone.attributes = new HashMap(attributes);
+        clone.attributes = cloneAttributes();
 
       if (elements != null)
-        clone.elements = new ArrayList(elements);
+        clone.elements = cloneElements();
 
       return clone;
     }
@@ -185,7 +228,7 @@ public class XmlElement implements Cloneable, Serializable {
       return false;
 
     final XmlElement that = (XmlElement)obj;
-    return name.equals(that.name) && Objects.equals(attributes, that.attributes) && (elements == null ? that.elements == null : that.elements != null && elements.size() == that.elements.size() && elements.equals(that.elements));
+    return name.equals(that.name) && Objects.equals(attributes, that.attributes) && (elements == null ? that.elements == null : that.elements != null && elements.equals(that.elements));
   }
 
   @Override

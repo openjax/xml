@@ -101,26 +101,15 @@ public class MonthDay extends TemporalType {
   }
 
   @Override
-  protected String toEmbeddedString() {
-    final StringBuilder b = new StringBuilder();
-    b.append(month.toEmbeddedString()).append('-');
-    if (getDay() < 10)
-      b.append('0');
-
-    b.append(getDay());
-    return b.toString();
-  }
-
-  @Override
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
 
-    if (!(obj instanceof MonthDay))
+    if (!(obj instanceof MonthDay && super.equals(obj)))
       return false;
 
     final MonthDay that = (MonthDay)obj;
-    return super.equals(obj) && month.equals(that.month) && day.equals(that.day);
+    return month.equals(that.month) && day.equals(that.day);
   }
 
   @Override
@@ -129,5 +118,16 @@ public class MonthDay extends TemporalType {
     hashCode = 31 * hashCode + month.hashCode();
     hashCode = 31 * hashCode + day.hashCode();
     return hashCode;
+  }
+
+  @Override
+  protected StringBuilder toEmbeddedString(final StringBuilder b) {
+    month.toEmbeddedString(b).append('-');
+    final int day = getDay();
+    if (day < 10)
+      b.append('0');
+
+    b.append(day);
+    return b;
   }
 }

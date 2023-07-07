@@ -19,6 +19,7 @@ package org.openjax.xml.datatype;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Objects;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#base64Binary
@@ -36,16 +37,11 @@ public class Base64Binary implements Serializable {
   private String encoded;
 
   public Base64Binary(final byte[] bytes) {
-    this.bytes = bytes;
-    if (bytes == null)
-      throw new IllegalArgumentException("bytes == null");
+    this.bytes = Objects.requireNonNull(bytes);
   }
 
   public Base64Binary(final String encoded) {
     this.encoded = encoded;
-    if (encoded == null)
-      throw new IllegalArgumentException("encoded == null");
-
     this.bytes = Base64.getDecoder().decode(encoded);
   }
 

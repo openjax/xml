@@ -88,8 +88,7 @@ public class Day extends TemporalType {
   @SuppressWarnings("deprecation")
   public Day(final long time) {
     super(TimeZone.getDefault());
-    final java.util.Date date = new java.util.Date(time);
-    this.day = date.getDate();
+    this.day = new java.util.Date(time).getDate();
   }
 
   public Day() {
@@ -101,24 +100,24 @@ public class Day extends TemporalType {
   }
 
   @Override
-  protected String toEmbeddedString() {
-    return (day < 10 ? "---0" : "---") + day;
-  }
-
-  @Override
   public boolean equals(final Object obj) {
     if (obj == this)
       return true;
 
-    if (!(obj instanceof Day))
+    if (!(obj instanceof Day && super.equals(obj)))
       return false;
 
     final Day that = (Day)obj;
-    return super.equals(obj) && this.day == that.day;
+    return this.day == that.day;
   }
 
   @Override
   public int hashCode() {
     return 31 * super.hashCode() + day;
+  }
+
+  @Override
+  protected StringBuilder toEmbeddedString(final StringBuilder b) {
+    return b.append(day < 10 ? "---0" : "---").append(day);
   }
 }

@@ -84,8 +84,7 @@ public class Month extends TemporalType {
   @SuppressWarnings("deprecation")
   public Month(final long time) {
     super(TimeZone.getDefault());
-    final java.util.Date date = new java.util.Date(time);
-    this.month = date.getMonth() + 1;
+    this.month = new java.util.Date(time).getMonth() + 1;
   }
 
   public Month() {
@@ -97,24 +96,24 @@ public class Month extends TemporalType {
   }
 
   @Override
-  protected String toEmbeddedString() {
-    return (month < 10 ? "--0" : "--") + month;
-  }
-
-  @Override
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
 
-    if (!(obj instanceof Month))
+    if (!(obj instanceof Month && super.equals(obj)))
       return false;
 
     final Month that = (Month)obj;
-    return super.equals(obj) && this.month == that.month;
+    return this.month == that.month;
   }
 
   @Override
   public int hashCode() {
     return 31 * super.hashCode() + month;
+  }
+
+  @Override
+  protected StringBuilder toEmbeddedString(final StringBuilder b) {
+    return b.append(month < 10 ? "--0" : "--").append(month);
   }
 }

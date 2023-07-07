@@ -96,26 +96,15 @@ public class YearMonth extends TemporalType {
   }
 
   @Override
-  protected String toEmbeddedString() {
-    final StringBuilder b = new StringBuilder();
-    b.append(year.toEmbeddedString()).append('-');
-    if (getMonth() < 10)
-      b.append('0');
-
-    b.append(getMonth());
-    return b.toString();
-  }
-
-  @Override
   public boolean equals(final Object obj) {
     if (obj == this)
       return true;
 
-    if (!(obj instanceof YearMonth))
+    if (!(obj instanceof YearMonth && super.equals(obj)))
       return false;
 
     final YearMonth that = (YearMonth)obj;
-    return super.equals(obj) && Objects.equals(year, that.year) && Objects.equals(month, that.month);
+    return Objects.equals(year, that.year) && Objects.equals(month, that.month);
   }
 
   @Override
@@ -128,5 +117,15 @@ public class YearMonth extends TemporalType {
       hashCode = 31 * hashCode + month.hashCode();
 
     return hashCode;
+  }
+
+  @Override
+  protected StringBuilder toEmbeddedString(final StringBuilder b) {
+    year.toEmbeddedString(b).append('-');
+    final int month = getMonth();
+    if (month < 10)
+      b.append('0');
+
+    return b.append(month);
   }
 }

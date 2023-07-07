@@ -18,6 +18,7 @@ package org.openjax.xml.datatype;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * http://www.w3.org/TR/xmlschema11-2/#hexBinary
@@ -35,12 +36,13 @@ public class HexBinary implements Serializable {
     if (i$ % 2 != 0)
       throw new IllegalArgumentException("Odd length of hex string: " + string.length());
 
+    byte b;
     final int j$ = i$ / 2;
     final byte[] bytes = new byte[j$];
-    for (int i = 0, j = 0; j < j$; ++j) { // [N]
-      final char c0 = string.charAt(i++);
-      final char c1 = string.charAt(i++);
-      byte b = 0;
+    for (int i = 0, j = 0, c0, c1; j < j$; ++j) { // [N]
+      c0 = string.charAt(i++);
+      c1 = string.charAt(i++);
+      b = 0;
       if ('0' <= c0 && c0 <= '9')
         b += (c0 - '0') * 16;
       else if ('a' <= c0 && c0 <= 'f')
@@ -67,16 +69,14 @@ public class HexBinary implements Serializable {
 
   private static char convertDigit(int value) {
     value &= 0x0f;
-    return value >= 10 ? (char)(value - 10 + 'A') : (char)(value + '0');
+    return (char)(value >= 10 ? value - 10 + 'A' : value + '0');
   }
 
   private final byte[] bytes;
   private String encoded;
 
   public HexBinary(final byte[] bytes) {
-    this.bytes = bytes;
-    if (bytes == null)
-      throw new IllegalArgumentException("bytes == null");
+    this.bytes = Objects.requireNonNull(bytes);
   }
 
   public byte[] getBytes() {
@@ -110,12 +110,14 @@ public class HexBinary implements Serializable {
     if (encoded != null)
       return encoded;
 
-    final StringBuilder str = new StringBuilder(bytes.length * 2);
-    for (int i = 0, i$ = bytes.length; i < i$; ++i) { // [A]
-      final byte b = bytes[i];
-      str.append(convertDigit(b >> 4)).append(convertDigit(b & 0x0f));
+    byte b;
+    final int i$ = bytes.length;
+    final StringBuilder s = new StringBuilder(i$ * 2);
+    for (int i = 0; i < i$; ++i) { // [A]
+      b = bytes[i];
+      s.append(convertDigit(b >> 4)).append(convertDigit(b & 0x0f));
     }
 
-    return encoded = str.toString();
+    return encoded = s.toString();
   }
 }

@@ -25,7 +25,7 @@ import java.util.TimeZone;
 public class Time extends TemporalType {
   static Calendar newCalendar(final long time, final TimeZone timeZone) {
     if (timeZone == null)
-      throw new IllegalArgumentException("timeZone == null");
+      throw new IllegalArgumentException("timeZone is null");
 
     final Calendar calendar = Calendar.getInstance(timeZone);
     calendar.setTimeInMillis(time);
@@ -81,7 +81,8 @@ public class Time extends TemporalType {
   }
 
   protected static float parseSecondFrag(final String string) {
-    if (string.length() < SECOND_FRAG_MIN_LENGTH)
+    final int length = string.length();
+    if (length < SECOND_FRAG_MIN_LENGTH)
       throw new IllegalArgumentException("second == " + string);
 
     final char ch1 = string.charAt(0);
@@ -96,10 +97,10 @@ public class Time extends TemporalType {
     secondString.append(ch1);
     secondString.append(ch2);
     int index = 2;
-    if (index < string.length() && string.charAt(index) == '.') {
+    if (index < length && string.charAt(index) == '.') {
       char ch = '.';
       secondString.append(ch);
-      while (++index < string.length()) {
+      while (++index < length) {
         ch = string.charAt(index);
         if (ch < '0' || '9' < ch)
           break;
@@ -116,7 +117,8 @@ public class Time extends TemporalType {
   }
 
   protected static TimeZone parseTimeZoneFrag(final String string) {
-    if (string.length() == 0)
+    final int length = string.length();
+    if (length == 0)
       return null;
 
     int index = 0;
@@ -126,7 +128,7 @@ public class Time extends TemporalType {
       ++index;
       timeZone = TimeZone.getTimeZone("GMT");
     }
-    else if ((zPlusMinus == '+' || zPlusMinus == '-') && 6 <= string.length()) {
+    else if ((zPlusMinus == '+' || zPlusMinus == '-') && 6 <= length) {
       final String hourString = string.substring(++index, index += 2);
       final int hour = Integer.parseInt(hourString);
       if (14 < hour || hour < 0)
@@ -143,16 +145,13 @@ public class Time extends TemporalType {
       throw new IllegalArgumentException("timeZone == " + string);
     }
 
-    if (index != string.length())
+    if (index != length)
       throw new IllegalArgumentException("timeZone == " + string);
 
     return timeZone;
   }
 
   protected static String formatTimeZone(final TimeZone timeZone) {
-    if (timeZone == null)
-      return "";
-
     if (DateTime.GMT.equals(timeZone))
       return "Z";
 
@@ -225,8 +224,28 @@ public class Time extends TemporalType {
   }
 
   @Override
-  protected String toEmbeddedString() {
-    final StringBuilder b = new StringBuilder();
+  public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+
+    if (!(obj instanceof Time && super.equals(obj)))
+      return false;
+
+    final Time that = (Time)obj;
+    return this.hour == that.hour && this.minute == that.minute && this.second == that.second;
+  }
+
+  @Override
+  public int hashCode() {
+    int hashCode = super.hashCode();
+    hashCode = 31 * hashCode + hour;
+    hashCode = 31 * hashCode + minute;
+    hashCode = 31 * hashCode + Float.hashCode(second);
+    return hashCode;
+  }
+
+  @Override
+  protected StringBuilder toEmbeddedString(final StringBuilder b) {
     if (hour < 10)
       b.append('0');
 
@@ -240,8 +259,7 @@ public class Time extends TemporalType {
     }
     else if (second != 0f) {
       b.append('0').append(second);
-      while (b.charAt(b.length() - 1) == '0')
-        b.deleteCharAt(b.length() - 1);
+      for (int i = b.length() - 1; b.charAt(i) == '0'; b.deleteCharAt(i));
     }
     else {
       b.append("00");
@@ -256,27 +274,6 @@ public class Time extends TemporalType {
         b.append('0');
     }
 
-    return b.toString();
-  }
-
-  @Override
-  public boolean equals(final Object obj) {
-    if (obj == this)
-      return true;
-
-    if (!(obj instanceof Time))
-      return false;
-
-    final Time that = (Time)obj;
-    return super.equals(obj) && this.hour == that.hour && this.minute == that.minute && this.second == that.second;
-  }
-
-  @Override
-  public int hashCode() {
-    int hashCode = super.hashCode();
-    hashCode = 31 * hashCode + hour;
-    hashCode = 31 * hashCode + minute;
-    hashCode = 31 * hashCode + Float.hashCode(second);
-    return hashCode;
+    return b;
   }
 }

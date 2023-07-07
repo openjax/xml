@@ -110,28 +110,15 @@ public class Date extends TemporalType {
   }
 
   @Override
-  protected String toEmbeddedString() {
-    final StringBuilder b = new StringBuilder();
-    b.append(yearMonth.toEmbeddedString()).append('-');
-    final int day = getDay();
-    if (day < 10)
-      b.append('0').append(day);
-    else
-      b.append(day);
-
-    return b.toString();
-  }
-
-  @Override
   public boolean equals(final Object obj) {
     if (obj == this)
       return true;
 
-    if (!(obj instanceof Date))
+    if (!(obj instanceof Date && super.equals(obj)))
       return false;
 
     final Date that = (Date)obj;
-    return super.equals(obj) && yearMonth.equals(that.yearMonth) && day.equals(that.day);
+    return yearMonth.equals(that.yearMonth) && day.equals(that.day);
   }
 
   @Override
@@ -140,5 +127,15 @@ public class Date extends TemporalType {
     hashCode = 31 * hashCode + yearMonth.hashCode();
     hashCode = 31 * hashCode + day.hashCode();
     return hashCode;
+  }
+
+  @Override
+  protected StringBuilder toEmbeddedString(final StringBuilder b) {
+    yearMonth.toEmbeddedString(b).append('-');
+    final int day = getDay();
+    if (day < 10)
+      b.append('0');
+
+    return b.append(day);
   }
 }

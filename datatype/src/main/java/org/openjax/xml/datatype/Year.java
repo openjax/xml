@@ -111,8 +111,24 @@ public class Year extends TemporalType {
   }
 
   @Override
-  protected String toEmbeddedString() {
-    final StringBuilder b = new StringBuilder();
+  public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+
+    if (!(obj instanceof Year && super.equals(obj)))
+      return false;
+
+    final Year that = (Year)obj;
+    return this.year == that.year;
+  }
+
+  @Override
+  public int hashCode() {
+    return 31 * super.hashCode() + year;
+  }
+
+  @Override
+  protected StringBuilder toEmbeddedString(final StringBuilder b) {
     if (year < 10)
       b.append("000").append(year);
     else if (year < 100)
@@ -122,23 +138,6 @@ public class Year extends TemporalType {
     else
       b.append(year);
 
-    return b.toString();
-  }
-
-  @Override
-  public boolean equals(final Object obj) {
-    if (obj == this)
-      return true;
-
-    if (!(obj instanceof Year))
-      return false;
-
-    final Year that = (Year)obj;
-    return super.equals(obj) && this.year == that.year;
-  }
-
-  @Override
-  public int hashCode() {
-    return 31 * super.hashCode() + year;
+    return b;
   }
 }

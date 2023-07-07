@@ -22,20 +22,16 @@ import java.util.TimeZone;
 
 public abstract class TemporalType implements Serializable {
   protected final TimeZone timeZone;
+  private String timeZoneStr;
 
   protected TemporalType(final TimeZone timeZone) {
     this.timeZone = timeZone == null ? TimeZone.getDefault() : timeZone;
   }
 
-  protected abstract String toEmbeddedString();
+  protected abstract StringBuilder toEmbeddedString(StringBuilder b);
 
   public final TimeZone getTimeZone() {
     return timeZone;
-  }
-
-  @Override
-  public final String toString() {
-    return toEmbeddedString() + Time.formatTimeZone(timeZone);
   }
 
   @Override
@@ -53,5 +49,10 @@ public abstract class TemporalType implements Serializable {
   @Override
   public int hashCode() {
     return 31 * timeZone.hashCode();
+  }
+
+  @Override
+  public final String toString() {
+    return toEmbeddedString(new StringBuilder()).append(timeZoneStr == null ? timeZoneStr = Time.formatTimeZone(timeZone) : timeZoneStr).toString();
   }
 }

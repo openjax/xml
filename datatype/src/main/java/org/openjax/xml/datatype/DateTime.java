@@ -105,19 +105,6 @@ public class DateTime extends TemporalType {
   }
 
   @Override
-  protected String toEmbeddedString() {
-    final StringBuilder b = new StringBuilder();
-    if (date != null)
-      b.append(date.toEmbeddedString());
-
-    b.append('T');
-    if (time != null)
-      b.append(time.toEmbeddedString());
-
-    return b.toString();
-  }
-
-  @Override
   public boolean equals(final Object obj) {
     if (obj == this)
       return true;
@@ -135,5 +122,17 @@ public class DateTime extends TemporalType {
     hashCode = 31 * hashCode + date.hashCode();
     hashCode = 31 * hashCode + time.hashCode();
     return hashCode;
+  }
+
+  @Override
+  protected StringBuilder toEmbeddedString(final StringBuilder b) {
+    if (date != null)
+      date.toEmbeddedString(b);
+
+    b.append('T');
+    if (time != null)
+      time.toEmbeddedString(b);
+
+    return b;
   }
 }

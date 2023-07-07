@@ -16,10 +16,8 @@
 
 package org.openjax.xml.api;
 
-import org.xml.sax.SAXException;
-
 /**
- * A {@link SAXException} that signifies a validation exception due to an attempt to parse a remote document while offline.
+ * A {@link ValidationException} that signifies a validation exception due to an attempt to parse a remote document while offline.
  */
 public class OfflineValidationException extends ValidationException {
   /**
