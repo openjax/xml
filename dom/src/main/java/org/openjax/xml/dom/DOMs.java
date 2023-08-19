@@ -18,10 +18,10 @@ package org.openjax.xml.dom;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.XMLConstants;
 
+import org.libj.lang.Strings;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -64,10 +64,10 @@ public final class DOMs {
     final boolean indent = DOMStyle.isIndent(styles);
     final boolean indentAttributes = DOMStyle.isIndentAttributes(styles);
     final boolean omitNamespaces = DOMStyle.isOmitNamespaces(styles);
-    final Set<String> namespaces = omitNamespaces || schemaLocations == null ? null : new HashSet<>();
-    final StringBuilder builder = domToString(new StringBuilder(), namespaces, namespaceToPrefix, node, 0, indent, indentAttributes, omitNamespaces);
+    final HashSet<String> namespaces = omitNamespaces || schemaLocations == null ? null : new HashSet<>();
+    final StringBuilder xml = domToString(new StringBuilder(), namespaces, namespaceToPrefix, node, 0, indent, indentAttributes, omitNamespaces);
     if (schemaLocations == null || schemaLocations.size() == 0 || namespaces == null || namespaces.size() == 0)
-      return builder.toString();
+      return xml.toString();
 
     final StringBuilder locations = new StringBuilder();
     for (final String namespace : namespaces) { // [S]
@@ -77,26 +77,26 @@ public final class DOMs {
     }
 
     if (locations.length() == 0)
-      return builder.toString();
+      return xml.toString();
 
-    int index = builder.indexOf(">");
-    if (builder.charAt(index - 1) == '/')
+    int index = Strings.indexOf(xml, '>');
+    if (xml.charAt(index - 1) == '/')
       --index;
 
     locations.append('"');
     locations.insert(0, " xsi:schemaLocation=\"");
-    if (builder.lastIndexOf("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", index) == -1)
+    if (xml.lastIndexOf("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", index) == -1)
       locations.insert(0, " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
 
-    builder.insert(index, locations);
-    return builder.toString();
+    xml.insert(index, locations);
+    return xml.toString();
   }
 
   private static boolean validNamespaceURI(final String namespaceURI) {
     return namespaceURI != null && !XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI) && !XMLConstants.XML_NS_URI.equals(namespaceURI);
   }
 
-  private static StringBuilder domToString(final StringBuilder b, final Set<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final boolean indent, final boolean indentAttributes, final boolean omitNamespaces) {
+  private static StringBuilder domToString(final StringBuilder b, final HashSet<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final boolean indent, final boolean indentAttributes, final boolean omitNamespaces) {
     if (node == null)
       return b;
 
@@ -157,7 +157,7 @@ public final class DOMs {
     return b;
   }
 
-  private static StringBuilder attributeToString(final StringBuilder b, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Attr attribute, final int depth, final boolean indentAttributes, final boolean omitNamespaces) {
+  private static StringBuilder attributeToString(final StringBuilder b, final HashSet<String> namespaces, final Map<String,String> namespaceToPrefix, final Attr attribute, final int depth, final boolean indentAttributes, final boolean omitNamespaces) {
     if (indentAttributes) {
       b.append('\n');
       for (int i = 0; i < depth; ++i) // [N]
@@ -218,7 +218,7 @@ public final class DOMs {
     return b;
   }
 
-  private static StringBuilder attributesToString(final StringBuilder builder, final Set<? super String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final boolean indentAttributes, final boolean omitNamespaces) {
+  private static StringBuilder attributesToString(final StringBuilder builder, final HashSet<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final boolean indentAttributes, final boolean omitNamespaces) {
     final NamedNodeMap attributes = node.getAttributes();
     if (attributes == null)
       return builder;

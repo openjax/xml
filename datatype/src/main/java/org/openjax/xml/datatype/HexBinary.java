@@ -28,7 +28,7 @@ public class HexBinary implements Serializable {
     return hexBinary == null ? null : hexBinary.toString();
   }
 
-  public static HexBinary parse(final String string) {
+  public static HexBinary parse(final CharSequence string) {
     if (string == null)
       return null;
 

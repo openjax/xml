@@ -17,6 +17,7 @@
 package org.openjax.xml.dom;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,6 +25,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.libj.net.URLConnections;
+import org.libj.util.StringPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.EntityResolver;
@@ -67,9 +69,30 @@ public final class DOMParsers {
       final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
       documentBuilder.setErrorHandler(errorHandler);
       documentBuilder.setEntityResolver(new EntityResolver() {
+        private String prevPath;
+
+        private InputStream getInputStream(final String systemId) throws IOException {
+          System.err.println(systemId);
+          return URLConnections.checkFollowRedirect(new URL(systemId).openConnection()).getInputStream();
+        }
+
         @Override
         public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
-          return systemId == null ? null : new InputSource(URLConnections.checkFollowRedirect(new URL(systemId).openConnection()).getInputStream());
+          if (systemId == null)
+            return null;
+
+          if (!StringPaths.isAbsoluteLocal(systemId))
+            prevPath = StringPaths.getCanonicalParent(systemId);
+
+          try {
+            return new InputSource(getInputStream(systemId));
+          }
+          catch (final IOException e) {
+            if (prevPath == null || !StringPaths.isAbsoluteLocal(systemId))
+              throw e;
+
+            return new InputSource(getInputStream(prevPath + StringPaths.getName(systemId)));
+          }
         }
       });
       return documentBuilder;
