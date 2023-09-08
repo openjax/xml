@@ -259,7 +259,7 @@ public class Time extends TemporalType {
     }
     else if (second != 0f) {
       b.append('0').append(second);
-      for (int i = b.length() - 1; b.charAt(i) == '0'; b.deleteCharAt(i));
+      for (int i = b.length() - 1; b.charAt(i) == '0'; b.deleteCharAt(i)); // [ST]
     }
     else {
       b.append("00");

@@ -218,23 +218,23 @@ public final class DOMs {
     return b;
   }
 
-  private static StringBuilder attributesToString(final StringBuilder builder, final HashSet<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final boolean indentAttributes, final boolean omitNamespaces) {
+  private static StringBuilder attributesToString(final StringBuilder b, final HashSet<String> namespaces, final Map<String,String> namespaceToPrefix, final Node node, final int depth, final boolean indentAttributes, final boolean omitNamespaces) {
     final NamedNodeMap attributes = node.getAttributes();
     if (attributes == null)
-      return builder;
+      return b;
 
     for (int i = 0, i$ = attributes.getLength(); i < i$; ++i) { // [RA]
       final Attr attribute = (Attr)attributes.item(i);
       if (!omitNamespaces || !attribute.getNodeName().startsWith("xmlns"))
-        attributeToString(builder, namespaces, namespaceToPrefix, attribute, depth, indentAttributes, omitNamespaces);
+        attributeToString(b, namespaces, namespaceToPrefix, attribute, depth, indentAttributes, omitNamespaces);
     }
 
-    return builder;
+    return b;
   }
 
   /**
-   * Append the specified {@code text} string to {@code builder}, ensuring characters are properly escaped. The escaped characters
-   * are:
+   * Append the specified {@code text} string to the provided {@link StringBuilder}, ensuring characters are properly escaped. The
+   * escaped characters are:
    *
    * <pre>
    * {@code From |  To
@@ -248,25 +248,25 @@ public final class DOMs {
    *
    * Note: This method removes any leading and trailing whitespace from {@code text}.
    *
-   * @param builder The {@link StringBuilder} to which to append.
+   * @param b The {@link StringBuilder} to which to append.
    * @param text The text string to append.
-   * @throws NullPointerException If {@code builder} or {@code text} is null.
+   * @throws NullPointerException If the provided {@link StringBuilder} or specified {@code text} is null.
    */
-  private static void appendText(final StringBuilder builder, final String text) {
+  private static void appendText(final StringBuilder b, final String text) {
     for (int i = 0, i$ = text.length(); i < i$; ++i) { // [N]
       final char ch = text.charAt(i);
       if (ch == '&')
-        builder.append("&amp;");
+        b.append("&amp;");
       else if (ch == '>')
-        builder.append("&gt;");
+        b.append("&gt;");
       else if (ch == '<')
-        builder.append("&lt;");
+        b.append("&lt;");
       else if (ch == '\'')
-        builder.append("&apos;");
+        b.append("&apos;");
       else if (ch == '"')
-        builder.append("&quot;");
+        b.append("&quot;");
       else
-        builder.append(ch);
+        b.append(ch);
     }
   }
 

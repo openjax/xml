@@ -70,7 +70,7 @@ public final class SchemaResolver {
       return null;
 
     for (final Schema schema : schemas) { // [A]
-      if (publicId.equals(schema.publicId) && (systemId == null || systemId.equals(schema.systemId))) {
+      if (publicId.equals(schema.publicId)) {
         if (schema.url != null)
           return schema.url;
 
