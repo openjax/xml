@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.openjax.xml</groupId>
     <artifactId>xml</artifactId>
-    <version>0.9.5-SNAPSHOT</version>
+    <version>0.9.5</version>
   </parent>
   <artifactId>xml-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
@@ -122,17 +122,17 @@
     <dependency>
       <groupId>org.openjax.xml</groupId>
       <artifactId>sax</artifactId>
-      <version>0.9.5-SNAPSHOT</version>
+      <version>0.9.5</version>
     </dependency>
     <dependency>
       <groupId>org.openjax.xml</groupId>
       <artifactId>transform</artifactId>
-      <version>0.9.5-SNAPSHOT</version>
+      <version>0.9.5</version>
     </dependency>
     <dependency>
       <groupId>org.openjax.maven</groupId>
       <artifactId>mojo</artifactId>
-      <version>0.4.3-SNAPSHOT</version>
+      <version>0.4.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
