@@ -31,26 +31,26 @@ import org.openjax.maven.mojo.FilterParameter;
 import org.openjax.maven.mojo.FilterType;
 import org.openjax.maven.mojo.PatternSetMojo;
 
-@Mojo(name="xml", requiresDependencyResolution=ResolutionScope.TEST)
+@Mojo(name = "xml", requiresDependencyResolution = ResolutionScope.TEST)
 public abstract class XmlMojo extends PatternSetMojo {
   static final Path CWD = new File("").getAbsoluteFile().toPath();
   private static final String delimeter = "://";
 
-  @Parameter(defaultValue="${httpProxy}", readonly=true)
+  @Parameter(defaultValue = "${httpProxy}", readonly = true)
   private String httpProxy;
 
-  @Parameter(defaultValue="${project.build.directory}", required=true, readonly=true)
+  @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true)
   protected String directory = null;
 
-  @Parameter(defaultValue="${settings.offline}", required=true, readonly=true)
+  @Parameter(defaultValue = "${settings.offline}", required = true, readonly = true)
   protected boolean offline;
 
   @FilterParameter(FilterType.RESOURCE)
-  @Parameter(property="resources")
+  @Parameter(property = "resources")
   private List<String> resources;
 
   @FilterParameter(FilterType.FILE)
-  @Parameter(property="files")
+  @Parameter(property = "files")
   private List<File> files;
 
   protected final void setHttpProxy() throws MojoFailureException {

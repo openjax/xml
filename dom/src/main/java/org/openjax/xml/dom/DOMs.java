@@ -35,8 +35,8 @@ public final class DOMs {
    * Returns a string representation of a {@link Node}, or an empty string if {@code node} is null. This method handles all child
    * nodes recursively.
    *
-   * @implNote Only elements, attributes and text nodes and considered. Other facets like processing instructions, comments and
-   *           CDATA are not considered.
+   * @implNote Only elements, attributes and text nodes and considered. Other facets like processing instructions, comments and CDATA
+   *           are not considered.
    * @param node The {@link Node} to convert.
    * @param styles An array of {@link DOMStyle} style preferences.
    * @return A string representation of a {@link Node}.
@@ -49,8 +49,8 @@ public final class DOMs {
    * Returns a string representation of a {@link Node}, or an empty string if {@code node} is null. This method handles all child
    * nodes recursively.
    *
-   * @implNote Only elements, attributes and text nodes and considered. Other facets like processing instructions, comments and
-   *           CDATA are not considered.
+   * @implNote Only elements, attributes and text nodes and considered. Other facets like processing instructions, comments and CDATA
+   *           are not considered.
    * @param node The {@link Node} to convert.
    * @param namespaceToPrefix Map of namespace-to-prefix assignments.
    * @param schemaLocations Map of namespace-to-schemaLocation assignments.

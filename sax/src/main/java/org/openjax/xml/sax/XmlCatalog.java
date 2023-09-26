@@ -137,8 +137,8 @@ public class XmlCatalog extends XmlEntity {
   }
 
   /**
-   * Closes this {@link XmlCatalog}. This method calls {@link XmlEntity#close()} on each {@link XmlEntity} instance referenced in
-   * this {@link XmlCatalog}.
+   * Closes this {@link XmlCatalog}. This method calls {@link XmlEntity#close()} on each {@link XmlEntity} instance referenced in this
+   * {@link XmlCatalog}.
    *
    * @throws IOException If an I/O error has occurred.
    */

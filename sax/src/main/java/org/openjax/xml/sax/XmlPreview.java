@@ -63,8 +63,8 @@ public class XmlPreview {
    * Specifies whether the XML document represented by this {@link XmlPreview} instance only contains references that locally
    * accessible via the {@code file:} protocol.
    *
-   * @return Whether the XML document represented by this {@link XmlPreview} instance only contains references that locally
-   *         accessible via the {@code file:} protocol.
+   * @return Whether the XML document represented by this {@link XmlPreview} instance only contains references that locally accessible
+   *         via the {@code file:} protocol.
    */
   public boolean isLocal() {
     return isLocal;
@@ -89,8 +89,8 @@ public class XmlPreview {
   }
 
   /**
-   * Returns the "targetNamespace" attribute of the XML document represented by this {@link XmlPreview} instance. This method is
-   * only useful for XML Schema Documents (i.e. when {@link #isSchema()} is {@code true}).
+   * Returns the "targetNamespace" attribute of the XML document represented by this {@link XmlPreview} instance. This method is only
+   * useful for XML Schema Documents (i.e. when {@link #isSchema()} is {@code true}).
    *
    * @return The "targetNamespace" attribute of the XML document represented by this {@link XmlPreview} instance.
    */

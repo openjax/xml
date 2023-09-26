@@ -53,8 +53,8 @@ public final class SchemaResolver {
   }
 
   /**
-   * Returns the schema location {@link URL} for the specified {@code publicId} and {@code systemId}, or {@code null} if the
-   * provided {@code publicId} and {@code systemId} do not match one of:
+   * Returns the schema location {@link URL} for the specified {@code publicId} and {@code systemId}, or {@code null} if the provided
+   * {@code publicId} and {@code systemId} do not match one of:
    *
    * <pre>
    * http://www.w3.org/2001/XMLSchema

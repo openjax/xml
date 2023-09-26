@@ -93,12 +93,12 @@ public class XMLManifestParserTest {
   @Test
   public void testDoctypeXml() throws Exception {
     final URL url = ClassLoader.getSystemClassLoader().getResource("doctype.xml");
-//    try (final ReplayReader reader = new ReplayReader(new InputStreamReader(url.openStream()))) {
-      XmlPreviewParser.parse(url);
+    // try (final ReplayReader reader = new ReplayReader(new InputStreamReader(url.openStream()))) {
+    XmlPreviewParser.parse(url);
 
-//      final char[] chars = new char[19];
-//      assertEquals(chars.length, reader.read(chars));
-//      assertEquals("<!DOCTYPE catalog [", new String(chars));
-//    }
+    // final char[] chars = new char[19];
+    // assertEquals(chars.length, reader.read(chars));
+    // assertEquals("<!DOCTYPE catalog [", new String(chars));
+    // }
   }
 }

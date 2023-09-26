@@ -341,7 +341,7 @@ public final class Validator {
   }
 
   @SuppressWarnings("unchecked")
-  private static <E extends Exception>void checkException(final ValidatorErrorHandler validatorErrorHandler, final Throwable suppressor) throws E, SAXParseException {
+  private static <E extends Exception> void checkException(final ValidatorErrorHandler validatorErrorHandler, final Throwable suppressor) throws E, SAXParseException {
     if (validatorErrorHandler.errors != null) {
       final Iterator<SAXParseException> iterator = validatorErrorHandler.errors.iterator();
       final SAXParseException exception = iterator.next();

@@ -28,8 +28,8 @@ import org.w3c.dom.NodeList;
  */
 public final class Documents {
   /**
-   * Set the specified namespace URI to each node of the provided document, which includes all child elements, and conditionally
-   * their attributes if {@code attributeFormQualified} is {@code true}.
+   * Set the specified namespace URI to each node of the provided document, which includes all child elements, and conditionally their
+   * attributes if {@code attributeFormQualified} is {@code true}.
    *
    * @param document The {@link Document}.
    * @param namespaceURI The namespace URI.

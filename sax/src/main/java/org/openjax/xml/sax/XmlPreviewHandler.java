@@ -229,8 +229,8 @@ class XmlPreviewHandler extends FastSAXHandler {
   }
 
   /**
-   * Returns the map of namespace-to-URL entries of "import" references for the XML document represented by the {@link XmlCatalog}
-   * in this {@link XmlPreviewHandler} instance.
+   * Returns the map of namespace-to-URL entries of "import" references for the XML document represented by the {@link XmlCatalog} in
+   * this {@link XmlPreviewHandler} instance.
    * <ul>
    * <li>If {@link #isSchema()} is {@code true}, this method represents the {@code <xs:import/>} elements of an XML Schema
    * Document.</li>
@@ -238,8 +238,8 @@ class XmlPreviewHandler extends FastSAXHandler {
    * Document.</li>
    * </ul>
    *
-   * @return The map of namespace-to-URL entries of "import" references for the XML document represented by the {@link XmlCatalog}
-   *         in this {@link XmlPreviewHandler} instance.
+   * @return The map of namespace-to-URL entries of "import" references for the XML document represented by the {@link XmlCatalog} in
+   *         this {@link XmlPreviewHandler} instance.
    */
   Map<String,URL> getImports() {
     return imports;

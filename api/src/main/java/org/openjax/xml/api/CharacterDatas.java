@@ -693,8 +693,7 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param str The string to unescape.
-   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
-   *          {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
    * @throws NullPointerException If {@code str} is null.
    * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
@@ -721,8 +720,7 @@ public final class CharacterDatas {
    *
    * @param out The {@link StringBuilder} to which the unescaped contents of {@code str} are to be appended.
    * @param str The string to unescape.
-   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
-   *          {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
    * @throws NullPointerException If {@code out} or {@code str} is null.
    * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
@@ -748,8 +746,7 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param chars The {@code char[]} to unescape.
-   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
-   *          {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
    * @throws NullPointerException If {@code chars} is null.
    * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
@@ -776,8 +773,7 @@ public final class CharacterDatas {
    *
    * @param out The {@link StringBuilder} to which the unescaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to unescape.
-   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
-   *          {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.
    * @throws NullPointerException If {@code out} or {@code chars} is null.
    * @throws IllegalArgumentException If {@code quote} is not {@code '"'} or {@code '\''}.
@@ -803,8 +799,7 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param str The string to unescape.
-   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
-   *          {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
    * @return A new {@link StringBuilder} with the unescaped representation of {@code str}.
@@ -835,8 +830,7 @@ public final class CharacterDatas {
    *
    * @param out The {@link StringBuilder} to which the unescaped contents of {@code str} are to be appended.
    * @param str The string to unescape.
-   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
-   *          {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code str}.
@@ -867,8 +861,7 @@ public final class CharacterDatas {
    * </pre>
    *
    * @param chars The {@code char[]} to unescape.
-   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
-   *          {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
    * @return A new {@link StringBuilder} with the unescaped representation of {@code chars}.
@@ -900,8 +893,7 @@ public final class CharacterDatas {
    *
    * @param out The {@link StringBuilder} to which the unescaped contents of {@code chars} are to be appended.
    * @param chars The {@code char[]} to unescape.
-   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or
-   *          {@code '\''}).
+   * @param quote The quote character used to delimit the attribute's value in the XML document (either {@code '"'} or {@code '\''}).
    * @param off Start index from which to unescape characters.
    * @param len Number of characters to escape.
    * @return The provided {@link StringBuilder} with the unescaped representation of {@code chars}.

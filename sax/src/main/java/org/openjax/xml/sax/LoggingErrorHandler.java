@@ -32,20 +32,20 @@ public class LoggingErrorHandler implements ErrorHandler {
   public void warning(final SAXParseException exception) throws SAXParseException {
     final String message = exception.getMessage() + " (" + exception.getLineNumber() + "," + exception.getColumnNumber() + ")";
     if (exception.getMessage() != null && exception.getMessage().startsWith("schema_reference.4")) {
-      if (logger.isErrorEnabled()) logger.error(message);
+      if (logger.isErrorEnabled()) { logger.error(message); }
       throw exception;
     }
 
-    if (logger.isWarnEnabled()) logger.warn(message);
+    if (logger.isWarnEnabled()) { logger.warn(message); }
   }
 
   @Override
   public void error(final SAXParseException exception) {
-    if (logger.isErrorEnabled()) logger.error(exception.getMessage() + " (" + exception.getLineNumber() + "," + exception.getColumnNumber() + ")");
+    if (logger.isErrorEnabled()) { logger.error(exception.getMessage() + " (" + exception.getLineNumber() + "," + exception.getColumnNumber() + ")"); }
   }
 
   @Override
   public void fatalError(final SAXParseException exception) {
-    if (logger.isErrorEnabled()) logger.error(exception.getMessage() + " (" + exception.getLineNumber() + "," + exception.getColumnNumber() + ")");
+    if (logger.isErrorEnabled()) { logger.error(exception.getMessage() + " (" + exception.getLineNumber() + "," + exception.getColumnNumber() + ")"); }
   }
 }

@@ -96,8 +96,8 @@ public interface FasterSAXHandler {
   /**
    * Callback method for attribute occurrences.
    *
-   * @param prefixLen The length of the prefix part of the attribute name, which is {@code == 0} if the attribute name does not have
-   *          a prefix, and {@code >= 2} if the attribute name does not has a prefix, as this includes the {@code ':'} character.
+   * @param prefixLen The length of the prefix part of the attribute name, which is {@code == 0} if the attribute name does not have a
+   *          prefix, and {@code >= 2} if the attribute name does not has a prefix, as this includes the {@code ':'} character.
    * @param localPartLen The length of the local part of the attribute name.
    * @param skip The length of the data to skip, which matches the regex: {@code "[ \n\r\t]*=[ \n\r\t]*\""}.
    * @param valueLen The length of the attribute value (does not include the surrounding quotes).
@@ -133,8 +133,8 @@ public interface FasterSAXHandler {
   /**
    * Called when an element's "end tag" is encountered.
    * <p>
-   * The "end tag" is either a dedicated tag that resembles {@code "</ELEMENT>"} for elements that may have child elements, or can
-   * be the "start tag" that ends with {@code "/>"} for elements that have no child elements.
+   * The "end tag" is either a dedicated tag that resembles {@code "</ELEMENT>"} for elements that may have child elements, or can be
+   * the "start tag" that ends with {@code "/>"} for elements that have no child elements.
    *
    * @return Whether parsing should continue.
    * @throws IOException If an I/O error has occurred.

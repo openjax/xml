@@ -36,8 +36,8 @@ import org.openjax.xml.sax.CachedInputSource;
 import org.openjax.xml.sax.Validator;
 import org.xml.sax.SAXException;
 
-@Mojo(name="validate", defaultPhase=LifecyclePhase.COMPILE)
-@Execute(goal="validate")
+@Mojo(name = "validate", defaultPhase = LifecyclePhase.COMPILE)
+@Execute(goal = "validate")
 public class ValidatorMojo extends XmlMojo {
   @Override
   public void execute(final LinkedHashSet<URI> uris) throws MojoExecutionException, MojoFailureException {

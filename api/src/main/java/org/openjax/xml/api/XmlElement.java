@@ -246,14 +246,13 @@ public class XmlElement implements Cloneable, Serializable {
   /**
    * Returns an XML string representation of this element with the specified number of spaces to indent child elements.
    *
-   * @param indent Number of spaces to indent child elements. If the specified indent value is greater than {@code 0}, child
-   *          elements are indented and placed on a new line. If the indent value is {@code 0}, child elements are not indented, nor
-   *          placed on a new line.
+   * @param indent Number of spaces to indent child elements. If the specified indent value is greater than {@code 0}, child elements
+   *          are indented and placed on a new line. If the indent value is {@code 0}, child elements are not indented, nor placed on
+   *          a new line.
    * @return An XML string representation of this element.
    * @throws NullPointerException If a child element is null, or the name or value of an attribute is null.
    * @throws IllegalArgumentException If the name of an attribute is not a valid
-   *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>, or if {@code indent} is
-   *           negative.
+   *           <a href= "https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname">xs:qName</a>, or if {@code indent} is negative.
    * @throws StackOverflowError If the graph of child elements has cycles.
    */
   public String toString(final int indent) {

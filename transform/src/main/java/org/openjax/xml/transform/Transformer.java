@@ -79,7 +79,7 @@ public final class Transformer {
   }
 
   public static void transform(final URL stylesheet, final InputStream in, final String systemId, final File out) throws IOException, TransformerException {
-    transform(stylesheet,in, systemId, out, (Map<String,String>)null);
+    transform(stylesheet, in, systemId, out, (Map<String,String>)null);
   }
 
   public static void transform(final URL stylesheet, final InputStream in, final String systemId, final File out, final Map<String,String> parameters) throws IOException, TransformerException {

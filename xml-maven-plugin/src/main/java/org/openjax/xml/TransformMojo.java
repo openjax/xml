@@ -39,19 +39,19 @@ import org.libj.util.Dates;
 import org.libj.util.StringPaths;
 import org.openjax.xml.transform.Transformer;
 
-@Mojo(name="transform", defaultPhase=LifecyclePhase.COMPILE)
-@Execute(goal="transform")
+@Mojo(name = "transform", defaultPhase = LifecyclePhase.COMPILE)
+@Execute(goal = "transform")
 public class TransformMojo extends XmlMojo {
-  @Parameter(property="destDir", required=true)
+  @Parameter(property = "destDir", required = true)
   private String destDir;
 
-  @Parameter(property="rename")
+  @Parameter(property = "rename")
   private String rename;
 
-  @Parameter(property="stylesheet")
+  @Parameter(property = "stylesheet")
   private File stylesheet;
 
-  @Parameter(property="parameters")
+  @Parameter(property = "parameters")
   private Map<String,String> parameters;
 
   @Override
