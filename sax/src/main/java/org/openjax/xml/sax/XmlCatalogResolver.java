@@ -79,8 +79,14 @@ class XmlCatalogResolver implements LSResourceResolver {
         }
       }
 
-      if (entity == null)
-        return new CachedInputSource(publicId, systemId, baseURI, new URL(systemId).openConnection());
+      if (entity == null) {
+        try {
+          return new CachedInputSource(publicId, systemId, baseURI, new URL(systemId).openConnection());
+        }
+        catch (final IOException e) {
+          return null;
+        }
+      }
 
       final CachedInputSource inputSource = entity.getInputSource();
       inputSource.getCharacterStream().close();
