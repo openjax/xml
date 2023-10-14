@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
 public class ValidatorMojo extends XmlMojo {
   @Override
   public void execute(final LinkedHashSet<URI> uris) throws MojoExecutionException, MojoFailureException {
-    final File recordDir = new File(directory, "validator");
+    final File recordDir = new File(getProject().getBuild().getDirectory(), "validator");
     recordDir.mkdirs();
 
     try {
@@ -63,14 +63,14 @@ public class ValidatorMojo extends XmlMojo {
             Validator.validate(url, new CachedInputSource(null, url.toString(), null, connection));
           }
           catch (final FileNotFoundException | SAXException e) {
-            if (!offline || !(e instanceof SAXException) || !Validator.isRemoteAccessException((SAXException)e)) {
+            if (!getOffline() || !(e instanceof SAXException) || !Validator.isRemoteAccessException((SAXException)e)) {
               final String message = e instanceof FileNotFoundException ? e.getClass().getSimpleName() + e.getMessage() : e.getMessage();
-              final StringBuilder builder = new StringBuilder("\nURL: ").append(uri.toString());
-              builder.append("\nReason: ").append(message).append('\n');
+              final StringBuilder b = new StringBuilder("\nURL: ").append(uri.toString());
+              b.append("\nReason: ").append(message).append('\n');
               for (final Throwable t : e.getSuppressed()) // [A]
-                builder.append("        ").append(t.getMessage()).append('\n');
+                b.append("        ").append(t.getMessage()).append('\n');
 
-              final MojoFailureException exception = new MojoFailureException("Failed to validate xml.", "", builder.toString());
+              final MojoFailureException exception = new MojoFailureException("Failed to validate xml.", "", b.toString());
               exception.initCause(e);
               throw exception;
             }

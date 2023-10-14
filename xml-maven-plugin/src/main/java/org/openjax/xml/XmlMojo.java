@@ -39,12 +39,6 @@ public abstract class XmlMojo extends PatternSetMojo {
   @Parameter(defaultValue = "${httpProxy}", readonly = true)
   private String httpProxy;
 
-  @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true)
-  protected String directory = null;
-
-  @Parameter(defaultValue = "${settings.offline}", required = true, readonly = true)
-  protected boolean offline;
-
   @FilterParameter(FilterType.RESOURCE)
   @Parameter(property = "resources")
   private List<String> resources;

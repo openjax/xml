@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -58,6 +59,7 @@ public class TransformMojo extends XmlMojo {
   public void execute(final LinkedHashSet<URI> uris) throws MojoExecutionException, MojoFailureException {
     try {
       if (uris.size() > 0) {
+        final Log log = getLog();
         for (final URI uri : uris) { // [S]
           final String outFileName = Strings.searchReplace(StringPaths.getName(uri.toString()), rename);
           final File destFile = new File(destDir, outFileName);
@@ -68,10 +70,10 @@ public class TransformMojo extends XmlMojo {
           final long lastModifiedSource;
           final long lastModifiedTarget;
           if (destFile.exists() && (lastModifiedSource = connection.getLastModified()) <= (lastModifiedTarget = destFile.lastModified()) && lastModifiedTarget < lastModifiedSource + Dates.MILLISECONDS_IN_DAY) {
-            getLog().info("Pre-transformed: " + inFilePath);
+            log.info("Pre-transformed: " + inFilePath);
           }
           else {
-            getLog().info("   Transforming: " + inFilePath + " -> " + CWD.relativize(destFile.getAbsoluteFile().toPath()));
+            log.info("   Transforming: " + inFilePath + " -> " + CWD.relativize(destFile.getAbsoluteFile().toPath()));
             destFile.getParentFile().mkdirs();
             Transformer.transform(stylesheet.toURI().toURL(), connection, destFile, parameters);
           }
