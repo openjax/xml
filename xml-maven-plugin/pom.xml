@@ -31,7 +31,7 @@
     Maven Plugin for general XML-related tasks, specializing in validation and transformation of XML documents.
   </description>
   <properties>
-    <maven.version>3.0</maven.version>
+    <maven.version>3.8.1</maven.version>
   </properties>
   <prerequisites>
     <maven>${maven.version}</maven>
