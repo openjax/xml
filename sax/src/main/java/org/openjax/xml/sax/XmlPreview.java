@@ -56,7 +56,7 @@ public class XmlPreview {
    * @return The {@link XmlCatalog} instance.
    */
   public XmlCatalog getCatalog() {
-    return this.catalog;
+    return catalog;
   }
 
   /**
@@ -95,7 +95,7 @@ public class XmlPreview {
    * @return The "targetNamespace" attribute of the XML document represented by this {@link XmlPreview} instance.
    */
   public String getTargetNamespace() {
-    return this.targetNamespace;
+    return targetNamespace;
   }
 
   /**

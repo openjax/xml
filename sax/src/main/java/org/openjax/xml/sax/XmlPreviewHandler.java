@@ -138,7 +138,7 @@ class XmlPreviewHandler extends FastSAXHandler {
    * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">IETF RFC 2396</a>
    */
   String getSystemId() {
-    return this.systemId;
+    return systemId;
   }
 
   /**
@@ -147,7 +147,7 @@ class XmlPreviewHandler extends FastSAXHandler {
    * @return The catalog instance.
    */
   XmlCatalog getCatalog() {
-    return this.catalog;
+    return catalog;
   }
 
   /**
@@ -213,7 +213,7 @@ class XmlPreviewHandler extends FastSAXHandler {
    *         {@link XmlPreviewHandler} instance.
    */
   String getTargetNamespace() {
-    return this.targetNamespace;
+    return targetNamespace;
   }
 
   private Map<String,URL> imports;
