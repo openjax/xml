@@ -72,7 +72,6 @@ public final class DOMParsers {
         private String prevPath;
 
         private InputStream getInputStream(final String systemId) throws IOException {
-          System.err.println(systemId);
           return URLConnections.checkFollowRedirect(new URL(systemId).openConnection()).getInputStream();
         }
 
