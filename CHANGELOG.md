@@ -1,18 +1,21 @@
 # Changes by Version
 
-## [v1.0.0-SNAPSHOT](https://github.com/libj/util/compare/d0c67d4e541efec6c78816639664513db64488dd..HEAD)
+## [v1.0.1-SNAPSHOT](https://github.com/libj/util/compare/b1c87b0377c5e611955c1486b9b392980eef4aa1..HEAD)
+
+## [v1.0.0](https://github.com/libj/util/compare/d0c67d4e541efec6c78816639664513db64488dd..b1c87b0377c5e611955c1486b9b392980eef4aa1) (2024-02-27)
+* #13 XmlMojo use mojo parameters provided by BaseMojo
 
 ## [v0.9.5](https://github.com/openjax/xml/compare/cb61e8271d217eb106e6d62b972e0562fb20697c..d0c67d4e541efec6c78816639664513db64488dd) (2023-09-20)
-* #12 EntityResolver does not follow redirects
-* #10 Rewrite CharacterDatas
+* #12 `EntityResolver` does not follow redirects
+* #10 Rewrite `CharacterDatas`
 * #9 Support standalone execution
-* #8 Add base64BinaryNonEmpty to datatypes-0.9.xsd
+* #8 Add `base64BinaryNonEmpty` to `datatypes-0.9.xsd`
 * #7 Null pointer exception when validating XML with no targetNamespace defined in XSD
 * #6 Transition to GitHub Actions
-* #5 Add Documents class for operations pertaining to Document
+* #5 Add `Documents` class for operations pertaining to `Document`
 * #4 Upgrade Maven dependencies
-* #2 Properly set line/column for new SAXParseException in FastSAXParser.parse(...)
-* #1 FastSAXParser should throw SAXParseException instead of IllegalStateException in case of malformed XML
+* #2 Properly set line/column for new `SAXParseException` in `FastSAXParser.parse(...)`
+* #1 `FastSAXParser` should throw `SAXParseException` instead of `IllegalStateException` in case of malformed XML
 
 ## [v0.9.4](https://github.com/openjax/xml/compare/cc44b4706d3802ab7a6737f11bcc84341c7fe1de..cb61e8271d217eb106e6d62b972e0562fb20697c) (2020-05-23)
 * Add `CachedInputSource`.
