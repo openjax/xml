@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Utility functions for operations pertaining to classes in the {@code org.w3c.dom} package.
+ * Utility functions for operations pertaining to classes in the {@link org.w3c.dom} package.
  */
 public final class DOMs {
   /**
