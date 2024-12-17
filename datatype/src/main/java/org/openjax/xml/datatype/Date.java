@@ -81,12 +81,12 @@ public class Date extends TemporalType {
     this(year, month, day, null);
   }
 
-  public Date(final long time, final TimeZone timeZone) {
-    this(new YearMonth(time, timeZone), new Day(time), null);
+  public Date(final long timeMs, final TimeZone timeZone) {
+    this(new YearMonth(timeMs, timeZone), new Day(timeMs), null);
   }
 
-  public Date(final long time) {
-    this(new YearMonth(time), new Day(time), null);
+  public Date(final long timeMs) {
+    this(new YearMonth(timeMs), new Day(timeMs), null);
   }
 
   public Date() {

@@ -64,12 +64,12 @@ public class DateTime extends TemporalType {
     this(year, month, day, hour, minute, second, null);
   }
 
-  public DateTime(final long time, final TimeZone timeZone) {
-    this(new Date(time, timeZone), new Time(time, timeZone));
+  public DateTime(final long timeMs, final TimeZone timeZone) {
+    this(new Date(timeMs, timeZone), new Time(timeMs, timeZone));
   }
 
-  public DateTime(final long time) {
-    this(new Date(time), new Time(time));
+  public DateTime(final long timeMs) {
+    this(new Date(timeMs), new Time(timeMs));
   }
 
   public DateTime() {

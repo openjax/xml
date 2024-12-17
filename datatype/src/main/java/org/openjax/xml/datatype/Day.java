@@ -86,9 +86,9 @@ public class Day extends TemporalType {
   }
 
   @SuppressWarnings("deprecation")
-  public Day(final long time) {
+  public Day(final long timeMs) {
     super(TimeZone.getDefault());
-    this.day = new java.util.Date(time).getDate();
+    this.day = new java.util.Date(timeMs).getDate();
   }
 
   public Day() {

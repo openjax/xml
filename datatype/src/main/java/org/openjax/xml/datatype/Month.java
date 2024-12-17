@@ -82,9 +82,9 @@ public class Month extends TemporalType {
   }
 
   @SuppressWarnings("deprecation")
-  public Month(final long time) {
+  public Month(final long timeMs) {
     super(TimeZone.getDefault());
-    this.month = new java.util.Date(time).getMonth() + 1;
+    this.month = new java.util.Date(timeMs).getMonth() + 1;
   }
 
   public Month() {

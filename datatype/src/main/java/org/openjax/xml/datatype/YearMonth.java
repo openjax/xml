@@ -71,12 +71,12 @@ public class YearMonth extends TemporalType {
     this(year, month, null);
   }
 
-  public YearMonth(final long time, final TimeZone timeZone) {
-    this(new Year(time, timeZone), new Month(time), timeZone);
+  public YearMonth(final long timeMs, final TimeZone timeZone) {
+    this(new Year(timeMs, timeZone), new Month(timeMs), timeZone);
   }
 
-  public YearMonth(final long time) {
-    this(new Year(time), new Month(time), null);
+  public YearMonth(final long timeMs) {
+    this(new Year(timeMs), new Month(timeMs), null);
   }
 
   public YearMonth() {

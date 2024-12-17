@@ -90,12 +90,12 @@ public class Year extends TemporalType {
     this(year, null);
   }
 
-  public Year(final long time, final TimeZone timeZone) {
-    this(Time.newCalendar(time, timeZone).get(Calendar.YEAR), null);
+  public Year(final long timeMs, final TimeZone timeZone) {
+    this(Time.newCalendar(timeMs, timeZone).get(Calendar.YEAR), null);
   }
 
-  public Year(final long time) {
-    this(Time.newCalendar(time).get(Calendar.YEAR), null);
+  public Year(final long timeMs) {
+    this(Time.newCalendar(timeMs).get(Calendar.YEAR), null);
   }
 
   public Year() {

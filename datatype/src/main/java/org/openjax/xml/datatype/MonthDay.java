@@ -84,8 +84,8 @@ public class MonthDay extends TemporalType {
     this(month, day, null);
   }
 
-  public MonthDay(final long time) {
-    this(new Month(time), new Day(time), null);
+  public MonthDay(final long timeMs) {
+    this(new Month(timeMs), new Day(timeMs), null);
   }
 
   public MonthDay() {

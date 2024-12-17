@@ -23,18 +23,18 @@ import java.util.TimeZone;
  * http://www.w3.org/TR/xmlschema11-2/#time
  */
 public class Time extends TemporalType {
-  static Calendar newCalendar(final long time, final TimeZone timeZone) {
+  static Calendar newCalendar(final long timeMs, final TimeZone timeZone) {
     if (timeZone == null)
       throw new IllegalArgumentException("timeZone is null");
 
     final Calendar calendar = Calendar.getInstance(timeZone);
-    calendar.setTimeInMillis(time);
+    calendar.setTimeInMillis(timeMs);
     return calendar;
   }
 
-  static Calendar newCalendar(final long time) {
+  static Calendar newCalendar(final long timeMs) {
     final Calendar calendar = Calendar.getInstance();
-    calendar.setTimeInMillis(time);
+    calendar.setTimeInMillis(timeMs);
     return calendar;
   }
 
@@ -191,16 +191,16 @@ public class Time extends TemporalType {
     this(hours, minutes, seconds, null);
   }
 
-  public Time(final long time, final TimeZone timeZone) {
+  public Time(final long timeMs, final TimeZone timeZone) {
     super(timeZone);
-    final Calendar calendar = newCalendar(time, this.timeZone);
+    final Calendar calendar = newCalendar(timeMs, this.timeZone);
     this.hour = calendar.get(Calendar.HOUR);
     this.minute = calendar.get(Calendar.MINUTE);
     this.second = calendar.get(Calendar.SECOND) + calendar.get(Calendar.MILLISECOND) / 1000f;
   }
 
-  public Time(final long time) {
-    this(time, null);
+  public Time(final long timeMs) {
+    this(timeMs, null);
   }
 
   public Time() {
